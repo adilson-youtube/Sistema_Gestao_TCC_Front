@@ -1,0 +1,23 @@
+
+    <p-panel header="">
+        <div class="p-grid">
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">NIP:</span> {{funcionario.nip}}</div>
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">Nome:</span> {{candidato?.dadosPessoais?.nomeCompleto}}</div>
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">Cargo:</span> {{funcionario.ultimaActualizacaoLaboral?.cargo?.estruturaCargo}}</div><!-- {{contacto.funcionario.cargo}}-->
+            
+            <div class="p-col-12"><span style="font-weight: bold">Área:</span> {{area?.denominacao}}</div>
+
+            <div class="p-col-12"><span style="font-weight: bold">Orgão:</span> {{orgao?.denominacao}} - {{orgao?.sigla}}</div>
+
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">BigAnt:</span> </div> {{candidato?.contactos?.bigAnt}}
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">Telefone [ Serviço:</span> {{candidato?.contactos?.telefone2}}</div> 
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">Pessoal:</span> {{candidato?.contactos?.telefone1}} ]</div> 
+            <div class="p-col-12"> <span style="font-weight: bold">E-mail:</span> {{candidato?.contactos?.email}}</div> 
+
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">Ponto-a-Ponto:</span> {{area?.pontoPonto}}</div> 
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">Telefone fixo:</span> {{area?.telefone}}</div> 
+            <div class="p-col-12 p-md-4"><span style="font-weight: bold">Voip:</span> {{area?.voip}}</div> 
+        </div>
+    </p-panel>
+
+

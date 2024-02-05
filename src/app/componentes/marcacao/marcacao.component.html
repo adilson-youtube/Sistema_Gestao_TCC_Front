@@ -1,0 +1,41 @@
+<p-card>
+    <ng-template pTemplate="content">
+        <p-panel header="MARCAÇÃO DE SERVIÇO">
+            <p-card class="p-grid p-jc-center p-mt-6">
+                <div class="card">
+                    <h5>Marcação</h5>
+                    <div class="p-fluid p-formgrid p-grid">
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="animal">Animal</label>
+                            <p-dropdown optionLabel="nome" inputId="animal" [options]="animais" [(ngModel)]="animalSelecionado" placeholder="Seleccionar"></p-dropdown>
+                        </div>
+                        <!-- <div class="p-field p-col-12">
+                            <label for="address">Address</label>
+                            <textarea id="address" type="text" rows="4" pInputTextarea></textarea>
+                        </div> -->
+                        <div class="p-field p-col-12 p-md-6">
+                            <label for="city">Data Desejada</label>
+                            <p-calendar [(ngModel)]="dataMarcacao" dateFormat="dd/mm/yy" appendTo="body"></p-calendar>
+                            <!-- <p-calendar formControlName="dateValue"></p-calendar> -->
+                        </div>
+                        <div class="p-field p-col-12 p-md-12">
+                            <label for="state">Serviços</label>
+                            <p-multiSelect optionLabel="tipoServico" [options]="servicos" [(ngModel)]="servicosSelecionados" display="chip"></p-multiSelect>
+                        </div>
+                        <!--<div class="p-field p-col-12 p-md-6">
+                            <label for="state">Veterinario</label>
+                            <p-dropdown inputId="state" [options]="states" [(ngModel)]="selectedState" placeholder="Select" optionLabel="name"></p-dropdown>
+                        </div>-->
+                        <div class="p-field p-col-12 p-md-3 p-ml-auto p-mt-4">
+                            <button pButton type="button" (click)="agendarServico()" label="Agendar"></button>
+                            <button pButton type="button" (click)="testar()" label="Teste"></button>
+                        </div>
+                    </div>
+                </div>
+            
+            </p-card>
+        </p-panel>
+    </ng-template>
+</p-card>
+
+

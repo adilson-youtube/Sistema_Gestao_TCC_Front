@@ -1,0 +1,79 @@
+<p-toast></p-toast>
+<!------------------------ tabela ------------------------------------>
+<p-card>
+    <h3>Dados dos Animais</h3>
+    <p-table #dt [value]="proprietario.animais" [rows]="5" [paginator]="true" [rowHover]="true" dataKey="id" [showCurrentPageReport]="true" 
+            currentPageReportTemplate="{first} até {last} de {totalRecords} Animais" styleClass="p-datatable-customers p-datatable-gridlines">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-nogutter p-jc-between">
+                <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limparTabela(dt)"></button>
+                <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center"> 
+                        Nome do Animal <p-columnFilter type="text" field="nome" display="menu"></p-columnFilter>
+                    </div>  
+                </th>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center"> 
+                    Peso <p-columnFilter type="text" field="peso" display="menu"></p-columnFilter>
+                    </div>  
+                </th>
+                <th style="width:8rem">Operação</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-animaL>
+            <tr>
+                <td>{{animaL.nome}}</td>
+                <td>{{animaL.peso}}</td>
+                <td style="text-align:center">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text" (click)="modal(proprietario.animais)" pTooltip="Editar" tooltipPosition="bottom"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="3" style="text-align:center">LISTA DE ANIMAIS VAZIA.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+
+</p-card>
+
+<!---------------------------- modal -------------------------------->
+<p-dialog [header]="cabecario" [(visible)]="exibir" [modal]="true" [style]="{width: '30vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <div class="p-fluid p-formgrid p-grid"> 
+        <div class="field col-12 p-md-12">
+            <label>Nome</label>
+            <input id="nome" type="text" [(ngModel)]="animal.nome" pInputText>
+            <small class="p-invalid p-error" *ngIf="validar && !animal.nome">Campo Obrigatório.</small>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label>Sexo</label>
+            <p-dropdown optionLabel="name" optionValue="code" appendTo="body" inputId="genero" [options]="generos" [(ngModel)]="generoSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label>Peso</label>
+            <input id="denominacao" type="text" [(ngModel)]="animal.peso" pInputText>
+            <small class="p-invalid p-error" *ngIf="validar && !animal.peso">Campo Obrigatório.</small>
+        </div>
+        
+        <!-- <div class="fielld col-12">
+            <p-messages [showTransitionOptions]="'1000ms'" [hideTransitionOptions]="'1000ms'"></p-messages>
+        </div> -->
+    </div>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+        <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+    </ng-template>
+</p-dialog>
+

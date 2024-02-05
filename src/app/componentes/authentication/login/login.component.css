@@ -1,0 +1,89 @@
+
+.logar {
+    width: 100%;
+    height: 100%;
+    /* margin: 0 !important; */
+    /* padding: 0 !important; */
+    background-repeat: no-repeat;
+    background-color: #cccccc;
+    /* background: url(../../../../assets/images/LOGO-SINSE-WEB.png) !important; */
+    background-size: cover !important;
+    background-position: center !important;
+    font-family: "Comfortaa", sans-serif;
+}
+
+.box {
+    width: 380px;
+    height: 480px;
+    background-color: #000000b3;
+    color: #fff;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    padding: 70px 30px;
+    box-sizing: border-box;
+    /* border-radius: 10px; */
+    border-radius: 190px 0px 190px 0px;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 100px;
+    border-color: #fff;
+    position: absolute;
+    top: -50px;
+    left: calc(50% - 50px);
+}
+
+h1 {
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.box input {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.box input[type="text"],input[type="password"] {
+    border: none;
+    border-bottom: 1px solid #fff;
+    background-color: transparent;
+    outline: none;
+    height: 40px;
+    color: #fff;
+    font-size: 16px;
+} 
+
+.box input[type="submit"]{
+    border: none;
+    outline: none;
+    height: 40px;
+    background-color: #3f51b5;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 20px;
+    transition: 0.4s ease;
+}
+
+.box input[type="submit"]:hover {
+    cursor: pointer;
+    background-color: #39468d;
+    color: #fff;
+}
+
+.box a{
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 20px;
+    color: darkgray;
+}
+
+.box a:hover{
+    color: #fff;
+}
+

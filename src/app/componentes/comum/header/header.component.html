@@ -1,0 +1,146 @@
+<p-card>
+    <div class="p-grid">
+        <div class="p-col-12">
+            <div class="p-grid">
+                <span class="item-spacer"></span>
+                <img class="logo p-col-6" src="assets/images/LogoClinica2.png" alt="logo">
+                <span class="item-spacer"></span>
+                <div>
+                    <h2 style="color: rgb(137, 53, 82);">URGÊNCIAS 24H 929 529 551</h2>
+                    <h5 style="color: rgb(137, 53, 82);">Estamos disponíveis 24H na clínica ou em domicílios.</h5>
+                </div>
+                <span class="item-spacer"></span>
+            </div>
+        </div>
+    </div>
+</p-card>
+<mat-toolbar class="header mat-elevation-z4 header-position sidenav">
+    <mat-toolbar-row>
+        <!-- <img class="logo" src="assets/images/Roda_Dentada_Angola.png" alt="logo"> -->
+        <!-- <button class="texts-color" mat-icon-button>
+        <mat-icon>home</mat-icon>
+      </button> -->
+        <span class="item-spacer"></span>
+        <!-- <h1 class="texts-color p-center">CLÍNICA VETERINARIA DE LUANDA</h1> -->
+
+        <div>
+
+
+            <button class="texts-color" mat-button routerLink=""><mat-icon class="icons-color"> home
+                </mat-icon>INICIO</button>
+
+            <button class="texts-color" mat-button [matMenuTriggerFor]="menuServicos"><mat-icon class="icons-color">
+                    public </mat-icon>Tema</button>
+            <mat-menu class="custom-menu" #menuServicos="matMenu" xPosition="after">
+                <button class="texts-color" mat-menu-item routerLink="marcacao"><mat-icon
+                        class="icons-color"> person_add </mat-icon>FAZER MARCAÇÃO</button>
+                <button class="texts-color" mat-menu-item routerLink="registarServico"><mat-icon
+                        class="icons-color"> person_add </mat-icon>REGISTAR SERVIÇOS</button>
+                <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
+                        person_search </mat-icon>PESQUISAR SERVIÇOS</button>
+            </mat-menu>
+
+            <button class="texts-color" mat-button [matMenuTriggerFor]="afterMenu1"><mat-icon class="icons-color">
+                    groups </mat-icon>EQUIPA VETERINARIA</button>
+            <mat-menu class="custom-menu" #afterMenu1="matMenu" xPosition="after">
+                <button class="texts-color" mat-menu-item routerLink="registar/requerente"><mat-icon
+                        class="icons-color"> person_add </mat-icon>REGISTAR </button>
+                <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
+                        person_search </mat-icon>PESQUISAR</button>
+            </mat-menu>
+
+            <button class="texts-color" mat-button [matMenuTriggerFor]="afterMenu1"><mat-icon class="icons-color">
+                    home_work </mat-icon>NOSSAS UNIDADES</button>
+            <mat-menu class="custom-menu" #afterMenu1="matMenu" xPosition="after">
+                <button class="texts-color" mat-menu-item routerLink="registar/requerente"><mat-icon
+                        class="icons-color"> person_add </mat-icon>REGISTAR </button>
+                <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
+                        person_search </mat-icon>PESQUISAR</button>
+            </mat-menu>
+
+
+            <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> info
+                </mat-icon>QUEM SOMOS</button>
+
+
+            <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> call
+                </mat-icon>FALE CONOSCO</button>
+
+
+            <!-- <button class="texts-color espaco" mat-button [matMenuTriggerFor]="afterMenu3"><mat-icon class="icons-color"> miscellaneous_services </mat-icon>ADMINISTRAÇÃO</button> -->
+            <mat-menu class="custom-menu" #afterMenu3="matMenu" xPosition="after">
+                <button class="texts-color menu-buttom-item" mat-menu-item routerLink="/oos"><mat-icon
+                        class="icons-color"> supervisor_account </mat-icon>O/Os</button>
+                <button class="texts-color" mat-menu-item routerLink="/orgaos"><mat-icon class="icons-color">
+                        corporate_fare </mat-icon>ORGÃOS</button>
+            </mat-menu>
+
+            <button class="texts-color" mat-button [matMenuTriggerFor]="menuUsuario"><mat-icon class="icons-color">
+                manage_accounts </mat-icon></button>
+            <mat-menu class="custom-menu" #menuUsuario="matMenu" xPosition="after">
+                <button class="texts-color" mat-menu-item routerLink="registarProrietario/acesso"><mat-icon
+                        class="icons-color"> person_add </mat-icon>PROPRIETARIO </button>
+                <button class="texts-color" mat-menu-item routerLink="registarVeterinario/acesso-veterinario"><mat-icon class="icons-color">
+                        person_search </mat-icon>VETERINARIA</button>
+            </mat-menu>
+
+
+            <button (click)="infoUser()" mat-icon-button class="espaco">
+                <mat-icon class="icons-color">manage_accounts</mat-icon>
+            </button>
+
+        </div>
+        <span class="item-spacer"></span>
+        <button mat-icon-button class="espaco">
+            <mat-icon class="icons-color">power_settings_new</mat-icon>
+        </button>
+    </mat-toolbar-row>
+
+    <!-- <mat-toolbar-row class="mat-custom-row">
+      <h1 class="text-title">SISTEMA DE GESTÃO DAS VÍTIMAS DOS CONFLITOS POLÍTICOS</h1>
+    </mat-toolbar-row> -->
+</mat-toolbar>
+
+<p-sidebar #userperfil [(visible)]="showPerfil" position="right" [baseZIndex]="10000">
+    <div class="p-grid">
+        <div class="p-col-12">
+            <h1 style="font-weight:normal">Perfil</h1>
+            <div class="p-grid">
+                <div class="p-col-4"></div>
+                <div class="p-col-4">
+                    <mat-icon style="font-size: 6rem">account_circle</mat-icon>
+                </div>
+                <div class="p-col-4"></div>
+            </div>
+
+            <div>
+                <label>Nome</label>
+                <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
+                    placeholder="Digite o nome completo">
+            </div>
+            <div>
+                <label>Usuário</label>
+                <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
+                    placeholder="Digite o nome de usúario">
+            </div>
+            <div>
+                <label>Senha</label>
+                <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
+                    placeholder="Digite o email">
+            </div>
+            <div>
+                <label>Email</label>
+                <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
+                    placeholder="Digite o email">
+            </div>
+            <div class="p-grid">
+                <p-button disabled="true" class="p-col-3" type="button" (click)="showPerfil = false" label="Salvar"
+                    styleClass="p-button-success"></p-button>
+                <p-button class="p-col-3 p-ml-2" type="button" (click)="showPerfil = false" label="Editar"
+                    styleClass="p-button-secondary"></p-button>
+                <p-button class="p-col-3 p-ml-2" type="button" (click)="showPerfil = false" label="Cancelar"
+                    styleClass="p-button-secondary"></p-button>
+            </div>
+        </div>
+    </div>
+</p-sidebar>

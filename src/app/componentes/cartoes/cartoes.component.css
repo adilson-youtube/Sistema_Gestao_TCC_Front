@@ -1,0 +1,9 @@
+:host ::ng-deep {
+    .cartao {
+        .p-card.p-component {
+            border-radius: 10px;
+            background: #F1A509 !important;
+        }
+    }
+
+}

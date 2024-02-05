@@ -1,0 +1,59 @@
+<div class="stepsdemo-content">
+    <p-card>
+        <!-- <ng-template pTemplate="header">
+            Header content here
+        </ng-template> -->
+        <ng-template pTemplate="content">
+            <!---------Dados Pessoais------------->
+            <p-divider align="left">
+                <div class="p-d-inline-flex p-ai-center">
+                    <i class="pi pi-user p-mr-2"></i>
+                    <b>Dados de Acesso</b>
+                </div>
+            </p-divider>
+            <div class="p-grid">
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Usuario</span>
+                    {{veterinario.usuario.usuario}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Emai:</span>
+                    {{veterinario.usuario.email}}</div>
+
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Senha:</span>
+                    {{veterinario.usuario.senha}}</div>
+
+            </div>
+
+            <!---------Dados Pessoais------------->
+            <p-divider align="left">
+                <div class="p-d-inline-flex p-ai-center">
+                    <i class="pi pi-user p-mr-2"></i>
+                    <b>Dados de Pessoais</b>
+                </div>
+            </p-divider>
+            <div class="p-grid">
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Nome Completo:</span>
+                    {{veterinario.nome}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Genero:</span>
+                    {{veterinario.genero}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Especialidade:</span>
+                    {{veterinario.especialidade}}</div>
+                <!-- <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Telefone:</span>
+                    {{proprietario.telefone}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Municipio:</span>
+                    {{proprietario.endereco.municipio}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Bairro:</span>
+                    {{proprietario.endereco.bairro}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Rua:</span>
+                    {{proprietario.endereco.rua}}</div> -->
+
+            </div>
+
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <div class="p-grid p-nogutter p-jc-between">
+                <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+                <p-button label="Confirmar" (onClick)="salvar()" icon="pi pi-save" iconPos="right"></p-button>
+            </div>
+        </ng-template>
+    </p-card>
+</div>

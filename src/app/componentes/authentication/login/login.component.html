@@ -1,0 +1,20 @@
+<!-- <router-outlet></router-outlet> -->
+<div class="logar">
+
+    <div class="box">
+        <img src="../../../../assets/images/LOGO-SINSE-WEB.png" alt="" class="avatar">
+        <h1>SINSE</h1>
+        <form (ngSubmit)="login()">
+            <p>Usuário</p>
+            <input type="text" pInputText [(ngModel)]="usuario" name="usuario" placeholder="Digite o nome">
+            <p>Senha</p>
+            <input type="password" pPassword [(ngModel)]="senha" name="senha" placeholder="Digite a senha">
+            <input type="submit" name="" value="Login">
+            <!-- <input @fade type="submit" name="" value="Test"> -->
+            <a href="#" target="_blank" rel="noopener noreferrer">Esqueceu sua senha?</a><br>
+            <a (click)="register()">Ainda não possui conta!</a>
+        </form>
+    </div>
+
+</div>
+<p-toast></p-toast>

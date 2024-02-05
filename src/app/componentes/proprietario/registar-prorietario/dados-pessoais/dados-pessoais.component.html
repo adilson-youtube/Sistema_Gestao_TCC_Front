@@ -1,0 +1,49 @@
+<p-card>
+    <ng-template pTemplate="content">
+        <h3>Dados Pessoais</h3>
+        <!-- <div class="p-fluid p-formgrid p-grid p-jc-center p-col-12 p-md-12"> -->
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 p-md-12">
+                <label for="nome">Nome</label>
+                <input id="nome" [(ngModel)]="proprietario.nome" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-4">
+                <label for="state">Genero</label>
+                <p-dropdown inputId="state" [options]="generos" [(ngModel)]="generoSelecionado" placeholder="Select"
+                    optionLabel="name" optionValue="code"></p-dropdown>
+            </div>
+            <div class="p-field p-col-12 p-md-4">
+                <label for="dataNascimento">Data de Nascimento</label>
+                <p-calendar [(ngModel)]="dateValue" dateFormat="dd/mm/yy" appendTo="body"></p-calendar>
+            </div>
+            <div class="p-field p-col-12 p-md-4">
+                <label for="telefone">Telefone</label>
+                <input id="telefone" [(ngModel)]="proprietario.telefone" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-4">
+                <label for="municipio">Municipio</label>
+                <input id="municipio" [(ngModel)]="proprietario.endereco.municipio" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-4">
+                <label for="bairro">Bairro</label>
+                <input id="bairro" [(ngModel)]="proprietario.endereco.bairro" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-4">
+                <label for="rua">Rua</label>
+                <input id="rua" [(ngModel)]="proprietario.endereco.rua" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+            </div>
+
+            <!-- <div class="p-field p-col-12 p-md-3 p-ml-auto p-mt-4">
+                <button pButton type="button" (click)="proximo()" label="Proximo"></button>
+            </div> -->
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card>

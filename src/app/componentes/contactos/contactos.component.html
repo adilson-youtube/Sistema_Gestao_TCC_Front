@@ -1,0 +1,113 @@
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header>
+<app-nav [showMenu]="showMenu"></app-nav> -->
+
+<!--------------------- tabela --------------------------------------->
+<p-card>
+    <ng-template pTemplate="content">
+        <p-panel header="CONTACTOS">
+            <p-table #dt [value]="funcionarios" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="id" [globalFilterFields]="['funcionario.nome','area.orgao.sigla', 'area.denominacao','detalhes.telefone1','detalhes.bigAnt', 'area.voip']"
+                    [showCurrentPageReport]="true" currentPageReportTemplate="{first} até {last} de {totalRecords} contactos" styleClass="p-datatable-customers p-datatable-gridlines">
+                <ng-template pTemplate="caption">
+                    <div class="p-d-flex">
+                        <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limpar(dt)"></button>
+                        <span class="p-input-icon-left p-ml-auto">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Pesquisar..." />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Nome <p-columnFilter type="text" field="funcionario.nome" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Orgão <p-columnFilter type="text" field="area.orgao.sigla" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Cargo <p-columnFilter type="text" field="area.orgao.sigla" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="width:14rem">
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Telefone de Serviço <p-columnFilter type="text" field="detalhes.telefone1" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="width:10rem">
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                Voip <p-columnFilter type="text" field="area.voip" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="width:10rem">
+                            <div class="p-d-flex p-jc-between p-ai-center">
+                                BigAnt <p-columnFilter type="text" field="detalhes.bigAnt" display="menu"></p-columnFilter>
+                            </div>
+                        </th>
+                        <th style="width:9rem;text-align:center">Operação</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-funcionario>
+                    <tr>
+                        <td>{{findNomeCompleto(funcionario.codigoDoCandidato)}}</td> <!-- {{contacto.funcionario.nome}}-->
+                        <td>{{findArea(funcionario.ultimaActualizacaoLaboral?.areaId)}} ({{findOrgao(funcionario.ultimaActualizacaoLaboral?.orgaoId)}})</td> <!-- {{contacto.area.denominacao}} ({{contacto.area.orgao.sigla}}) -->
+                        <td>{{funcionario.ultimaActualizacaoLaboral?.cargo?.estruturaCargo}}</td> <!-- {{contacto.funcionario.cargo}} -->
+                        <td>{{findTelefone(funcionario.nip)}}</td> <!-- {{contacto.detalhes.telefone1}} -->
+                        <td>{{findVoip(funcionario.ultimaActualizacaoLaboral?.areaId)}}</td> <!-- {{contacto.area.voip}} -->
+                        <td>{{findBigAnt(funcionario.nip)}}</td> <!-- {{contacto.detalhes.bigAnt}} -->
+                        <td style="text-align:center">
+                            <button *ngIf="parametro==='dsics-admin'" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text p-mr-2" (click)="modal(funcionario)" pTooltip="Editar" tooltipPosition="bottom"></button>
+                            <button *ngIf="parametro!=='dsics-admin'" pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" (click)="modalDetalhes(funcionario)" pTooltip="Detalhes" tooltipPosition="bottom"></button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-panel>
+    </ng-template>
+</p-card>
+
+<!--------------------- modal --------------------------------------->
+<p-dialog [header]="cabecario" [(visible)]="exibir" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-12 p-md-6">
+            <label>Telefone 1 *</label>
+            <input id="telefone1" type="text" [(ngModel)]="candidato.contactos.telefone1" pInputText> 
+            <small class="p-invalid" *ngIf="validar && !candidato.contactos.telefone1">Campo Obrigatório.</small>
+        </div>
+        <div class="p-field p-col-12 p-md-6">
+            <label>Telefone 2</label>
+            <input id="telefone2" type="text" [(ngModel)]="candidato.contactos.telefone2" pInputText> 
+        </div> 
+
+        <div class="p-field p-col-12 p-md-6">
+            <label>E-mail</label>
+            <input id="email" type="text" [(ngModel)]="candidato.contactos.email" email pInputText> 
+        </div> 
+
+        <div class="p-field p-col-12 p-md-6">
+            <label>BigAnt</label>
+            <input id="bigAnt" type="text" [(ngModel)]="candidato.contactos.bigAnt" pInputText/>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+    </ng-template>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-dialog header="DETALHES DO CONTACTO" [(visible)]="exibirDetalhes" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <app-detalhes [funcionario]="funcionario"></app-detalhes>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-confirmDialog [style]="{width: '500px'}" #cd>
+    <p-footer>
+        <button type="button" pButton pRipple icon="pi pi-check" label="Sim" (click)="cd.accept()"></button>
+        <button type="button" pButton pRipple icon="fa fa-fw fa-times" label="Não" (click)="cd.reject()"></button>
+    </p-footer>
+</p-confirmDialog>

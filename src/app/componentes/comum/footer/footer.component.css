@@ -1,0 +1,17 @@
+.footer {
+    /* position: fixed;
+    bottom: 0;
+    z-index: 1000; */
+
+    /* display: flex; */
+    justify-content: center;
+}
+
+.footer > span {
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.centralizar-vertical {
+    vertical-align: middle;
+}

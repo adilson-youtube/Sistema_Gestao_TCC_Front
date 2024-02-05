@@ -1,0 +1,38 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; background-color: #FAFAFA; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.red {
+    color: rgb(227, 94, 107);
+}
+
+.v-middle {
+    vertical-align: middle;
+}
+
+
+.mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+/* .mat-exp-color {
+    color: white !important;
+    background-color: midnightblue !important;
+} */
+
+/* .mat-expansion-panel-header.mat-expanded,
+.mat-expansion-panel-header.mat-expanded:hover,
+.mat-expansion-panel-header.mat-expanded:focus {
+    background-color: red !important;
+} */
+
+/* .mat-expansion-panel {
+    color: white !important;
+    background-color: #3F51B5 !important;
+} */
+
+.mat-expansion-panel {
+    color: white !important;
+    background-color: #928f8f !important;
+}

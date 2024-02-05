@@ -1,0 +1,84 @@
+<div class="stepsdemo-content">
+    <p-card>
+        <!-- <ng-template pTemplate="header">
+            Header content here
+        </ng-template> -->
+        <ng-template pTemplate="content">
+            <!---------Dados Pessoais------------->
+            <p-divider align="left">
+                <div class="p-d-inline-flex p-ai-center">
+                    <i class="pi pi-user p-mr-2"></i>
+                    <b>Dados de Acesso</b>
+                </div>
+            </p-divider>
+            <div class="p-grid">
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Usuario</span>
+                    {{proprietario.usuario.usuario}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Emai:</span>
+                    {{proprietario.usuario.email}}</div>
+
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Senha:</span>
+                    {{proprietario.usuario.senha}}</div>
+                <!-- <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Naturalidade:</span>
+                    {{ri.dadosPessoais?.naturalidade?.provincia}} - {{ri.dadosPessoais?.naturalidade?.municipio}} </div> -->
+
+            </div>
+
+            <!---------Dados Pessoais------------->
+            <p-divider align="left">
+                <div class="p-d-inline-flex p-ai-center">
+                    <i class="pi pi-user p-mr-2"></i>
+                    <b>Dados de Pessoais</b>
+                </div>
+            </p-divider>
+            <div class="p-grid">
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Nome Completo:</span>
+                    {{proprietario.nome}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Genero:</span>
+                    {{proprietario.genero}}</div>
+
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Data de Nascimento:</span>
+                    {{proprietario.dataNascimento}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Telefone:</span>
+                    {{proprietario.telefone}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Municipio:</span>
+                    {{proprietario.endereco.municipio}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Bairro:</span>
+                    {{proprietario.endereco.bairro}}</div>
+                <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Rua:</span>
+                    {{proprietario.endereco.rua}}</div>
+                <!-- <div class="p-col-12 p-md-4 p-lg-4"><span style="font-weight: bold">Naturalidade:</span>
+                    {{ri.dadosPessoais?.naturalidade?.provincia}} - {{ri.dadosPessoais?.naturalidade?.municipio}} </div> -->
+
+            </div>
+
+            <!---------Dados Pessoais------------->
+            <p-divider align="left">
+                <div class="p-d-inline-flex p-ai-center">
+                    <i class="pi pi-user p-mr-2"></i>
+                    <b>Dados do Animal</b>
+                </div>
+            </p-divider>
+            <div class="p-grid">
+                <div class="p-d-inline-flex p-jc-center p-col-12 p-md-12 p-lg-12">
+                    <p-timeline [value]="this.proprietario.animais">
+                        <ng-template pTemplate="content" let-animal>
+                            <small class="p-text-secondary">Peso - {{animal.peso}} KG</small>
+                        </ng-template>
+                        <ng-template pTemplate="opposite" let-animal>
+                            Nome - {{animal.nome}}
+                        </ng-template>
+                    </p-timeline>
+                </div>
+            </div>
+
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <div class="p-grid p-nogutter p-jc-between">
+                <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+                <p-button label="Confirmar" (onClick)="salvar()" icon="pi pi-save" iconPos="right"></p-button>
+            </div>
+        </ng-template>
+    </p-card>
+</div>

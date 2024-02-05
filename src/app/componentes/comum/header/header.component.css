@@ -1,0 +1,138 @@
+.header {
+    display: flex;
+    align-items: center;
+
+}
+
+.header a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.header .logo {
+    max-height: 35px;
+}
+
+.header .title-group {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.header .title-group i {
+    padding-right: 5px;
+}
+
+.header .posicao-item {
+    display: flex;
+    margin-inline-start: 0px;
+}
+
+.p-center {
+    /* display: flex; */
+    /* text-align: center; */
+    margin: auto;
+}
+
+.item-spacer {
+    flex: 1 1 auto;
+}
+
+.espaco {
+    padding-right: 3em;
+}
+
+.header-position {
+    position: sticky;
+    position: -webkit-sticky; /* For macOS/iOS Safari */
+    top: 0; /* Sets the sticky toolbar to be on top */
+    z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+}
+
+
+/*Estilo do Menu Horizontal*/
+/*-----------------------------------------------*/
+.sidenav {
+    /* background-color: #3F51B5; */
+    /* background-color: #38006b; */
+    /* background-color: #4d7b91; */
+    /* background-color: #b90d2c; */
+    /* background: #F1A509; */
+    background-color: rgb(137, 53, 82);
+    
+    /* width: 300px; */
+}
+
+.sidenav a {
+    color: white;
+    /* background-color: midnightblue; */
+    background-color: #5c5858;
+    /* width: 1000%; */
+    margin: auto;
+    padding-left: 25px;
+}
+
+
+.sidenav i {
+    padding-right: 10px;
+}
+
+
+  .icons-color {
+      color: white;
+  }
+
+  .texts-color {
+      color: white;
+  }
+
+  .menu-vertical {
+      color: white;
+      padding-right: 5px;
+  }
+
+  .menu-vertical mat-icon {
+      color: white;
+      padding-right: 5px;
+      vertical-align: middle;
+  }
+
+  ::ng-deep .custom-menu {
+    /* background-color: #3F51B5; */
+    /* background-color: #38006b; */
+    /* background-color: #4d7b91; */
+    background-color: #b90d2c;
+      /* background-color: #424242; */
+  }
+
+  ::ng-deep .custom-menu button {
+    /* background-color: #3F51B5; */
+    /* background-color: #38006b; */
+    /* background-color: #4d7b91; */
+    background-color: #b90d2c;
+      /* background-color: #424242; */
+  }
+
+  ::ng-deep .custom-menu:hover button:hover {
+    /* background-color: #29357c; */
+    /* background-color: #38006b; */
+    /* background-color: #4d7b91; */
+    background-color: #8f152c;
+      /* background-color: #424242; */
+  }
+
+  ::ng-deep .mat-custom-row {
+      align-items: center;
+      background-color: #38006b;
+  }
+
+  .text-title {
+      align-content: center;
+      color: rgb(255, 255, 255);
+  }
+
+  .logo {
+      max-height: 400px;
+      max-width: 400px;
+      margin: 0px 25px 0px 10px;
+  }

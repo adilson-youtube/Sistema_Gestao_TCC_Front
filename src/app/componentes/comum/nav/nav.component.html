@@ -1,0 +1,66 @@
+<mat-sidenav-container class="container" style="height: calc(100% - 64px); margin: 0;">
+  <mat-sidenav class="sidenav" [opened] = "showMenu" fixedInViewport="true" fixedTopGap="54"
+  [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      fixedBottomGap="0" position="start">
+        <mat-nav-list class="nav-list">
+            <button mat-icon-button (click)="onLogout()" style="color: aliceblue; font-size: large;">
+                <mat-icon class="icons-color">home</mat-icon>
+                <!-- INÍCIO -->
+            </button>
+            <mat-accordion class="example-headers-align mat-exp-color" multi=false togglePosition="before"
+                displayMode="flat">
+
+                <mat-expansion-panel hideToggle=true routerLink="/dsics-admin/contactos">
+                    <mat-expansion-panel-header>
+                        <mat-panel-description>
+                            <div class="menu-vertical">
+                                <mat-icon class="icons-color">assignment</mat-icon>
+                                CONTACTOS
+                            </div>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel hideToggle=true>
+                    <mat-expansion-panel-header>
+                        <mat-panel-description>
+                            <div class="menu-vertical">
+                                <mat-icon class="icons-color">miscellaneous_services</mat-icon>
+                                ADMINISTRAÇÃO
+                            </div>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <a mat-list-item routerLink="/dsics-admin/areas">
+                        <i class="material-icons">
+                            account_balance
+                        </i>
+                        ÁREA
+                    </a>
+
+                </mat-expansion-panel>
+
+                <mat-expansion-panel hideToggle=true (click)="onLogout()">
+                    <mat-expansion-panel-header>
+                        <mat-panel-description>
+                            <div class="menu-vertical">
+                                <mat-icon class="icons-color">power_settings_new</mat-icon>
+                                SAIR
+                            </div>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                </mat-expansion-panel>
+
+            </mat-accordion>
+        </mat-nav-list>
+    </mat-sidenav>
+    <!-- <ng-content #tabela></ng-content> -->
+
+    <!-- <mat-sidenav-content role="region">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content> -->
+
+    <mat-sidenav-content role="region" fxLayout="column">
+        <router-outlet style="margin-top: 0;"></router-outlet>
+        <app-footer fxFlexOffset="auto"></app-footer>
+    </mat-sidenav-content>
+</mat-sidenav-container>

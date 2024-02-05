@@ -1,0 +1,14 @@
+:host ::ng-deep {
+    .cartao-form {
+        .p-card.p-component {
+            border-radius: 10px;
+            max-width: 1200px;
+            /* background: rgb(235, 233, 233) !important; */
+            /* background: rgba(137, 53, 82, 0.8) !important; */
+            /* color: white; */
+            /* background: #F1A509 !important; */
+            
+        }
+    }
+
+}

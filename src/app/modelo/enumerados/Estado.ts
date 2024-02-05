@@ -1,0 +1,3 @@
+export enum Estado {
+    ACTIVO, CANCELADO, VALIDADO, AUTORIZADO, PENDENTE
+}

@@ -1,0 +1,35 @@
+<p-card>
+    <ng-template pTemplate="content">
+        <h3>Dados de Acesso</h3>
+        <!-- <div class="p-fluid p-formgrid p-grid p-jc-center p-col-12 p-md-12"> -->
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 p-md-3">
+                <label for="usuario">Usuario</label>
+                <input id="usuario" [(ngModel)]="proprietario.usuario.usuario" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-3">
+                <label for="email">Email</label>
+                <input id="email" [(ngModel)]="proprietario.usuario.email" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-3">
+                <label for="senha">Senha</label>
+                <input id="senha" [(ngModel)]="proprietario.usuario.senha" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-3">
+                <label for="repitirSenha">Repiter Senha</label>
+                <input id="repitirSenha" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+            </div>
+
+            <!-- <div class="p-field p-col-12 p-md-3 p-ml-auto p-mt-4">
+                <button pButton type="button" (click)="proximo()" label="Proximo"></button>
+            </div> -->
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-end">
+            <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card>

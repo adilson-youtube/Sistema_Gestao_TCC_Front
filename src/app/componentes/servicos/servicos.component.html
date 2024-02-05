@@ -1,0 +1,102 @@
+<p-toast></p-toast>
+<!------------------------ tabela ------------------------------------>
+<p-card>
+    <h3>Dados dos Serviços</h3>
+    <p-table #dt [value]="servicos" [rows]="5" [paginator]="true" [rowHover]="true" dataKey="id" [showCurrentPageReport]="true" 
+            currentPageReportTemplate="{first} até {last} de {totalRecords} Serviços" styleClass="p-datatable-customers p-datatable-gridlines">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex p-nogutter p-jc-between">
+                <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limparTabela(dt)"></button>
+                <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button>
+                <!-- <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button> -->
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center"> 
+                        Tipo de Serviço <p-columnFilter type="text" field="nome" display="menu"></p-columnFilter>
+                    </div>  
+                </th>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center"> 
+                    Preço <p-columnFilter type="text" field="peso" display="menu"></p-columnFilter>
+                    </div>  
+                </th>
+                <th style="width:8rem">Operação</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-servico>
+            <tr>
+                <td>{{servico?.tipoServico}}</td>
+                <td>{{servico?.preco}}</td>
+                <td style="text-align:center">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text" (click)="modal(servico)" pTooltip="Editar" tooltipPosition="bottom"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="3" style="text-align:center">LISTA DE SERVIÇOS VAZIA.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+
+</p-card>
+
+<!---------------------------- modal -------------------------------->
+<p-dialog #servicoDialogo [header]="cabecario" [(visible)]="exibir" [modal]="true" [style]="{width: '40vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <div class="p-fluid p-formgrid p-grid"> 
+        <div class="p-field p-col-12 p-md-12">
+            <label>Seleciona o Serviço</label>
+            <p-dropdown optionLabel="name" optionValue="code" appendTo="body" inputId="genero" [options]="tiposServicos" [(ngModel)]="servicoSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+        </div>
+        <div class="field col-12 p-md-12">
+            <label>Tipo de Serviço</label>
+            <input id="tipoServico" type="text" [(ngModel)]="servico.tipoServico" pInputText>
+            <small class="p-invalid p-error" *ngIf="validar && !servico.tipoServico">Campo Obrigatório.</small>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label>Preço</label>
+            <p-inputNumber [(ngModel)]="servico.preco" [showButtons]="true" mode="decimal" [minFractionDigits]="2" suffix=" KZ"></p-inputNumber>
+            <!-- <input id="preco" type="text" [(ngModel)]="servico.preco" pInputText> -->
+            <small class="p-invalid p-error" *ngIf="validar && !servico.preco">Campo Obrigatório.</small>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label>Tipo de Pagamento</label>
+            <p-dropdown optionLabel="name" optionValue="code" appendTo="body" inputId="genero" [options]="tiposPagamentos" [(ngModel)]="tipoPagamentoSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+        </div>
+        <div *ngIf="(servicoSelecionado === 'Consulta'||servicoSelecionado === 'Cirurgia'||servicoSelecionado === 'Exame')" class="p-field p-col-12 p-md-12">
+            <label>Observação</label>
+            <input id="descricao" type="text" [(ngModel)]="servico.descricao" pInputText>
+            <small class="p-invalid p-error" *ngIf="validar && !servico.descricao">Campo Obrigatório.</small>
+        </div>
+        <div *ngIf="(servicoSelecionado === 'Vacina')" class="p-field p-col-12 p-md-12">
+            <label>Nome</label>
+            <input id="nome" type="text" [(ngModel)]="servico.nome" pInputText>
+            <small class="p-invalid p-error" *ngIf="validar && !servico.nome">Campo Obrigatório.</small>
+        </div>
+        <div *ngIf="(servicoSelecionado === 'Vacina')" class="p-field p-col-12 p-md-12">
+            <label>Periodo</label>
+            <!--<p-calendar appendTo="body" [(ngModel)]="servico.periodo" showButtonBar="true" showIcon="true"></p-calendar>-->
+            <!-- <input id="periodo" type="text" [(ngModel)]="servico.periodo" pInputText> -->
+            <p-inputNumber [(ngModel)]="servico.periodo"></p-inputNumber>
+            <small class="p-invalid p-error" *ngIf="validar && !servico.periodo">Campo Obrigatório.</small>
+        </div>
+        
+        <div class="fielld col-12">
+            <!-- <p-messages [showTransitionOptions]="'1000ms'" [hideTransitionOptions]="'1000ms'"></p-messages> -->
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+        <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+    </ng-template>
+</p-dialog>
+
