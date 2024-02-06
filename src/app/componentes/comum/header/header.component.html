@@ -3,12 +3,12 @@
         <div class="p-col-12">
             <div class="p-grid">
                 <span class="item-spacer"></span>
-                <img class="logo p-col-6" src="assets/images/LogoClinica2.png" alt="logo">
-                <span class="item-spacer"></span>
-                <div>
+                <img class="logo p-col-6" src="assets/images/logo_sg_tcc2.png" alt="logo">
+                <!-- <span class="item-spacer"></span> -->
+                <!-- <div>
                     <h2 style="color: rgb(137, 53, 82);">URGÊNCIAS 24H 929 529 551</h2>
                     <h5 style="color: rgb(137, 53, 82);">Estamos disponíveis 24H na clínica ou em domicílios.</h5>
-                </div>
+                </div> -->
                 <span class="item-spacer"></span>
             </div>
         </div>
@@ -30,41 +30,41 @@
                 </mat-icon>INICIO</button>
 
             <button class="texts-color" mat-button [matMenuTriggerFor]="menuServicos"><mat-icon class="icons-color">
-                    public </mat-icon>Tema</button>
+                    public </mat-icon>TCC</button>
             <mat-menu class="custom-menu" #menuServicos="matMenu" xPosition="after">
                 <button class="texts-color" mat-menu-item routerLink="marcacao"><mat-icon
-                        class="icons-color"> person_add </mat-icon>FAZER MARCAÇÃO</button>
+                        class="icons-color"> person_add </mat-icon>PROPOSTAS</button>
                 <button class="texts-color" mat-menu-item routerLink="registarServico"><mat-icon
-                        class="icons-color"> person_add </mat-icon>REGISTAR SERVIÇOS</button>
+                        class="icons-color"> person_add </mat-icon>ENVIAR TCC</button>
                 <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
                         person_search </mat-icon>PESQUISAR SERVIÇOS</button>
             </mat-menu>
 
-            <button class="texts-color" mat-button [matMenuTriggerFor]="afterMenu1"><mat-icon class="icons-color">
-                    groups </mat-icon>EQUIPA VETERINARIA</button>
+            <!-- <button class="texts-color" mat-button [matMenuTriggerFor]="afterMenu1"><mat-icon class="icons-color">
+                    groups </mat-icon>ACTIVIDADES</button>
             <mat-menu class="custom-menu" #afterMenu1="matMenu" xPosition="after">
                 <button class="texts-color" mat-menu-item routerLink="registar/requerente"><mat-icon
                         class="icons-color"> person_add </mat-icon>REGISTAR </button>
                 <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
                         person_search </mat-icon>PESQUISAR</button>
-            </mat-menu>
+            </mat-menu> -->
 
-            <button class="texts-color" mat-button [matMenuTriggerFor]="afterMenu1"><mat-icon class="icons-color">
+            <!-- <button class="texts-color" mat-button [matMenuTriggerFor]="afterMenu1"><mat-icon class="icons-color">
                     home_work </mat-icon>NOSSAS UNIDADES</button>
             <mat-menu class="custom-menu" #afterMenu1="matMenu" xPosition="after">
                 <button class="texts-color" mat-menu-item routerLink="registar/requerente"><mat-icon
                         class="icons-color"> person_add </mat-icon>REGISTAR </button>
                 <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
                         person_search </mat-icon>PESQUISAR</button>
-            </mat-menu>
+            </mat-menu> -->
 
 
             <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> info
-                </mat-icon>QUEM SOMOS</button>
+                </mat-icon>ACTIVIDADES</button>
 
 
-            <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> call
-                </mat-icon>FALE CONOSCO</button>
+            <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> info
+                </mat-icon>CALENDARIO</button>
 
 
             <!-- <button class="texts-color espaco" mat-button [matMenuTriggerFor]="afterMenu3"><mat-icon class="icons-color"> miscellaneous_services </mat-icon>ADMINISTRAÇÃO</button> -->
@@ -75,22 +75,22 @@
                         corporate_fare </mat-icon>ORGÃOS</button>
             </mat-menu>
 
-            <button class="texts-color" mat-button [matMenuTriggerFor]="menuUsuario"><mat-icon class="icons-color">
+            <!-- <button class="texts-color" mat-button [matMenuTriggerFor]="menuUsuario"><mat-icon class="icons-color">
                 manage_accounts </mat-icon></button>
             <mat-menu class="custom-menu" #menuUsuario="matMenu" xPosition="after">
                 <button class="texts-color" mat-menu-item routerLink="registarProrietario/acesso"><mat-icon
                         class="icons-color"> person_add </mat-icon>PROPRIETARIO </button>
                 <button class="texts-color" mat-menu-item routerLink="registarVeterinario/acesso-veterinario"><mat-icon class="icons-color">
                         person_search </mat-icon>VETERINARIA</button>
-            </mat-menu>
+            </mat-menu> -->
 
 
-            <button (click)="infoUser()" mat-icon-button class="espaco">
-                <mat-icon class="icons-color">manage_accounts</mat-icon>
-            </button>
-
+            
         </div>
         <span class="item-spacer"></span>
+        <button (click)="infoUser()" mat-icon-button class="espaco">
+            <mat-icon class="icons-color">manage_accounts</mat-icon>
+        </button>
         <button mat-icon-button class="espaco">
             <mat-icon class="icons-color">power_settings_new</mat-icon>
         </button>

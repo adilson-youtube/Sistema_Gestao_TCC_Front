@@ -63,7 +63,7 @@ h1 {
     border: none;
     outline: none;
     height: 40px;
-    background-color: #3f51b5;
+    background-color: #783852;
     color: #fff;
     font-size: 18px;
     border-radius: 20px;
@@ -72,7 +72,7 @@ h1 {
 
 .box input[type="submit"]:hover {
     cursor: pointer;
-    background-color: #39468d;
+    background-color: #4d2535;
     color: #fff;
 }
 
