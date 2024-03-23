@@ -8,7 +8,7 @@ export const environment = {
   candidatoUrl: 'http://172.17.60.41:8091/',
   funcionarioUrl: 'http://172.17.60.41:8092/',
   // predefinidaUrl: 'http://127.0.0.1:80/',
-  predefinidaUrl: 'http://localhost:5002/api/',
+  predefinidaUrl: 'http://localhost:5247/api/',
 };
 
 /*

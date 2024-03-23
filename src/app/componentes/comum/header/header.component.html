@@ -29,15 +29,24 @@
             <button class="texts-color" mat-button routerLink=""><mat-icon class="icons-color"> home
                 </mat-icon>INICIO</button>
 
-            <button class="texts-color" mat-button [matMenuTriggerFor]="menuServicos"><mat-icon class="icons-color">
-                    public </mat-icon>TCC</button>
-            <mat-menu class="custom-menu" #menuServicos="matMenu" xPosition="after">
-                <button class="texts-color" mat-menu-item routerLink="marcacao"><mat-icon
-                        class="icons-color"> person_add </mat-icon>PROPOSTAS</button>
-                <button class="texts-color" mat-menu-item routerLink="registarServico"><mat-icon
-                        class="icons-color"> person_add </mat-icon>ENVIAR TCC</button>
-                <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
-                        person_search </mat-icon>PESQUISAR SERVIÇOS</button>
+            <button class="texts-color" mat-button [matMenuTriggerFor]="menuProposta"><mat-icon class="icons-color">
+                    book </mat-icon>PROPOSTA</button>
+            <mat-menu class="custom-menu" #menuProposta="matMenu" xPosition="after">
+                <button class="texts-color" mat-menu-item routerLink="/listarPropostas"><mat-icon
+                        class="icons-color"> list </mat-icon>TEMAS DESPONIVEIS</button>
+                <button class="texts-color" mat-menu-item routerLink="/enviarProposta"><mat-icon
+                        class="icons-color"> send </mat-icon>ENVIAR PROPOSTA</button>
+            </mat-menu>
+
+            <button class="texts-color" mat-button [matMenuTriggerFor]="menuTCC"><mat-icon class="icons-color">
+                    book </mat-icon>TCC</button>
+            <mat-menu class="custom-menu" #menuTCC="matMenu" xPosition="after">
+                <button class="texts-color" mat-menu-item routerLink="/marcacao"><mat-icon
+                        class="icons-color"> list </mat-icon>TRABALHOS DEFENDIDOS</button>
+                <button class="texts-color" mat-menu-item routerLink="/registarServico"><mat-icon
+                        class="icons-color"> send </mat-icon>ENVIAR TCC</button>
+                <!-- <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
+                        person_search </mat-icon>PESQUISAR SERVIÇOS</button> -->
             </mat-menu>
 
             <!-- <button class="texts-color" mat-button [matMenuTriggerFor]="afterMenu1"><mat-icon class="icons-color">
@@ -59,21 +68,12 @@
             </mat-menu> -->
 
 
-            <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> info
+            <button class="texts-color" mat-button routerLink="/listarActividades"><mat-icon class="icons-color"> ruler
                 </mat-icon>ACTIVIDADES</button>
 
 
             <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> info
                 </mat-icon>CALENDARIO</button>
-
-
-            <!-- <button class="texts-color espaco" mat-button [matMenuTriggerFor]="afterMenu3"><mat-icon class="icons-color"> miscellaneous_services </mat-icon>ADMINISTRAÇÃO</button> -->
-            <mat-menu class="custom-menu" #afterMenu3="matMenu" xPosition="after">
-                <button class="texts-color menu-buttom-item" mat-menu-item routerLink="/oos"><mat-icon
-                        class="icons-color"> supervisor_account </mat-icon>O/Os</button>
-                <button class="texts-color" mat-menu-item routerLink="/orgaos"><mat-icon class="icons-color">
-                        corporate_fare </mat-icon>ORGÃOS</button>
-            </mat-menu>
 
             <!-- <button class="texts-color" mat-button [matMenuTriggerFor]="menuUsuario"><mat-icon class="icons-color">
                 manage_accounts </mat-icon></button>
@@ -88,18 +88,36 @@
             
         </div>
         <span class="item-spacer"></span>
+
+
+        <button class="texts-color espaco" mat-button [matMenuTriggerFor]="adminMenu"><mat-icon class="icons-color"> miscellaneous_services </mat-icon>ADMINISTRAÇÃO</button>
+        <mat-menu class="custom-menu" #adminMenu="matMenu" xPosition="after">
+            <button class="texts-color menu-buttom-item" mat-menu-item routerLink="/oos"><mat-icon
+                    class="icons-color"> supervisor_account </mat-icon>USUARIOS</button>
+            <button class="texts-color" mat-menu-item routerLink="/areas"><mat-icon class="icons-color">
+                    corporate_fare </mat-icon>AREAS</button>
+        </mat-menu>
+        <!-- <button mat-icon-button [matBadge]="5" matBadgeColor="warn" matBadgePosition="above after"  (click)="infoNotifications()">
+            <mat-icon>notifications</mat-icon>
+        </button> -->
+        <button (click)="infoNotifications()" mat-icon-button style="margin-right: 1em;">
+            <i class="pi pi-bell p-mr-4 p-text-secondary" pBadge style="font-size: 1.5rem; color: white;" value={{quantNotificacoes}}></i>
+        </button>
         <button (click)="infoUser()" mat-icon-button class="espaco">
             <mat-icon class="icons-color">manage_accounts</mat-icon>
         </button>
-        <button mat-icon-button class="espaco">
+        <button (click)="logOut()" mat-icon-button class="espaco">
             <mat-icon class="icons-color">power_settings_new</mat-icon>
         </button>
     </mat-toolbar-row>
 
     <!-- <mat-toolbar-row class="mat-custom-row">
-      <h1 class="text-title">SISTEMA DE GESTÃO DAS VÍTIMAS DOS CONFLITOS POLÍTICOS</h1>
+      <h1 class="text-title">SISTEMA DE GESTÃO</h1>
     </mat-toolbar-row> -->
 </mat-toolbar>
+
+<!-- Rotas que serão chamadas apartir do Menu -->
+<router-outlet></router-outlet>
 
 <p-sidebar #userperfil [(visible)]="showPerfil" position="right" [baseZIndex]="10000">
     <div class="p-grid">
@@ -133,6 +151,49 @@
                 <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
                     placeholder="Digite o email">
             </div>
+            <div class="p-grid">
+                <p-button disabled="true" class="p-col-3" type="button" (click)="showPerfil = false" label="Salvar"
+                    styleClass="p-button-success"></p-button>
+                <p-button class="p-col-3 p-ml-2" type="button" (click)="showPerfil = false" label="Editar"
+                    styleClass="p-button-secondary"></p-button>
+                <p-button class="p-col-3 p-ml-2" type="button" (click)="showPerfil = false" label="Cancelar"
+                    styleClass="p-button-secondary"></p-button>
+            </div>
+        </div>
+    </div>
+</p-sidebar>
+
+<p-sidebar #userNotification [style]="{'height': '100%', 'overflow-y': 'auto'}" [(visible)]="showNotifications" position="right" [baseZIndex]="10000">
+    <div class="p-grid">
+        <div class="p-col-12">
+            <h1 style="font-weight:normal">Notificações</h1>
+            <div class="p-grid">
+                <div class="p-col-4"></div>
+                <div class="p-col-4">
+                    <mat-icon style="font-size: 6rem">account_circle</mat-icon>
+                </div>
+                <div class="p-col-4"></div>
+            </div>
+            <p-messages #mensagemComponent [(value)]="msgs" [enableService]="false">
+                <!-- <ng-template pTemplate>
+                    <div class="p-ml-2">Always bet on Prime.</div>
+                    <table>
+                        <thead>
+                          <tr>
+                            <th>Tipo</th>
+                            <th>Detalhe</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let notification of msgs">
+                            <td>{{ notification.severity }}</td>
+                            <td>{{ notification.detail }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </ng-template> -->
+            </p-messages>
+
             <div class="p-grid">
                 <p-button disabled="true" class="p-col-3" type="button" (click)="showPerfil = false" label="Salvar"
                     styleClass="p-button-success"></p-button>

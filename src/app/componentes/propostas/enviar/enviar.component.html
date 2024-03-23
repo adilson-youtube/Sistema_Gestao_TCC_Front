@@ -1,0 +1,65 @@
+
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+
+<p-card class="p-grid p-jc-center p-mt-6">
+    <ng-template pTemplate="content">
+        <h3>Enviar Proposta</h3>
+        <!-- <div class="p-fluid p-formgrid p-grid p-jc-center p-col-12 p-md-12"> -->
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 p-md-12">
+                <label for="nome">Titulo</label>
+                <input id="nome" [(ngModel)]="proposta.titulo" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+                <label for="state">Areas de Conhecimento</label>
+                <p-dropdown inputId="state" [options]="areas" [(ngModel)]="areaSelecionado" placeholder="Seleccionar"
+                    optionLabel="descricao" optionValue=""></p-dropdown>
+            </div>
+            <div class="p-field p-col-12 p-md-6">
+                <label for="state">Orientador</label>
+                <p-dropdown inputId="state" [options]="professores" [(ngModel)]="professorSelecionado" placeholder="Seleccionar"
+                    optionLabel="nome" optionValue=""></p-dropdown>
+            </div>
+            <!-- <div class="p-field p-col-12 p-md-12">
+                <p-editor [(ngModel)]="text2" [style]="{'height':'320px'}">
+                    <ng-template pTemplate="header">
+                        <span class="ql-format-group">
+                            <span title="Bold" class="ql-format-button ql-bold"></span>
+                            <span class="ql-format-separator"></span>
+                            <span title="Italic" class="ql-format-button ql-italic"></span>
+                            <span class="ql-format-separator"></span>
+                            <span title="Underline" class="ql-format-button ql-underline"></span>
+                            <span class="ql-format-separator"></span>
+                            <span title="Strikethrough" class="ql-format-button ql-strike"></span>
+                        </span>
+                    </ng-template>
+                </p-editor>
+            </div> -->
+            <div class="p-field p-col-12 p-md-12">
+                <label for="telefone">Descrição</label>
+                <!-- <textarea [rows]="5" [cols]="90" pInputTextarea autoResize="true"></textarea> -->
+                <textarea id="telefone" [rows]="9" pInputTextarea [(ngModel)]="proposta.Descricao"></textarea>
+            </div>
+            <!-- <div class="p-field p-col-12 p-md-4">
+                <label for="dataNascimento">Data de Nascimento</label>
+                <p-calendar [(ngModel)]="dateValue" dateFormat="dd/mm/yy" appendTo="body"></p-calendar>
+            </div>
+            <div class="p-field p-col-12 p-md-4">
+                <label for="telefone">Telefone</label>
+                <input id="telefone" [(ngModel)]="proposta.telefone" type="text" pInputText>
+            </div> -->
+            <div class="p-field p-col-12 p-md-6">
+            </div>
+
+            <!-- <div class="p-field p-col-12 p-md-3 p-ml-auto p-mt-4">
+                <button pButton type="button" (click)="proximo()" label="Proximo"></button>
+            </div> -->
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Cancelar" (onClick)="retroceder()" icon="pi pi-close" class="p-button-danger"></p-button>
+            <p-button label="Salvar" (onClick)="salvar()" icon="pi pi-save" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card>

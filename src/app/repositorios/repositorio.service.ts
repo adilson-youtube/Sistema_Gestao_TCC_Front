@@ -14,7 +14,7 @@ export class Repositorio {
     baseUrl: string;
 
     constructor(private http: HttpClient) {
-      this.baseUrl = `${environment.orgaoUrl}`;
+      this.baseUrl = `${environment.predefinidaUrl}`;
     }
 
     //--Contactos
@@ -56,7 +56,7 @@ export class Repositorio {
 
     //--- Área
     listarAreas(): Observable<Array<Area>> {
-      const path = `areas`;
+      const path = `Area`;
       return this.http.get<Array<Area>>(`${this.baseUrl}${path}`);
     }
   
@@ -71,7 +71,7 @@ export class Repositorio {
     }
   
     salvarArea(area: Area): Observable<Area> {
-      const path = `areas`;
+      const path = `Area`;
       return this.http.post<Area>(`${this.baseUrl}${path}`, area);
     }
  

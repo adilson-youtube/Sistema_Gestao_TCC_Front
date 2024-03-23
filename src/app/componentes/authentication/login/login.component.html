@@ -6,9 +6,9 @@
         <h1>LOGIN</h1>
         <form (ngSubmit)="login()">
             <p>Usuário</p>
-            <input type="text" pInputText [(ngModel)]="usuario" name="usuario" placeholder="Digite o nome">
+            <input type="text" pInputText [(ngModel)]="usuario.email" name="usuario" placeholder="Digite o nome">
             <p>Senha</p>
-            <input type="password" pPassword [(ngModel)]="senha" name="senha" placeholder="Digite a senha">
+            <input type="password" pPassword [(ngModel)]="usuario.senha" name="senha" placeholder="Digite a senha">
             <input type="submit" name="" value="Login">
             <!-- <input @fade type="submit" name="" value="Test"> -->
             <a href="#" target="_blank" rel="noopener noreferrer">Esqueceu sua senha?</a><br>

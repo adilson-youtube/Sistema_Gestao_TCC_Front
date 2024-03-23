@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AdminGuard } from './servicos/admin.guard';
 import { AreasComponent } from './componentes/areas/areas.component';
-import { ContactosComponent } from './componentes/contactos/contactos.component';
 import { LoginComponent } from './componentes/authentication/login/login.component';
 import { AuthUserComponent } from './componentes/authentication/auth-user/auth-user.component';
 import { InicioComponent } from './componentes/inicio/inicio.component';
@@ -18,12 +17,24 @@ import { DadosUsuarioVeterinarioComponent } from './componentes/veterinario/regi
 import { DadosPessoaisVeterinarioComponent } from './componentes/veterinario/registar-veterinario/dados-pessoais-veterinario/dados-pessoais-veterinario.component';
 import { ConfirmacaoVeterinarioComponent } from './componentes/veterinario/registar-veterinario/confirmacao-veterinario/confirmacao-veterinario.component';
 import { ServicosComponent } from './componentes/servicos/servicos.component';
+import { PropostasComponent } from './componentes/propostas/propostas.component';
+import { EnviarComponent } from './componentes/propostas/enviar/enviar.component';
+import { ActividadesComponent } from './componentes/actividades/actividades.component';
+import { HeaderComponent } from './componentes/comum/header/header.component';
+import { NotificacaoComponent } from './componentes/notificacao/notificacao.component';
 
 
 const routes: Routes = [
-  { path: '', component: InicioComponent },
-  { path: 'registarServico', component: ServicosComponent },
-  { path: 'marcacao', component: MarcacaoComponent },
+  // { path: '', component: InicioComponent },
+  { path: 'registarUsuario', component: RegistarProrietarioComponent, children: 
+    [
+      {path: '', redirectTo: 'acesso', pathMatch: 'full'},
+      {path: 'acesso', component: DadosUsuarioComponent},
+      {path: 'pessoais', component: DadosPessoaisComponent},
+      {path: 'animal', component: DadosAnimalComponent},
+      {path: 'confirmacao', component: ConfirmacaoComponent}
+    ]
+  },
   { path: 'registarProrietario', component: RegistarProrietarioComponent, children: 
     [
       {path: '', redirectTo: 'acesso', pathMatch: 'full'},
@@ -41,12 +52,22 @@ const routes: Routes = [
       {path: 'confirmacao-veterinario', component: ConfirmacaoVeterinarioComponent}
     ]
   },
-  { path: 'contactos', component: ContactosComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'dsics-admin', component: AuthUserComponent, canActivate: [AdminGuard], children: [
-      { path: '', redirectTo: 'contactos', pathMatch: 'full'},
-      { path: 'contactos', component: ContactosComponent },
-      { path: 'areas', component: AreasComponent}
+  { path: '', component: AuthUserComponent, canActivate: [AdminGuard], children: [
+    { path: '', component: HeaderComponent, children: [
+      { path: '', component: PropostasComponent },
+      { path: 'areas', component: AreasComponent},
+      { path: 'listarPropostas', component: PropostasComponent },
+      { path: 'enviarProposta', component: EnviarComponent },
+      { path: 'listarActividades', component: ActividadesComponent },
+      { path: 'registarServico', component: ServicosComponent },
+      { path: 'marcacao', component: MarcacaoComponent },
+      { path: 'notificacoes', component: NotificacaoComponent },
+    ] },
+      // { path: '', redirectTo: 'proposta', pathMatch: 'full'},
+      // { path: '', component: PropostasComponent },
+      // { path: 'contactos', component: ContactosComponent },
+      // { path: 'areas', component: AreasComponent}
     ]
   },
 ];

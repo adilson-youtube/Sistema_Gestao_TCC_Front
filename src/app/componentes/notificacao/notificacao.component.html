@@ -1,0 +1,56 @@
+<div *ngFor="let notification of notifications">{{ notification }}</div>
+
+
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+
+<!--------------------- tabela --------------------------------------->
+<p-card>
+    <h3>Notificações{{quantNotificacoes}}</h3>
+    <p-table #dt [(value)]="notificacoes" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="Id" [globalFilterFields]="['Descricao']" 
+             [showCurrentPageReport]="true" currentPageReportTemplate="{first} até {last} de {totalRecords} áreas" styleClass="p-datatable-customers p-datatable-gridlines">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex">
+                <span class="p-input-icon-left p-mr-auto">
+                    <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal(notificacao)" pTooltip="Novo" tooltipPosition="bottom"></button>
+                </span>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Pesquisar..." />
+                    <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limpar(dt)"></button>
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center"> 
+                        Notificações Recebidas<p-columnFilter type="text" field="Descricao" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="width:8rem;text-align:center">Operação</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-notificacao>
+            <tr>
+                <td>{{notificacao?.Menssagem}}</td>
+                <td style="text-align:center">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text" (click)="modal(notificacao)" pTooltip="Editar" tooltipPosition="bottom"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="eliminarArea(notificacao.id)" pTooltip="Eliminar" tooltipPosition="bottom"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="2" style="text-align:center">LISTA DE ÁREAS VAZIA.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+    <!-- <ng-template pTemplate="content">
+    </ng-template> -->
+</p-card>

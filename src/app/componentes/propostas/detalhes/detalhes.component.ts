@@ -1,13 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-
 import { Area } from 'src/app/modelo/entidades/area';
-import { Orgao } from 'src/app/modelo/entidades/orgao';
 import { Candidato } from 'src/app/modelo/entidades/candidato';
 import { Funcionario } from 'src/app/modelo/entidades/funcionario';
-import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
+import { Orgao } from 'src/app/modelo/entidades/orgao';
+import { Proposta } from 'src/app/modelo/entidades/proposta';
 import { CandidatoServico } from 'src/app/servicos/candidatoservico.service';
 import { FuncionarioServico } from 'src/app/servicos/funcionarioservico.service';
-
+import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
 
 @Component({
   selector: 'app-detalhes',
@@ -23,12 +22,12 @@ export class DetalhesComponent implements OnInit {
   candidato = new Candidato;
   candidatos: Array<Candidato>;
 
-  private _funcionario: Funcionario;
+  private _proposta: Proposta;
 
   constructor(
     private orgaoServico: OrgaoServico,
     private candidatoServico: CandidatoServico,
-    private funcionarioServico: FuncionarioServico
+    private propostaServico: FuncionarioServico
   ) { }
 
   ngOnInit(): void {
@@ -39,16 +38,16 @@ export class DetalhesComponent implements OnInit {
     this.candidatoServico.listarCandidatos().subscribe( resultados => { this.candidatos = resultados; }); 
   }
 
-  get funcionario(): Funcionario {
-    return this._funcionario;
+  get proposta(): Proposta {
+    return this._proposta;
   }
 
   @Input()
-  set funcionario(funcionario: Funcionario) {
-    this._funcionario = funcionario;
-    this.area = this.areas ? this.areas.find(o => o.id === funcionario.ultimaActualizacaoLaboral.areaId) : null;
-    this.orgao = this.orgaos ? this.orgaos.find(o => o.id === funcionario.ultimaActualizacaoLaboral.orgaoId) : null;
-    this.candidato = this.candidatos ? this.candidatos.find(c => c.codigo === funcionario.codigoDoCandidato) : null;   
+  set proposta(proposta: Proposta) {
+    this._proposta = proposta;
+    // this.area = this.areas ? this.areas.find(o => o.id === proposta.ultimaActualizacaoLaboral.areaId) : null;
+    // this.orgao = this.orgaos ? this.orgaos.find(o => o.id === proposta.ultimaActualizacaoLaboral.orgaoId) : null;
+    // this.candidato = this.candidatos ? this.candidatos.find(c => c.codigo === proposta.codigoDoCandidato) : null;   
   }
 
 //----- 

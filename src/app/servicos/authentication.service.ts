@@ -1,6 +1,9 @@
 import { Injectable, EventEmitter, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AuthenticationRepositorio } from '../repositorios/authenticationrepositorio.service';
+import { Usuario } from '../modelo/entidades/usuario';
+import { UserToken } from '../modelo/entidades/userToken';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +17,7 @@ export class AuthenticationService implements OnInit {
   showHamburguerMenu = new EventEmitter<boolean>();
   isAuthenticated = false;
   viewRouta = true;
+  userToken: UserToken;
   // private loggedIn = new BehaviorSubject<boolean>(false);
 
   // get isLoggedIn() {
@@ -26,7 +30,9 @@ export class AuthenticationService implements OnInit {
 
 
 
-  constructor(private router: Router) { }
+  constructor(private repositorio: AuthenticationRepositorio, public router: Router) {
+    this.autenticar();
+   }
 
   ngOnInit() {
     // this.showMenuEmitter.emit(true);
@@ -48,14 +54,15 @@ export class AuthenticationService implements OnInit {
     throw new Error('Method not implemented.');
   }
 
-  login(){
-    this.showHamburguerMenu.emit(true);
-    this.showMenuEmitter.emit(true);
-    this.showAllMenu.emit(true);
-    this.showNav.emit(true);
-    this.isAuthenticated = true;
-    this.showLoginEmitter.emit(false);
-    this.router.navigate(['dsics-admin']);
+  login(usuario: Usuario) : Observable<UserToken> {
+    return this.repositorio.login(usuario);
+    // this.showHamburguerMenu.emit(true);
+    // this.showMenuEmitter.emit(true);
+    // this.showAllMenu.emit(true);
+    // this.showNav.emit(true);
+    // this.isAuthenticated = true;
+    // this.showLoginEmitter.emit(false);
+    // this.router.navigate(['']);
   }
 
 
@@ -77,11 +84,19 @@ export class AuthenticationService implements OnInit {
   // }
 
   autenticar(){
-    this.showHamburguerMenu.emit(true);
-    this.showAllMenu.emit(false);
-    this.showNav.emit(true);
-    this.showLoginEmitter.emit(true);
-    this.router.navigate(['/login']);
+
+    if ((localStorage.getItem("jwt") !="" && localStorage.getItem("jwt") != null)) {
+      // this.userToken.token = localStorage.getItem("jwt");
+      this.isAuthenticated = true;
+      // this.router.navigate(['']);
+    } else {
+      this.isAuthenticated = false;
+      this.showLoginEmitter.emit(true);
+      this.router.navigate(['/login']);
+    }
+    // this.showHamburguerMenu.emit(true);
+    // this.showAllMenu.emit(false);
+    // this.showNav.emit(true);
   }
 
   register(){
@@ -93,14 +108,16 @@ export class AuthenticationService implements OnInit {
 
 
   logout() {
-    this.showHamburguerMenu.emit(false);
-    this.showMenuEmitter.emit(true);
-    this.showAllMenu.emit(true);
-    this.showNav.emit(false);
+    // this.showHamburguerMenu.emit(false);
+    // this.showMenuEmitter.emit(true);
+    // this.showAllMenu.emit(true);
+    // this.showNav.emit(false);
     this.isAuthenticated = false;
-    this.showLoginEmitter.emit(false);
+    localStorage.removeItem("jwt");
+    this.userToken = null;
+    this.showLoginEmitter.emit(true);
     // this.loggedIn.next(false);
-    this.router.navigate(['']);
+    this.router.navigate(['/login']);
   }
 
 

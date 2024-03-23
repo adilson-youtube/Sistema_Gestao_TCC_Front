@@ -2,14 +2,20 @@ import { AuthenticationService } from 'src/app/servicos/authentication.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs/operators';
+import { Notificacao } from 'src/app/modelo/entidades/notificacao';
+import { NotificacaoService } from 'src/app/servicos/notificacao.service';
+import {Message, MessageService} from 'primeng//api';
+import { Messages } from 'primeng/messages';
+import { BadgeDirective } from 'primeng/badge';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  providers: [MessageService]
 })
 export class HeaderComponent implements OnInit {
 
@@ -29,26 +35,44 @@ export class HeaderComponent implements OnInit {
 
   visibleSidebar: boolean = false;
   showPerfil: boolean = false;
+  showNotificacoes: boolean = false;
   showNotifications: boolean = false;
 
-  notificacoes: any[];
-  notificacao: any;
+  // notificacoes: any[];
+  // notificacao: any;
   notificacoesSelecionadas: any[];
+  subscription: Subscription;
+  notificacao = new Notificacao();
+  notificacoes = new Array<Message>();
+  quantNotificacoes = 0;
+  msgs: Message[] = [];
 
   changePassword: boolean = false;
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) {
-    this.notificacoes = [
-      { id: 1, assunto: "esadgfdsgfds aedsegfdsfdsf edsafdsaf", descricao: "dsf DSICS dsagfdfdsfdfds fdsbvfcxbv esadgfdsgfds aedsegfdsfdsf edsafdsaf" },
-      { id: 2, assunto: "esadgfdsgfds aedsegfdsfdsf edsafdsaf", descricao: "dsf DSICS dsagfdfdsfdfds fdsbvfcxbv esadgfdsgfds aedsegfdsfdsf edsafdsaf" },
-      { id: 3, assunto: "esadgfdsgfds aedsegfdsfdsf edsafdsaf", descricao: "dsf DSICS dsagfdfdsfdfds fdsbvfcxbv esadgfdsgfds aedsegfdsfdsf edsafdsaf" },
-      { id: 4, assunto: "esadgfdsgfds aedsegfdsfdsf edsafdsaf", descricao: "dsf DSICS dsagfdfdsfdfds fdsbvfcxbv esadgfdsgfds aedsegfdsfdsf edsafdsaf" }
-    ];
+  @ViewChild('mensagemComponent') componentMensagem: Messages;
+  @ViewChild('mensagemComponent') componentBadge: BadgeDirective;
 
-    this.notificacoesSelecionadas = [
-      { id: 1, assunto: "esadgfdsgfds aedsegfdsfdsf edsafdsaf", descricao: "dsf DSICS dsagfdfdsfdfds fdsbvfcxbv esadgfdsgfds aedsegfdsfdsf edsafdsaf" },
-      { id: 4, assunto: "esadgfdsgfds aedsegfdsfdsf edsafdsaf", descricao: "dsf DSICS dsagfdfdsfdfds fdsbvfcxbv esadgfdsgfds aedsegfdsfdsf edsafdsaf" },
-    ];
+  constructor(private authenticationService: AuthenticationService, private notificationService: NotificacaoService, 
+    private messageService: MessageService, private router: Router) {
+    this.subscription = this.notificationService.getNotifications().subscribe(
+      (notification) => {
+        // console.log("Entrou no serviço de Notificações!"+ JSON.stringify(notification));
+        // console.log("O Objecto enviado é "+ notification.Menssagem);
+        // let no = JSON.parse(notification);
+        // this.notifications.push(notification);
+        this.notificacoes.unshift(notification);
+        // this.msgs.push(notification);
+        console.log("Array de Notificações"+JSON.stringify(this.msgs));
+        console.log("Vereficando as notificações!");
+        this.quantNotificacoes = this.notificacoes.length;
+        this.msgs = this.notificacoes;
+        this.componentMensagem.cd.detectChanges();
+        // this.componentBadge.el.nativeElement = this.notificacoes;
+      },
+      (error) => {
+        console.error('Erro ao receber notificação:', error);
+      }
+    );
 
   }
 
@@ -85,11 +109,20 @@ export class HeaderComponent implements OnInit {
 
   infoNotifications(): boolean {
     this.showNotifications = true
+    this.showViaService();
     return this.showNotifications;
+  }
+
+  showViaService() {
+      this.messageService.add({severity:'success', summary:'Service Message', detail:'Via MessageService'});
   }
 
   activeOrDesativePasswordInput(){
     this.changePassword = !this.changePassword;
+  }
+
+  logOut() {
+    this.authenticationService.logout();
   }
 
 

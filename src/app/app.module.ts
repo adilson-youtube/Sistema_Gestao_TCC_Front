@@ -40,13 +40,17 @@ import { ContextMenuModule} from 'primeng/contextmenu';
 import { InputNumberModule} from 'primeng/inputnumber';
 //import { RadioButtonModule } from 'primeng/radiobutton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-//import { InputTextareaModule } from 'primeng/inputtextarea';
 import {GalleriaModule} from 'primeng/galleria';
 import {StepsModule} from 'primeng/steps';
 import {SplitterModule} from 'primeng/splitter';
 import {DividerModule} from 'primeng/divider';
 import {TimelineModule} from 'primeng/timeline';
 import {MultiSelectModule} from 'primeng/multiselect';
+import {CheckboxModule} from 'primeng/checkbox';
+import {TooltipModule} from 'primeng/tooltip';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import {BadgeModule} from 'primeng/badge';
 
 
 import { MenuItem } from 'primeng/api';
@@ -61,6 +65,8 @@ import { InputMaskModule} from 'primeng/inputmask';
 //import { SplitButtonModule } from 'primeng/splitbutton';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {EditorModule} from 'primeng/editor';
 
 //---- componentes - Sistema ------
 import { AppComponent } from './app.component';
@@ -69,9 +75,7 @@ import { AreasComponent } from './componentes/areas/areas.component';
 import { AuthenticationService } from './servicos/authentication.service';
 import { HeaderComponent } from './componentes/comum/header/header.component';
 import { FooterComponent } from './componentes/comum/footer/footer.component';
-import { ContactosComponent } from './componentes/contactos/contactos.component';
 import { LoginComponent } from './componentes/authentication/login/login.component';
-import { DetalhesComponent } from './componentes/contactos/detalhes/detalhes.component';
 import { RecoveryComponent } from './componentes/authentication/recovery/recovery.component';
 import { RegisterComponent } from './componentes/authentication/register/register.component';
 import { AuthUserComponent } from './componentes/authentication/auth-user/auth-user.component';
@@ -96,13 +100,20 @@ import { RegistarVeterinarioComponent } from './componentes/veterinario/registar
 import { DadosUsuarioVeterinarioComponent } from './componentes/veterinario/registar-veterinario/dados-usuario-veterinario/dados-usuario-veterinario.component';
 import { DadosPessoaisVeterinarioComponent } from './componentes/veterinario/registar-veterinario/dados-pessoais-veterinario/dados-pessoais-veterinario.component';
 import { ConfirmacaoVeterinarioComponent } from './componentes/veterinario/registar-veterinario/confirmacao-veterinario/confirmacao-veterinario.component';
+import { PropostasComponent } from './componentes/propostas/propostas.component';
+import { EnviarComponent } from './componentes/propostas/enviar/enviar.component';
+import { UsuariosComponent } from './componentes/usuarios/usuarios.component';
+import { CadastrarUsuarioComponent } from './componentes/usuarios/cadastrar-usuario/cadastrar-usuario.component';
+import { DetalhesComponent } from './componentes/propostas/detalhes/detalhes.component';
+import { ActividadesComponent } from './componentes/actividades/actividades.component';
+import { ChatComponent } from './componentes/chat/chat.component';
+import { NotificacaoComponent } from './componentes/notificacao/notificacao.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     AreasComponent,
-    DetalhesComponent,
-    ContactosComponent,
     
     NavComponent,
     LoginComponent,
@@ -132,6 +143,14 @@ import { ConfirmacaoVeterinarioComponent } from './componentes/veterinario/regis
     DadosUsuarioVeterinarioComponent,
     DadosPessoaisVeterinarioComponent,
     ConfirmacaoVeterinarioComponent,
+    PropostasComponent,
+    EnviarComponent,
+    UsuariosComponent,
+    CadastrarUsuarioComponent,
+    DetalhesComponent,
+    ActividadesComponent,
+    ChatComponent,
+    NotificacaoComponent
   ],
   imports: [
     BrowserModule,
@@ -170,7 +189,8 @@ import { ConfirmacaoVeterinarioComponent } from './componentes/veterinario/regis
    // ProgressBarModule,
    // RatingModule,
     InputNumberModule,
-  //  InputTextareaModule,
+    InputTextareaModule,
+    EditorModule,
     HttpClientModule,
   //  ChartModule,
     CardModule,
@@ -187,7 +207,12 @@ import { ConfirmacaoVeterinarioComponent } from './componentes/veterinario/regis
     SplitterModule,
     DividerModule,
     TimelineModule,
-    MultiSelectModule
+    MultiSelectModule,
+    CheckboxModule,
+    TooltipModule,
+    MessagesModule,
+    MessageModule,
+    BadgeModule
   ],
   providers: [ConfirmationService, AuthenticationService],
   bootstrap: [AppComponent]

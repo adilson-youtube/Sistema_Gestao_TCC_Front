@@ -18,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Sistema de Marcação da Clínica Veterinaria de Luanda';
+  title = 'Sistema de Gestão de TCC';
 
   @Input()
   showMenu: boolean = false;

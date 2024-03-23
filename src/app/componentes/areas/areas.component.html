@@ -1,82 +1,66 @@
+
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+
 <!--------------------- tabela --------------------------------------->
 <p-card>
-    <ng-template pTemplate="content">
-        <p-panel header="ÁREAS">
-            <p-table #dt [value]="areas" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="id" [globalFilterFields]="['orgaoId','denominacao','pontoPonto']" 
-                     [showCurrentPageReport]="true" currentPageReportTemplate="{first} até {last} de {totalRecords} áreas" styleClass="p-datatable-customers p-datatable-gridlines">
-                <ng-template pTemplate="caption">
-                    <div class="p-d-flex">
-                        <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limpar(dt)"></button> 
-                        <span class="p-input-icon-left p-ml-auto">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Pesquisar..." />
-                        </span> 
+    <h3>Areas</h3>
+    <p-table #dt [value]="areas" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="Id" [globalFilterFields]="['Descricao']" 
+             [showCurrentPageReport]="true" currentPageReportTemplate="{first} até {last} de {totalRecords} áreas" styleClass="p-datatable-customers p-datatable-gridlines">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex">
+                <span class="p-input-icon-left p-mr-auto">
+                    <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal(area)" pTooltip="Novo" tooltipPosition="bottom"></button>
+                </span>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Pesquisar..." />
+                    <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limpar(dt)"></button>
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center"> 
+                        Área de Conhecimento<p-columnFilter type="text" field="Descricao" display="menu"></p-columnFilter>
                     </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>
-                            <div class="p-d-flex p-jc-between p-ai-center"> 
-                                Área <p-columnFilter type="text" field="denominacao" display="menu"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="p-d-flex p-jc-between p-ai-center"> 
-                                Orgão <p-columnFilter type="text" field="orgaoId" display="menu"></p-columnFilter>
-                            </div>
-                        </th>  
-                        <th style="width:12rem"> 
-                            <div class="p-d-flex p-jc-between p-ai-center"> 
-                                Ponto-a-Ponto <p-columnFilter type="text" field="pontoPonto" display="menu"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="width:12rem">
-                            <div class="p-d-flex p-jc-between p-ai-center"> 
-                                Telefone Fixo <p-columnFilter type="text" field="telefone" display="menu"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="width:10rem"> 
-                            <div class="p-d-flex p-jc-between p-ai-center"> 
-                                Voip <p-columnFilter type="text" field="voip" display="menu"></p-columnFilter>
-                            </div>
-                        </th>
-                        <th style="width:8rem;text-align:center">Operação</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-area>
-                    <tr>
-                        <td>{{area.denominacao}}</td>
-                        <td>{{findOrgao(area.orgaoId)}}</td>
-                        <td>{{area.pontoPonto}}</td>
-                        <td>{{area.telefone}}</td>
-                        <td>{{area.voip}}</td>
-                        <td style="text-align:center">
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text" (click)="modal(area)" pTooltip="Editar" tooltipPosition="bottom"></button>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td colspan="6" style="text-align:center">LISTA DE ÁREAS VAZIA.</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </p-panel>
+                </th>
+                <th style="width:8rem;text-align:center">Operação</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-area>
+            <tr>
+                <td>{{area?.descricao}}</td>
+                <td style="text-align:center">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text" (click)="modal(area)" pTooltip="Editar" tooltipPosition="bottom"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="eliminarArea(area.id)" pTooltip="Eliminar" tooltipPosition="bottom"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="2" style="text-align:center">LISTA DE ÁREAS VAZIA.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
     </ng-template>
+    <!-- <ng-template pTemplate="content">
+    </ng-template> -->
 </p-card>
 
 <!---------------------------- modal -------------------------------->
 <p-dialog [header]="cabecario" [(visible)]="exibir" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
     <div class="p-fluid p-formgrid p-grid">
         <div class="p-field p-col-12">
-            <label>Órgão </label>
-            <input id="orgao" type="text" [(ngModel)]="orgao" pInputText/>
-        </div>
-        <div class="p-field p-col-12">
             <label>Área </label>
-            <input id="denominacao" type="text" [(ngModel)]="area.denominacao"  pInputText/>
+            <input id="descricao" type="text" [(ngModel)]="area.descricao"  pInputText/>
         </div>
-        <div class="p-field p-col-12 p-md-4">
+        <!-- <div class="p-field p-col-12 p-md-4">
             <label>Ponto-a-Ponto</label>
             <p-inputMask id="pontoPonto" mask="9999" [(ngModel)]="area.pontoPonto" placeholder="0000"></p-inputMask>
         </div>
@@ -87,7 +71,7 @@
         <div class="p-field p-col-12 p-md-4">
             <label>Voip</label>
             <p-inputMask id="voip" mask="9999" [(ngModel)]="area.voip" placeholder="0000"></p-inputMask>
-        </div>
+        </div> -->
     </div>
     <ng-template pTemplate="footer">
         <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
