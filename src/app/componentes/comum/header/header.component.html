@@ -34,7 +34,7 @@
             <mat-menu class="custom-menu" #menuProposta="matMenu" xPosition="after">
                 <button class="texts-color" mat-menu-item routerLink="/listarPropostas"><mat-icon
                         class="icons-color"> list </mat-icon>TEMAS DESPONIVEIS</button>
-                <button class="texts-color" mat-menu-item routerLink="/enviarProposta"><mat-icon
+                <button *ngIf='isRole("Estudante")' class="texts-color" mat-menu-item routerLink="/enviarProposta"><mat-icon
                         class="icons-color"> send </mat-icon>ENVIAR PROPOSTA</button>
             </mat-menu>
 
@@ -68,12 +68,20 @@
             </mat-menu> -->
 
 
-            <button class="texts-color" mat-button routerLink="/listarActividades"><mat-icon class="icons-color"> ruler
+            <button *ngIf='isRole("Estudante")' class="texts-color" mat-button routerLink="/listarActividades"><mat-icon class="icons-color"> ruler
                 </mat-icon>ACTIVIDADES</button>
 
 
-            <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> info
-                </mat-icon>CALENDARIO</button>
+            <button *ngIf='isRole("Estudante")' class="texts-color" mat-button routerLink="/PropostaReservada"><mat-icon class="icons-color"> list
+                </mat-icon>Minha Proposta</button>
+
+
+            <button *ngIf='isRole("Professor")' class="texts-color" mat-button routerLink="/PropostaReservada"><mat-icon class="icons-color"> list
+                </mat-icon>Minhas Proposta</button>
+
+
+            <!-- <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> info
+                </mat-icon>CALENDARIO</button> -->
 
             <!-- <button class="texts-color" mat-button [matMenuTriggerFor]="menuUsuario"><mat-icon class="icons-color">
                 manage_accounts </mat-icon></button>
@@ -90,22 +98,36 @@
         <span class="item-spacer"></span>
 
 
-        <button class="texts-color espaco" mat-button [matMenuTriggerFor]="adminMenu"><mat-icon class="icons-color"> miscellaneous_services </mat-icon>ADMINISTRAÇÃO</button>
+        <button *ngIf='isRole("Admin")||isRole("Coordenador")' class="texts-color espaco" mat-button [matMenuTriggerFor]="adminMenu">
+            <mat-icon class="icons-color"> miscellaneous_services </mat-icon>ADMINISTRAÇÃO
+        </button>
         <mat-menu class="custom-menu" #adminMenu="matMenu" xPosition="after">
             <button class="texts-color menu-buttom-item" mat-menu-item routerLink="/oos"><mat-icon
                     class="icons-color"> supervisor_account </mat-icon>USUARIOS</button>
             <button class="texts-color" mat-menu-item routerLink="/areas"><mat-icon class="icons-color">
                     corporate_fare </mat-icon>AREAS</button>
         </mat-menu>
+
         <!-- <button mat-icon-button [matBadge]="5" matBadgeColor="warn" matBadgePosition="above after"  (click)="infoNotifications()">
             <mat-icon>notifications</mat-icon>
         </button> -->
+
         <button (click)="infoNotifications()" mat-icon-button style="margin-right: 1em;">
             <i class="pi pi-bell p-mr-4 p-text-secondary" pBadge style="font-size: 1.5rem; color: white;" value={{quantNotificacoes}}></i>
         </button>
-        <button (click)="infoUser()" mat-icon-button class="espaco">
+
+        <!-- <button (click)="infoUser()" mat-icon-button class="espaco" mat-button [matMenuTriggerFor]="userMenu"> -->
+        <button (click)="infoUser()" mat-icon-button class="espaco" mat-button>
             <mat-icon class="icons-color">manage_accounts</mat-icon>
         </button>
+        <!-- <mat-menu class="custom-menu" #userMenu="matMenu" xPosition="after">
+            <mat-icon class="icons-color"> miscellaneous_services </mat-icon><label class="icons-color">Adilson da Silva</label>
+            <button class="texts-color menu-buttom-item" mat-menu-item routerLink="/oos"><mat-icon
+                    class="icons-color"> supervisor_account </mat-icon>USUARIOS</button>
+            <button class="texts-color" mat-menu-item routerLink="/areas"><mat-icon class="icons-color">
+                    corporate_fare </mat-icon>AREAS</button>
+        </mat-menu> -->
+
         <button (click)="logOut()" mat-icon-button class="espaco">
             <mat-icon class="icons-color">power_settings_new</mat-icon>
         </button>
@@ -131,24 +153,19 @@
                 <div class="p-col-4"></div>
             </div>
 
-            <div>
+            <!-- <div>
                 <label>Nome</label>
-                <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
+                <input disabled="true" [(ngModel)]="userInfo.nome" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
                     placeholder="Digite o nome completo">
-            </div>
+            </div> -->
             <div>
                 <label>Usuário</label>
-                <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
-                    placeholder="Digite o nome de usúario">
-            </div>
-            <div>
-                <label>Senha</label>
-                <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
-                    placeholder="Digite o email">
+                <input disabled="true" [(ngModel)]="userInfo.nome" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
+                    placeholder={{userInfo.nome}}>
             </div>
             <div>
                 <label>Email</label>
-                <input disabled="true" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
+                <input disabled="true" [(ngModel)]="userInfo.email" class="p-col-12 p-mb-4" type="text" pInputText name="" id=""
                     placeholder="Digite o email">
             </div>
             <div class="p-grid">

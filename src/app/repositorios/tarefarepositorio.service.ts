@@ -20,6 +20,16 @@ export class TarefaRepositorio {
     return this.http.get<Array<Tarefa>>(`${this.baseUrl}${path}`);
   }
 
+  listarTarefasEstudante(id: number): Observable<Array<Tarefa>> {
+    const path = `Tarefa/PorIdEstudante/${id}`;
+    return this.http.get<Array<Tarefa>>(`${this.baseUrl}${path}`);
+  }
+
+  listarTarefasProposta(id: number): Observable<Array<Tarefa>> {
+    const path = `Tarefa/PorIdProposta/${id}`;
+    return this.http.get<Array<Tarefa>>(`${this.baseUrl}${path}`);
+  }
+
   procurarTarefaPorId(id: number): Observable<Tarefa> {
     const path = `Tarefa/${id}`;
     return this.http.get<Tarefa>(`${this.baseUrl}${path}`);

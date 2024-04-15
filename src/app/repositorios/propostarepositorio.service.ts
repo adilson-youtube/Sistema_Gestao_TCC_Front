@@ -20,6 +20,30 @@ export class PropostaRepositorio {
     return this.http.get<Array<Proposta>>(`${this.baseUrl}${path}`);
   }
 
+  //--- Marcacão
+  ListarPropostasDisponiveisParaEstudante(): Observable<Array<Proposta>> {
+    const path = `Proposta/PropostaEstudante`;
+    return this.http.get<Array<Proposta>>(`${this.baseUrl}${path}`);
+  }
+
+  //--- Marcacão
+  ListarPropostasDisponiveisParaProfessor(): Observable<Array<Proposta>> {
+    const path = `Proposta/PropostaProfessor`;
+    return this.http.get<Array<Proposta>>(`${this.baseUrl}${path}`);
+  }
+
+  //--- Marcacão
+  PropostaEstudante(id: number): Observable<Array<Proposta>> {
+    const path = `Proposta/ParaEstudante/${id}`;
+    return this.http.get<Array<Proposta>>(`${this.baseUrl}${path}`);
+  }
+
+  //--- Marcacão
+  PropostaProfessor(id: number): Observable<Array<Proposta>> {
+    const path = `Proposta/ParaProfessor/${id}`;
+    return this.http.get<Array<Proposta>>(`${this.baseUrl}${path}`);
+  }
+
   procurarPropostaPorId(id: number): Observable<Proposta> {
     const path = `Proposta/${id}`;
     return this.http.get<Proposta>(`${this.baseUrl}${path}`);

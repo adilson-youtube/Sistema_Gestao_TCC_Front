@@ -15,7 +15,7 @@
             </div> -->
             <div class="p-d-flex">
                 <span class="p-input-icon-left p-mr-auto">
-                    <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal(tarefa)" pTooltip="Novo" tooltipPosition="bottom"></button>
+                    <button *ngIf='isRole("Professor")' pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal(tarefa)" pTooltip="Novo" tooltipPosition="bottom"></button>
                 </span>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
@@ -92,7 +92,7 @@
 </p-card>
 
 <!--------------------- modal --------------------------------------->
-<p-dialog #formActividade appendTo="body" [header]="cabecario" [(visible)]="exibir" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+<p-dialog #formActividade appendTo="body" [header]="cabecario" [(visible)]="exibirAddTarefa" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
     <div class="p-fluid p-formgrid p-grid">
         <div class="p-field p-col-12 p-md-6">
             <label>Titulo *</label>
@@ -117,6 +117,42 @@
             <p-calendar disabled="true" [(ngModel)]="dataTerminada" dateFormat="dd/mm/yy" appendTo="formActividade"></p-calendar>
             <small class="p-invalid" *ngIf="validar && !tarefa.dataTerminada">Campo Obrigatório.</small>
         </div>  -->
+
+        <div class="p-field p-col-12 p-md-12">
+            <label>Estado</label>
+            <p-dropdown optionLabel="name" optionValue="code" appendTo="body" inputId="estado" [options]="estadoTarefas" [(ngModel)]="tarefa.estadoTarefa" placeholder="-- Seleccionar --"></p-dropdown>
+            <!-- <input id="estadoTarefa" type="text" [(ngModel)]="tarefa.estadoTarefa" pInputText>  -->
+            <small class="p-invalid" *ngIf="validar && !tarefa.estadoTarefa">Campo Obrigatório.</small>
+        </div> 
+
+        
+    </div>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+    </ng-template>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-dialog #formActividade appendTo="body" [header]="cabecario" [(visible)]="exibirTerminarTarefa" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+    <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-12 p-md-6">
+            <label>Titulo *</label>
+            <input id="titulo" type="text" [(ngModel)]="tarefa.titulo" pInputText> 
+            <small class="p-invalid" *ngIf="validar && !tarefa.titulo">Campo Obrigatório.</small>
+        </div>
+
+        <div class="p-field p-col-12 p-md-6">
+            <label>Descrição</label>
+            <input id="descricao" type="text" [(ngModel)]="tarefa.descricao" pInputText> 
+            <small class="p-invalid" *ngIf="validar && !tarefa.descricao">Campo Obrigatório.</small>
+        </div>
+
+        <div class="p-field p-col-12 p-md-12">
+            <label>Data de Entrega</label>
+            <p-calendar id="calendar" inline="true" [(ngModel)]="dataEntrega" dateFormat="dd/mm/yy"></p-calendar>
+            <small class="p-invalid" *ngIf="validar && !tarefa.dataEntrega">Campo Obrigatório.</small>
+        </div>
 
         <div class="p-field p-col-12 p-md-12">
             <label>Estado</label>

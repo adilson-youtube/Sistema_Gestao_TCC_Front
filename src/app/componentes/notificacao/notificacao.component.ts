@@ -1,7 +1,7 @@
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Notificacao } from 'src/app/modelo/entidades/notificacao';
+import { Message } from 'src/app/modelo/entidades/notificacao';
 import { NotificacaoService } from 'src/app/servicos/notificacao.service';
 
 @Component({

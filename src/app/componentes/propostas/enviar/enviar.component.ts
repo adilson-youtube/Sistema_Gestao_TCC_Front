@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { PrimeNGConfig } from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Area } from 'src/app/modelo/entidades/area';
@@ -19,7 +19,8 @@ import { PropostaService } from 'src/app/servicos/proposta.service';
 @Component({
   selector: 'app-enviar',
   templateUrl: './enviar.component.html',
-  styleUrls: ['./enviar.component.css']
+  styleUrls: ['./enviar.component.css'],
+  providers:[ConfirmationService, MessageService],
 })
 export class EnviarComponent implements OnInit {
 
@@ -35,6 +36,7 @@ export class EnviarComponent implements OnInit {
   areas: Array<Area>;
   areaSelecionado: Area;
   estudante: Estudante;
+  userInfo: any;
 
   @Input()
   showMenu: boolean = true;
@@ -64,23 +66,17 @@ export class EnviarComponent implements OnInit {
     private propostaServico: PropostaService,
     private areaServico: AreaService,
     private professorServico: ProfessorService,
-    private estudanteService: EstudanteService
+    private estudanteService: EstudanteService, 
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
     this.parametro = this.router.url.substring(1, 12);
 
     const deviceInfo = this.deviceService.getDeviceInfo();
-
-    // this.orgaoServico.listarAreas().subscribe(resultados => { this.areas = resultados; });
-
-    // this.propostaServico.listarPropostas().subscribe( resultados => { this.propostas = resultados; });
+    
     this.areaServico.listarAreas().subscribe( resultados => { this.areas = resultados; });
     this.professorServico.listarProfessores().subscribe( resultados => { this.professores = resultados; });
-    this.estudanteService.listarEstudantes().subscribe( resultado => { 
-      this.estudante = resultado.shift();
-      console.log("Dados do Usuario: "+this.estudante);
-    });
 
     this.authenticationService.showMenuEmitter.subscribe( show => this.showAllMenu = show );
     this.authenticationService.showRegisterEmitter.subscribe( register => this.showregister = register );
@@ -94,8 +90,11 @@ export class EnviarComponent implements OnInit {
         this.deviceMd = result.mqAlias === 'md' ? true : false;
         this.deviceLg = result.mqAlias === 'lg' ? true : false;
     });
+    this.proposta = new Proposta();
 
     this.config.setTranslation(this.translation.translation);
+
+    this.userInfo = this.authenticationService.getDecodedToken();
 
   }
   
@@ -121,18 +120,30 @@ export class EnviarComponent implements OnInit {
 
   salvar(): void {
     this.validar = true;
-    this.proposta.idEstudante = this.estudante.id;
-    this.proposta.idProfessor = this.professorSelecionado.id;
+    if (this.isRole("Estudante")) {
+      this.proposta.idEstudante = Number(this.userInfo.id);
+      this.proposta.idProfessor = this.professorSelecionado.id;
+      this.proposta.professor = this.professorSelecionado;
+      this.proposta.respostaEstudante = true;
+      this.estudanteService.procurarEstudantePorId(Number(this.userInfo.id)).subscribe( resultado => {
+        this.proposta.estudante = resultado;
+      });
+    }
+    
+    if (this.isRole("Professor")) {
+      this.proposta.idProfessor = Number(this.userInfo.id);
+      this.proposta.respostaProfessor = true;
+      this.professorServico.procurarProfessorPorId(Number(this.userInfo.id)).subscribe( resultado => {
+        this.proposta.professor = resultado;
+      });
+    }
+    
     this.proposta.idArea = this.areaSelecionado.id;
-    this.proposta.estudante = this.estudante;
-    this.proposta.professor = this.professorSelecionado;
     this.proposta.area = this.areaSelecionado;
-    console.log("Dados do Estudante: "+JSON.stringify(this.proposta.estudante));
-    console.log("Dados do Professor: "+ JSON.stringify(this.proposta.professor));
-    console.log("Dados do Area: "+ JSON.stringify(this.proposta.area));
 
     if (this.proposta) {
       this.propostaServico.salvarProposta(this.proposta).subscribe(resultado => {
+        this.notificacaoMsg("success", "Proposta Evniada", "A Proposta foi enviada com sucesso!");
         this.cancelar();
       }); 
     }
@@ -148,30 +159,17 @@ export class EnviarComponent implements OnInit {
     this.exibirDetalhes = true;
   }
 
-  // findArea(id: number): string  {
-  //   const area = this.areas ? this.areas.find(o => o.id === id) : null;
-  //   return area ? area.denominacao : 'Não Definida';
-  // }
+  isRole(role: string): boolean {
+    return this.authenticationService.isRole(role);
+  }
 
-  // findVoip(id: number): string  {
-  //   const area = this.areas ? this.areas.find(o => o.id === id) : null;
-  //   return area ? (area.voip ? area.voip: 'Não Definida') : 'Não Definida';
-  // }
+  getInfoUser() {
+    this.userInfo = this.authenticationService.getDecodedToken();
+  }
 
-  // findOrgao(id: number): string  {
-  //   const orgao = this.orgaos ? this.orgaos.find(o => o.id === id) : null;
-  //   return orgao ? orgao.sigla : 'Não Definida';
-  // }
-
-  // findTelefone(codigo: String): string  {
-  //   const candidato = this.candidatos ? this.candidatos.find(c => c.codigo === codigo) : null;
-  //   return candidato ? candidato.contactos.telefone1 : 'Não Definida';
-  // }
-
-  // findBigAnt(codigo: String): string  {
-  //   const candidato = this.candidatos ? this.candidatos.find(c => c.codigo === codigo) : null;
-  //   return candidato ? candidato.contactos.bigAnt : 'Não Definida';
-  // }
+  notificacaoMsg(tipoNotificacao?: string, cabecario?: string, msg?: string) {
+    this.messageService.add({severity: tipoNotificacao, summary:cabecario, detail: msg});
+  }
                                                                                                                                                                                                                                                                                                                                                  
   // findNomeCompleto(codigo: String): string  {
   //   const candidato = this.candidatos ? this.candidatos.find(c => c.codigo === codigo) : null;

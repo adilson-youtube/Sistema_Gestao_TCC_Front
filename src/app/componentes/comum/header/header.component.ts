@@ -5,7 +5,7 @@ import { MatAccordion } from '@angular/material/expansion';
 import { Observable, Subscription } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs/operators';
-import { Notificacao } from 'src/app/modelo/entidades/notificacao';
+// import { Notificacao } from 'src/app/modelo/entidades/notificacao';
 import { NotificacaoService } from 'src/app/servicos/notificacao.service';
 import {Message, MessageService} from 'primeng//api';
 import { Messages } from 'primeng/messages';
@@ -42,10 +42,11 @@ export class HeaderComponent implements OnInit {
   // notificacao: any;
   notificacoesSelecionadas: any[];
   subscription: Subscription;
-  notificacao = new Notificacao();
+  // notificacao = new Notificacao();
   notificacoes = new Array<Message>();
   quantNotificacoes = 0;
   msgs: Message[] = [];
+  userInfo: any;
 
   changePassword: boolean = false;
 
@@ -73,6 +74,8 @@ export class HeaderComponent implements OnInit {
         console.error('Erro ao receber notificação:', error);
       }
     );
+
+    this.getInfoUser();
 
   }
 
@@ -123,6 +126,14 @@ export class HeaderComponent implements OnInit {
 
   logOut() {
     this.authenticationService.logout();
+  }
+
+  isRole(role: string): boolean {
+    return this.authenticationService.isRole(role);
+  }
+
+  getInfoUser() {
+    this.userInfo = this.authenticationService.getDecodedToken();
   }
 
 

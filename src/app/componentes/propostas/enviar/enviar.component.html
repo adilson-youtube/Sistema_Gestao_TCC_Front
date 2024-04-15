@@ -1,5 +1,6 @@
 
 <!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+<p-toast></p-toast>
 
 <p-card class="p-grid p-jc-center p-mt-6">
     <ng-template pTemplate="content">
@@ -10,12 +11,17 @@
                 <label for="nome">Titulo</label>
                 <input id="nome" [(ngModel)]="proposta.titulo" type="text" pInputText>
             </div>
-            <div class="p-field p-col-12 p-md-6">
+            <div *ngIf='isRole("Professor")' class="p-field p-col-12">
                 <label for="state">Areas de Conhecimento</label>
                 <p-dropdown inputId="state" [options]="areas" [(ngModel)]="areaSelecionado" placeholder="Seleccionar"
                     optionLabel="descricao" optionValue=""></p-dropdown>
             </div>
-            <div class="p-field p-col-12 p-md-6">
+            <div *ngIf='isRole("Estudante")' class="p-field p-col-12 p-md-6">
+                <label for="state">Areas de Conhecimento</label>
+                <p-dropdown inputId="state" [options]="areas" [(ngModel)]="areaSelecionado" placeholder="Seleccionar"
+                    optionLabel="descricao" optionValue=""></p-dropdown>
+            </div>
+            <div *ngIf='isRole("Estudante")' class="p-field p-col-12 p-md-6">
                 <label for="state">Orientador</label>
                 <p-dropdown inputId="state" [options]="professores" [(ngModel)]="professorSelecionado" placeholder="Seleccionar"
                     optionLabel="nome" optionValue=""></p-dropdown>

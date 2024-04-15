@@ -63,7 +63,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { PasswordModule } from 'primeng/password';
 import { InputMaskModule} from 'primeng/inputmask';
 //import { SplitButtonModule } from 'primeng/splitbutton';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {EditorModule} from 'primeng/editor';
@@ -108,6 +108,10 @@ import { DetalhesComponent } from './componentes/propostas/detalhes/detalhes.com
 import { ActividadesComponent } from './componentes/actividades/actividades.component';
 import { ChatComponent } from './componentes/chat/chat.component';
 import { NotificacaoComponent } from './componentes/notificacao/notificacao.component';
+import { AuthInterceptor } from './servicos/auth.interceptor';
+import { EnviarNotificacaoComponent } from './componentes/notificacao/enviar-notificacao/enviar-notificacao.component';
+import { ReservadoComponent } from './componentes/reservado/reservado.component';
+import { FileUploadComponent } from './componentes/file-upload/file-upload.component';
 
 
 @NgModule({
@@ -150,7 +154,10 @@ import { NotificacaoComponent } from './componentes/notificacao/notificacao.comp
     DetalhesComponent,
     ActividadesComponent,
     ChatComponent,
-    NotificacaoComponent
+    NotificacaoComponent,
+    EnviarNotificacaoComponent,
+    ReservadoComponent,
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,
@@ -214,7 +221,10 @@ import { NotificacaoComponent } from './componentes/notificacao/notificacao.comp
     MessageModule,
     BadgeModule
   ],
-  providers: [ConfirmationService, AuthenticationService],
+  providers: [
+    ConfirmationService, AuthenticationService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

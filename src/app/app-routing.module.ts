@@ -22,6 +22,9 @@ import { EnviarComponent } from './componentes/propostas/enviar/enviar.component
 import { ActividadesComponent } from './componentes/actividades/actividades.component';
 import { HeaderComponent } from './componentes/comum/header/header.component';
 import { NotificacaoComponent } from './componentes/notificacao/notificacao.component';
+import { EnviarNotificacaoComponent } from './componentes/notificacao/enviar-notificacao/enviar-notificacao.component';
+import { ReservadoComponent } from './componentes/reservado/reservado.component';
+import { FileUploadComponent } from './componentes/file-upload/file-upload.component';
 
 
 const routes: Routes = [
@@ -58,11 +61,14 @@ const routes: Routes = [
       { path: '', component: PropostasComponent },
       { path: 'areas', component: AreasComponent},
       { path: 'listarPropostas', component: PropostasComponent },
+      { path: 'PropostaReservada', component: ReservadoComponent },
       { path: 'enviarProposta', component: EnviarComponent },
       { path: 'listarActividades', component: ActividadesComponent },
       { path: 'registarServico', component: ServicosComponent },
       { path: 'marcacao', component: MarcacaoComponent },
       { path: 'notificacoes', component: NotificacaoComponent },
+      { path: 'enviarNotificacao', component: EnviarNotificacaoComponent },
+      { path: 'fileUpload', component: FileUploadComponent },
     ] },
       // { path: '', redirectTo: 'proposta', pathMatch: 'full'},
       // { path: '', component: PropostasComponent },

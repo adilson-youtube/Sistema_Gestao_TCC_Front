@@ -24,7 +24,8 @@ export class AreaRepositorio {
   //--- Marcacão
   listarAreas(): Observable<Array<Area>> {
     const path = `Area`;
-    return this.http.get<Array<Area>>(`${this.baseUrl}${path}`,  {headers: this.httpOptions, withCredentials: true});
+    // return this.http.get<Array<Area>>(`${this.baseUrl}${path}`,  {headers: this.httpOptions, withCredentials: true});
+    return this.http.get<Array<Area>>(`${this.baseUrl}${path}`);
   }
 
   procurarAreaPorId(id: number): Observable<Area> {

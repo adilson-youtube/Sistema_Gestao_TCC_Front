@@ -1,0 +1,25 @@
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+
+<p-card class="p-grid p-jc-center p-mt-6">
+    <ng-template pTemplate="content">
+        <h3>Enviar Mensagem</h3>
+        <!-- <div class="p-fluid p-formgrid p-grid p-jc-center p-col-12 p-md-12"> -->
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 p-md-12">
+                <label for="nome">Titulo</label>
+                <input id="nome" [(ngModel)]="tituto" type="text" pInputText>
+            </div>
+            <div class="p-field p-col-12 p-md-12">
+                <label for="telefone">Descrição</label>
+                <!-- <textarea [rows]="5" [cols]="90" pInputTextarea autoResize="true"></textarea> -->
+                <textarea id="telefone" [rows]="9" pInputTextarea [(ngModel)]="msg"></textarea>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Cancelar" (onClick)="retroceder()" icon="pi pi-close" class="p-button-danger"></p-button>
+            <p-button label="Salvar" (onClick)="salvar()" icon="pi pi-save" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card>

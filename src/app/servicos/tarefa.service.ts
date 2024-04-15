@@ -4,29 +4,37 @@ import { Tarefa } from '../modelo/entidades/tarefa';
 import { TarefaRepositorio } from '../repositorios/tarefarepositorio.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class TarefaService {
 
-  constructor(private repositorio: TarefaRepositorio) { }
+    constructor(private repositorio: TarefaRepositorio) { }
 
-  //-- Tarefa
-  listarTarefas(): Observable<Array<Tarefa>> {
+    //-- Tarefa
+    listarTarefas(): Observable<Array<Tarefa>> {
         return this.repositorio.listarTarefas();
+    }
+
+    listarTarefasEstudante(id: number): Observable<Array<Tarefa>> {
+        return this.repositorio.listarTarefasEstudante(id);
+    }
+
+    listarTarefasProposta(id: number): Observable<Array<Tarefa>> {
+        return this.repositorio.listarTarefasProposta(id);
     }
 
     procurarTarefaPorId(codigo: number): Observable<Tarefa> {
         return this.repositorio.procurarTarefaPorId(codigo);
     }
-  
+
     salvarTarefa(tarefa: Tarefa): Observable<Tarefa> {
         return this.repositorio.salvarTarefa(tarefa);
     }
-  
+
     actualizarTarefa(id: number, tarefa: Tarefa): Observable<Tarefa> {
         return this.repositorio.actualizarTarefa(id, tarefa);
     }
-  
+
     eliminarTarefa(id: number): Observable<Tarefa> {
         return this.repositorio.eliminarTarefa(id);
     }

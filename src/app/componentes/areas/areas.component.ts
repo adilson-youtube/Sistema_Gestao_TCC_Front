@@ -9,6 +9,7 @@ import { AreaService } from 'src/app/servicos/area.service';
 import { Subscription } from 'rxjs';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
 import { ConfirmationService } from 'primeng/api';
+import { AuthenticationService } from 'src/app/servicos/authentication.service';
 
 @Component({
   selector: 'app-areas',
@@ -41,11 +42,13 @@ export class AreasComponent implements OnInit {
   deviceLg: boolean;
   mediaSub: Subscription;
   translation = new Traducao;
+  tokenDescodificado = '';
   
   
   constructor(
     private areaServico: AreaService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private authService: AuthenticationService
   ) { }
 
   ngOnInit(): void {
@@ -53,9 +56,12 @@ export class AreasComponent implements OnInit {
 
     this.areaServico.listarAreas().subscribe(resultados => { 
       this.areas = resultados; 
-      resultados.forEach(a => {
-        console.log(a.descricao); 
-      });
+      // resultados.forEach(a => {
+      //   console.log(a.descricao); 
+      // });
+      // this.tokenDescodificado = JSON.stringify(this.authService.getDecodedToken());
+      this.tokenDescodificado = this.authService.getDecodedToken();
+      console.log("Payload do Token: "+this.tokenDescodificado);
     });
   }
 
@@ -117,19 +123,5 @@ export class AreasComponent implements OnInit {
   limpar(tabela: Table) {
     tabela.clear();
   }
-
-  get orgao(): any {
-    return this._orgao;
-  }
-
-  set orgao(orgao: any) {
-     this._orgao = orgao;
-     //this.area.orgaoId = orgao.id;
-  }
-
-  /* findOrgao(id: number): string  {
-    const orgao = this.orgaos ? this.orgaos.find(o => o.id === id) : null;
-    return orgao ? (orgao.denominacao +" ("+orgao.sigla+")") : 'Não Definida';
-  } */
 
 }

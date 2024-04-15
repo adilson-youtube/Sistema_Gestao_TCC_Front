@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Notificacao } from '../modelo/entidades/notificacao';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { Message } from '../modelo/entidades/notificacao';
+import { NotificacaoRepositorio } from '../repositorios/notificacaorepositorio.service';
+// import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 export class NotificacaoService {
   baseUrl: string;
   
-  constructor(private http: HttpClient) {
+  constructor(private repositorio: NotificacaoRepositorio) {
     this.baseUrl = `${environment.predefinidaUrl}`;
 
    }
@@ -36,4 +37,27 @@ export class NotificacaoService {
       };
     });
   }
+
+  //-- Message
+  listarMessages(): Observable<Array<Message>> {
+        return this.repositorio.listarMessages();
+    }
+
+    procurarMessagePorId(id: number): Observable<Message> {
+        return this.repositorio.procurarMessagePorId(id);
+    }
+  
+    enviarMessage(message: Message): Observable<Message> {
+      return this.repositorio.enviarMessage(message);
+    }
+  
+    actualizarMessage(id: number, message: Message): Observable<Message> {
+        return this.repositorio.actualizarMessage(id, message);
+    }
+  
+    eliminarMessage(id: number): Observable<Message> {
+        return this.repositorio.eliminarMessage(id);
+    }
+
+
 }

@@ -1,10 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { isNull } from '@angular/compiler/src/output/output_ast';
+import { isDefined } from '@angular/compiler/src/util';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ConfirmationService, PrimeNGConfig } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
+import { isEmpty } from 'rxjs/operators';
 import { Proposta } from 'src/app/modelo/entidades/proposta';
 import { Tarefa } from 'src/app/modelo/entidades/tarefa';
 import { EstadoTarefa } from 'src/app/modelo/enumerados/estadoTarefa';
@@ -25,19 +28,23 @@ import { TarefaService } from 'src/app/servicos/tarefa.service';
 export class ActividadesComponent implements OnInit {
 
   nova = true;
-  exibir = false;
+  exibirAddTarefa = false;
+  exibirTerminarTarefa = false;
   validar: boolean;
   parametro: string;
   //dadosDeUso: DadosDeUso;
   exibirDetalhes = false;
   tarefa = new Tarefa();
   tarefas: Array<Tarefa>;
-  proposta = new Proposta();
-  propostas: Array<Proposta>;
+  // proposta = new Proposta();
+  // propostas: Array<Proposta>;
   estadoTarefa: boolean;
   dataEntrega: Date;
   dataTerminada: Date;
   checkboxEstado: boolean;
+  
+  userInfo: any;
+  idProposta: number;
 
   estadoTarefaSelecionado: EstadoTarefa;
 
@@ -67,16 +74,47 @@ export class ActividadesComponent implements OnInit {
   
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private config: PrimeNGConfig,
     public mediaObserver: MediaObserver,
     private deviceService: DeviceDetectorService,
     private authenticationService: AuthenticationService,
-    // private propfessorServico: ProfessorService,
-    // private areaService: AreaService,
     private tarefaServico: TarefaService,
     private propostaServico: PropostaService,
     private confirmationService: ConfirmationService
-  ) { }
+  ) {  
+
+    this.getInfoUser();
+
+    if (this.isRole("Estudante")) {
+      const id = Number(this.userInfo.id);
+      this.tarefaServico.listarTarefasEstudante(id).subscribe( resultados => { 
+        this.tarefas = resultados;
+      });
+    }
+
+    if(this.isRole("Professor")) {
+      // const noIsId = this.router.getCurrentNavigation().extras ?? true; 
+      // isEmpty(this.router.getCurrentNavigation().extras);
+      if (this.router.getCurrentNavigation() && this.router.getCurrentNavigation().extras 
+      && this.router.getCurrentNavigation().extras.state && this.router.getCurrentNavigation().extras.state.id) {
+        this.idProposta = Number(this.router.getCurrentNavigation().extras.state.id);
+        // this.sub = this.activatedRoute.queryParams.subscribe(data => {
+        //   console.log("Recebeu id "+data['id']);
+        //   this.idProposta = Number(data['id']);
+        // });
+        console.log("O id da Proposta é "+this.router.getCurrentNavigation().extras.state.id);
+        this.tarefaServico.listarTarefasProposta(this.idProposta).subscribe( resultados => { 
+          this.tarefas = resultados;
+        });
+        
+      } else {
+        console.log("Chegou até no else ");
+        this.router.navigateByUrl("listarPropostas");
+      }
+    }
+
+  }
 
   ngOnInit(): void {
     this.parametro = this.router.url.substring(1, 12);
@@ -89,15 +127,17 @@ export class ActividadesComponent implements OnInit {
 
     // this.propfessorServico.listarProfessores().subscribe( resultados => { 
     //   this.professores = resultados; 
-    // }); 
+    // });
 
-    this.propostaServico.listarPropostas().subscribe( resultados => {
-      this.proposta = resultados.shift();
-    });
+    
 
-    this.tarefaServico.listarTarefas().subscribe( resultados => { 
-      this.tarefas = resultados; 
-    });
+    // this.propostaServico.listarPropostas().subscribe( resultados => {
+    //   this.proposta = resultados.shift();
+    // });
+
+    // this.tarefaServico.listarTarefas().subscribe( resultados => { 
+    //   this.tarefas = resultados; 
+    // });
 
     
     /*this.dadosDeUso = new DadosDeUso();
@@ -142,12 +182,28 @@ export class ActividadesComponent implements OnInit {
     }
     
     // console.log("Dados da Tarefa: "+JSON.stringify(tarefa));
-    this.exibir = true;
+    this.exibirAddTarefa = true;
+    this.validar = false;
+  }
+
+
+  modalTerminarTarefa(tarefa?: Tarefa): void {
+    // this.tarefaServico.procurarTarefaPorCodigo(tarefa.codigoDoCandidato).subscribe( resultado => { this.tarefa = resultado; }); 
+    this.tarefa = tarefa;
+    if (tarefa.dataEntrega) {
+      this.dataEntrega = new Date(tarefa.dataEntrega);
+    }
+    if (tarefa.dataTerminada) {
+      this.dataTerminada = new Date(tarefa.dataTerminada);
+    }
+    
+    // console.log("Dados da Tarefa: "+JSON.stringify(tarefa));
+    this.exibirAddTarefa = true;
     this.validar = false;
   }
 
   cancelar(): void {
-    this.exibir = false;
+    this.exibirAddTarefa = false;
     this.validar = false;
     this.dataEntrega = null;
     this.dataTerminada = null;
@@ -156,7 +212,7 @@ export class ActividadesComponent implements OnInit {
 
   salvar(): void {
     this.validar = true;
-    this.tarefa.idProposta = this.proposta.id;
+    this.tarefa.idProposta = this.idProposta;
     this.tarefa.dataEntrega = this.dataEntrega;
     this.tarefa.dataTerminada = this.dataTerminada;
     // this.tarefa.estadoTarefa = this.estadoTarefaSelecionado;
@@ -210,6 +266,14 @@ export class ActividadesComponent implements OnInit {
         this.tarefaServico.eliminarTarefa(idTarefa).subscribe();
       }
     });
+  }
+
+  isRole(role: string): boolean {
+    return this.authenticationService.isRole(role);
+  }
+
+  getInfoUser() {
+    this.userInfo = this.authenticationService.getDecodedToken();
   }
 
   // findArea(id: number): string  {

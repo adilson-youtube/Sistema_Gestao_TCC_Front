@@ -45,14 +45,6 @@ export class AuthenticationService implements OnInit {
   getAuthenticatedUser() : string{
     throw new Error('Method not implemented.');
   }
-  getAuthenticatedToken() : string{
-    throw new Error('Method not implemented.');
-  }
-
-
-  isUserLoggedIn() : boolean{
-    throw new Error('Method not implemented.');
-  }
 
   login(usuario: Usuario) : Observable<UserToken> {
     return this.repositorio.login(usuario);
@@ -64,24 +56,6 @@ export class AuthenticationService implements OnInit {
     // this.showLoginEmitter.emit(false);
     // this.router.navigate(['']);
   }
-
-
-  // irMain(){
-  //   this.showMenuEmitter.emit(true);
-  //   this.showAllMenu.emit(true);
-  //   this.showNav.emit(true);
-  //   this.showLoginEmitter.emit(false);
-  //   this.router.navigate(['dashboard']);
-  // }
-
-
-  // irLogin(){
-  //   this.showMenuEmitter.emit(false);
-  //   this.showAllMenu.emit(false);
-  //   this.showNav.emit(false);
-  //   this.showLoginEmitter.emit(true);
-  //   this.router.navigate(['dashboard']);
-  // }
 
   autenticar(){
 
@@ -118,6 +92,41 @@ export class AuthenticationService implements OnInit {
     this.showLoginEmitter.emit(true);
     // this.loggedIn.next(false);
     this.router.navigate(['/login']);
+  }
+
+  getToken(): string {
+    return localStorage.getItem("jwt");
+  }
+
+  getDecodedToken(): any {
+    const token = this.getToken();
+    if (token) {
+      const parts = token.split('.');
+      if (parts.length === 3) {
+        const decodedPayload = this.base64Decode(parts[1]);
+        return JSON.parse(decodedPayload);
+      }
+    }
+    return null;
+  }
+
+  private base64Decode(str: string): string {
+    return decodeURIComponent(atob(str).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+  }
+
+  isRole(role: string): boolean {
+    const roleAuthenticatedUser: string = this.getDecodedToken().role;
+    if (roleAuthenticatedUser===role) {
+      return true;
+    }
+    return false;
+  }
+
+  getRole(): string {
+    const roleAuthenticatedUser: string = this.getDecodedToken().role;
+    return roleAuthenticatedUser;
   }
 
 

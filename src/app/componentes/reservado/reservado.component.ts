@@ -6,9 +6,7 @@ import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api'
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Area } from 'src/app/modelo/entidades/area';
-import { Candidato } from 'src/app/modelo/entidades/candidato';
 import { Funcionario } from 'src/app/modelo/entidades/funcionario';
-import { Orgao } from 'src/app/modelo/entidades/orgao';
 import { Professor } from 'src/app/modelo/entidades/professor';
 import { Proposta } from 'src/app/modelo/entidades/proposta';
 import { Estado } from 'src/app/modelo/enumerados/Estado';
@@ -17,38 +15,35 @@ import { Traducao } from 'src/app/modelo/traducoes/traducao';
 import { AreaService } from 'src/app/servicos/area.service';
 import { AuthenticationService } from 'src/app/servicos/authentication.service';
 import { CandidatoServico } from 'src/app/servicos/candidatoservico.service';
-import { CoordenadorService } from 'src/app/servicos/coordenador.service';
 import { EstudanteService } from 'src/app/servicos/estudante.service';
-import { FuncionarioServico } from 'src/app/servicos/funcionarioservico.service';
 import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
 import { ProfessorService } from 'src/app/servicos/professor.service';
 import { PropostaService } from 'src/app/servicos/proposta.service';
 
 @Component({
-  selector: 'app-propostas',
-  templateUrl: './propostas.component.html',
-  styleUrls: ['./propostas.component.css'],
-  providers:[ConfirmationService, MessageService],
+  selector: 'app-reservado',
+  templateUrl: './reservado.component.html',
+  styleUrls: ['./reservado.component.css']
 })
-export class PropostasComponent implements OnInit {
+export class ReservadoComponent implements OnInit {
 
   nova = true;
   exibir = false;
   validar: boolean;
   parametro: string;
   areas: Array<Area>;
-  //dadosDeUso: DadosDeUso;
   exibirDetalhes = false;
   proposta = new Proposta();
+  funcionario = new Funcionario;
   propostas: Array<Proposta>;
   professores: Array<Professor>;
 
   estadoPropostaSelecionado: EstadoProposta;
 
   estadoPropostas: any[] = [
-    { name: 'Proposta', code: 0 },
-    { name: 'Reprovado', code: 1 },
-    { name: 'Aprovado', code: 2 },
+    { name: 'Pendente', code: 0 },
+    { name: 'Activo', code: 1 },
+    { name: 'Inativo', code: 2 },
     { name: 'Em Desenvolvimento', code: 3 },
     { name: 'Finalizado', code: 4 },
     { name: 'Defendido', code: 5 }
@@ -77,13 +72,14 @@ export class PropostasComponent implements OnInit {
     private router: Router,
     //private servico: Servico,
     private config: PrimeNGConfig,
+    private orgaoServico: OrgaoServico,
     public mediaObserver: MediaObserver,
+    private candidatoServico: CandidatoServico,
     private deviceService: DeviceDetectorService,
     // private funcionarioServico: FuncionarioServico,
     //private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
     private propfessorServico: ProfessorService,
-    private coordenadorServico: CoordenadorService,
     private areaService: AreaService,
     private estudanteService: EstudanteService,
     private propostaServico: PropostaService,
@@ -100,27 +96,23 @@ export class PropostasComponent implements OnInit {
     //   this.professores = resultados; 
     // }); 
 
+    this.getInfoUser();
+
     if(this.isRole("Estudante")) {
-      this.propostaServico.ListarPropostasDisponiveisParaEstudante().subscribe( resultados => { 
+      const id = Number(this.userInfo.id);
+      this.propostaServico.PropostaEstudante(id).subscribe( resultados => { 
         this.propostas = resultados; 
         console.log("Propostas: "+JSON.stringify(this.propostas));
       });
     }
 
     if(this.isRole("Professor")) {
-      this.propostaServico.ListarPropostasDisponiveisParaProfessor().subscribe( resultados => { 
+      const id = Number(this.userInfo.id);
+      this.propostaServico.PropostaProfessor(id).subscribe( resultados => { 
         this.propostas = resultados; 
         console.log("Propostas: "+JSON.stringify(this.propostas));
       });
     }
-
-    if(this.isRole("Coordenador")) {
-      this.propostaServico.listarPropostas().subscribe( resultados => { 
-        this.propostas = resultados;
-        console.log("Propostas: "+JSON.stringify(this.propostas));
-      });
-    }
-
 
     // this.propostaServico.listarPropostas().subscribe( resultados => { 
     //   this.propostas = resultados; 
@@ -177,8 +169,6 @@ export class PropostasComponent implements OnInit {
 
     if (this.proposta?.id>=1) {
       this.propostaServico.actualizarProposta(this.proposta.id, this.proposta).subscribe(resultado => {
-        this.proposta = resultado;
-        this.notificacaoMsg("success", "Proposta", "O estado Tema foi aceite com Sucesso!");
         this.cancelar();
       }); 
     } else {
@@ -220,15 +210,6 @@ export class PropostasComponent implements OnInit {
               this.proposta.professor = professor;
             })
           }
-          if (this.isRole("Coordenador")) {
-            // this.proposta.respostaEstudante = true;
-            this.proposta.idCoordenador = Number(this.authenticationService.getDecodedToken().id);
-            this.proposta.estado = this.estadoPropostaSelecionado;
-            this.coordenadorServico.procurarCoordenadorPorId(this.proposta.idCoordenador).subscribe((coordenador)=> {
-              this.proposta.coordenador = coordenador;
-              // proposta.estado = EstadoProposta.Aprovado;
-            })
-          }
           if (proposta.respostaEstudante==true && proposta.respostaProfessor==true) {
             proposta.estado = EstadoProposta.Aprovado;
           }
@@ -261,6 +242,10 @@ export class PropostasComponent implements OnInit {
 
   isRole(role: string): boolean {
     return this.authenticationService.isRole(role);
+  }
+
+  getInfoUser() {
+    this.userInfo = this.authenticationService.getDecodedToken();
   }
 
   temTarefa(idTarefa: number): boolean {
@@ -315,16 +300,4 @@ export class PropostasComponent implements OnInit {
     // this.router.navigate(["/listarActividades",  {id: id}]);
   }
 
-  // findArea(id: number): string  {
-  //   const area = this.areas ? this.areas.find(o => o.id === id) : null;
-  //   return area ? area.descricao : 'Não Definida';
-  // }
-
-  // findProfessor(id: number): string  {
-  //   const professor = this.professores ? this.professores.find(o => o.id === id) : null;
-  //   return professor ? professor.nome : 'Não Definida';
-  // }
-
-//----- 
 }
-

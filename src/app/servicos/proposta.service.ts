@@ -15,6 +15,26 @@ export class PropostaService {
         return this.repositorio.listarPropostas();
     }
 
+  //-- Proposta
+  ListarPropostasDisponiveisParaEstudante(): Observable<Array<Proposta>> {
+        return this.repositorio.ListarPropostasDisponiveisParaEstudante();
+    }
+
+  //-- Proposta
+  ListarPropostasDisponiveisParaProfessor(): Observable<Array<Proposta>> {
+        return this.repositorio.ListarPropostasDisponiveisParaProfessor();
+    }
+
+    //-- Proposta
+    PropostaEstudante(id: number): Observable<Array<Proposta>> {
+          return this.repositorio.PropostaEstudante(id);
+      }
+  
+    //-- Proposta
+    PropostaProfessor(id: number): Observable<Array<Proposta>> {
+          return this.repositorio.PropostaProfessor(id);
+      }
+
     procurarPropostaPorId(codigo: number): Observable<Proposta> {
         return this.repositorio.procurarPropostaPorId(codigo);
     }
