@@ -1,5 +1,5 @@
 import { Professor } from "./professor";
-import { Proposta } from "./proposta";
+import { TFC } from "./tfc";
 import { TCC } from "./tcc";
 import { Usuario } from "./usuario";
 
@@ -10,7 +10,7 @@ export class Coordenador extends Usuario  {
     bilhete?: string = '';
     telefone?: string = '';
     // idUsuario = 0;
-    // Proposta = new Proposta();
+    // TFC = new TFC();
     // Usuario = new Usuario();
     // TCC = new TCC();
 }

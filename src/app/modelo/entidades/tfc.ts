@@ -1,18 +1,19 @@
 import { Estado } from "../enumerados/Estado";
-import { EstadoProposta } from "../enumerados/estadoProposta";
+import { EstadoTFC } from "../enumerados/estadoTFC";
 import { Area } from "./area";
 import { Coordenador } from "./coordenador";
 import { Estudante } from "./estudante";
 import { Professor } from "./professor";
-import { TCC } from "./tcc";
 
-export class Proposta {
+export class TFC {
     id?;
     titulo?: string = '';
     descricao?: string = '';
-    estado?: EstadoProposta = EstadoProposta.Proposta;
+    estado?: EstadoTFC = EstadoTFC.Proposta;
     respostaEstudante?: boolean = false;
     respostaProfessor?: boolean = false;
+    dataInicio?: Date;
+    dataApresentacao?: Date;
     idArea?: number;
     idEstudante?: number;
     idProfessor?: number;
@@ -21,5 +22,4 @@ export class Proposta {
     estudante? = new Estudante();
     professor? = new Professor();
     coordenador? = new Coordenador();
-    TCC? = new TCC();
 }

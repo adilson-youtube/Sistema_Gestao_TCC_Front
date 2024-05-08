@@ -23,7 +23,7 @@ import { ButtonModule } from 'primeng/button';
 //import { FieldsetModule } from 'primeng/fieldset';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-//import { FileUploadModule } from 'primeng/fileupload';
+import { FileUploadModule } from 'primeng/fileupload';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule} from '@angular/material/input';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -51,6 +51,9 @@ import {TooltipModule} from 'primeng/tooltip';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import {BadgeModule} from 'primeng/badge';
+// import { NgxDocViewerModule } from 'ngx-doc-viewer';
+
+// import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
 import { MenuItem } from 'primeng/api';
@@ -100,11 +103,12 @@ import { RegistarVeterinarioComponent } from './componentes/veterinario/registar
 import { DadosUsuarioVeterinarioComponent } from './componentes/veterinario/registar-veterinario/dados-usuario-veterinario/dados-usuario-veterinario.component';
 import { DadosPessoaisVeterinarioComponent } from './componentes/veterinario/registar-veterinario/dados-pessoais-veterinario/dados-pessoais-veterinario.component';
 import { ConfirmacaoVeterinarioComponent } from './componentes/veterinario/registar-veterinario/confirmacao-veterinario/confirmacao-veterinario.component';
-import { PropostasComponent } from './componentes/propostas/propostas.component';
+import { TFCsComponent } from './componentes/propostas/tfcs.component';
 import { EnviarComponent } from './componentes/propostas/enviar/enviar.component';
 import { UsuariosComponent } from './componentes/usuarios/usuarios.component';
 import { CadastrarUsuarioComponent } from './componentes/usuarios/cadastrar-usuario/cadastrar-usuario.component';
 import { DetalhesComponent } from './componentes/propostas/detalhes/detalhes.component';
+import { DetalhesTarefaComponent } from './componentes/actividades/detalhes/detalhes-tarefa.component';
 import { ActividadesComponent } from './componentes/actividades/actividades.component';
 import { ChatComponent } from './componentes/chat/chat.component';
 import { NotificacaoComponent } from './componentes/notificacao/notificacao.component';
@@ -112,6 +116,9 @@ import { AuthInterceptor } from './servicos/auth.interceptor';
 import { EnviarNotificacaoComponent } from './componentes/notificacao/enviar-notificacao/enviar-notificacao.component';
 import { ReservadoComponent } from './componentes/reservado/reservado.component';
 import { FileUploadComponent } from './componentes/file-upload/file-upload.component';
+import { EncotrosComponent } from './componentes/encotros/encotros.component';
+import { TfcsDefendidosComponent } from './componentes/tfcs-defendidos/tfcs-defendidos.component';
+import { DetalhesEncontroComponent } from './componentes/encotros/detalhes-encontro/detalhes-encontro.component';
 
 
 @NgModule({
@@ -147,7 +154,7 @@ import { FileUploadComponent } from './componentes/file-upload/file-upload.compo
     DadosUsuarioVeterinarioComponent,
     DadosPessoaisVeterinarioComponent,
     ConfirmacaoVeterinarioComponent,
-    PropostasComponent,
+    TFCsComponent,
     EnviarComponent,
     UsuariosComponent,
     CadastrarUsuarioComponent,
@@ -157,7 +164,11 @@ import { FileUploadComponent } from './componentes/file-upload/file-upload.compo
     NotificacaoComponent,
     EnviarNotificacaoComponent,
     ReservadoComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    EncotrosComponent,
+    DetalhesTarefaComponent,
+    TfcsDefendidosComponent,
+    DetalhesEncontroComponent
   ],
   imports: [
     BrowserModule,
@@ -182,7 +193,7 @@ import { FileUploadComponent } from './componentes/file-upload/file-upload.compo
     MatCardModule,
     DropdownModule,
     //MultiSelectModule,
-   // FileUploadModule,
+   FileUploadModule,
    // FieldsetModule,
     TableModule,
     DialogModule,
@@ -219,7 +230,9 @@ import { FileUploadComponent } from './componentes/file-upload/file-upload.compo
     TooltipModule,
     MessagesModule,
     MessageModule,
-    BadgeModule
+    BadgeModule,
+    // NgxDocViewerModule
+    // PdfViewerModule
   ],
   providers: [
     ConfirmationService, AuthenticationService,

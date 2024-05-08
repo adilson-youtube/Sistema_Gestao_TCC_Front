@@ -1,0 +1,216 @@
+
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+
+<p-toast></p-toast>
+
+<p-card>
+    <div class="card p-pl-6 p-pr-6 p-pb-6">
+        <!-- <h5>Opposite Content</h5> -->
+        <div class="p-d-flex">
+            <span class="p-input-icon-left p-mr-auto">
+                <h2>Encontros</h2>
+            </span>
+            <span class="p-input-icon-left">
+                <button *ngIf='isRole("Professor")' pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal(encontro)" pTooltip="Novo" tooltipPosition="bottom"></button>
+                <!-- <i class="pi pi-search"></i> -->
+                <!-- <input pInputText type="text" placeholder="Pesquisar..." />
+                <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash"></button> -->
+            </span>
+        </div>
+        <p-timeline [(value)]="encontros">
+            <ng-template pTemplate="content" let-encontro>
+                <div class="p-grid">
+                    <div class="p-mt-2">{{encontro.data | date:'dd/MM/yyyy'}}
+                    </div>
+                    <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" 
+                    (click)="modalDetalhes(encontro)" pTooltip="Detalhes do Encontro" tooltipPosition="bottom"></button>
+                    
+                </div>
+            </ng-template>
+            <ng-template pTemplate="opposite" let-encontro>
+                {{encontro.local}}
+            </ng-template>
+        </p-timeline>
+    </div>
+
+    <!-- <div class="card p-pl-6 p-pr-6 p-pb-6">
+
+        <div class="p-d-flex">
+            <span class="p-input-icon-left p-mr-auto">
+                <h2>Encontros</h2>
+            </span>
+            <span class="p-input-icon-left">
+                <button *ngIf='isRole("Professor")' pButton pRipple type="button" icon="pi pi-plus" 
+                class="p-button-rounded" (click)="modal(encontro)" pTooltip="Novo" tooltipPosition="bottom"></button>
+            </span>
+        </div>
+
+        <p-timeline [value]="encontros" align="alternate" styleClass="customized-timeline">
+            <ng-template pTemplate="marker" let-encontro>
+                <span class="custom-marker p-shadow-2" [style.backgroundColor]="encontro?.color">
+                    <i [ngClass]="encontro.icon"></i>
+                </span>
+            </ng-template>
+            <ng-template pTemplate="content" let-encontro>
+                <p-card [header]="encontro.status" [subheader]="encontro.date">
+                    <img *ngIf="encontro?.image" [src]="'assets/showcase/images/demo/product/' + encontro.image" [alt]="encontro.name" width="200" class="p-shadow-2" />
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt
+                        quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!</p>
+                    <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" 
+                    (click)="modalDetalhes(encontro)" pTooltip="Detalhes do Encontro" tooltipPosition="bottom"></button>
+                </p-card>
+            </ng-template>
+        </p-timeline>
+
+    </div> -->
+
+</p-card>
+
+
+<!--------------------- tabela --------------------------------------->
+<!-- <p-card>
+    <h3>Encontros/h3>
+    <p-table #dt [value]="encontros" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="Id" [globalFilterFields]="['Descricao']" 
+             [showCurrentPageReport]="true" currentPageReportTemplate="{first} até {last} de {totalRecords} áreas" styleClass="p-datatable-customers p-datatable-gridlines">
+        <ng-template pTemplate="caption">
+            <div class="p-d-flex">
+                <span class="p-input-icon-left p-mr-auto">
+                    <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal(encontro)" pTooltip="Novo" tooltipPosition="bottom"></button>
+                </span>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Pesquisar..." />
+                    <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limpar(dt)"></button>
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center"> 
+                        Local do Encontro<p-columnFilter type="text" field="Descricao" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th style="width:8rem;text-align:center">Operação</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-encontro>
+            <tr>
+                <td>{{encontro?.local}}</td>
+                <td style="text-align:center">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text" (click)="modal(encontro)" pTooltip="Editar" tooltipPosition="bottom"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="eliminarArea(encontro.id)" pTooltip="Eliminar" tooltipPosition="bottom"></button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="2" style="text-align:center">LISTA DE ÁREAS VAZIA.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card> -->
+
+<!---------------------------- modal -------------------------------->
+<p-dialog [header]="cabecario" [(visible)]="exibir" [modal]="true" [style]="{width: '40vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-12 p-md-12">
+            <label for="state">Estudante</label>
+            <p-dropdown inputId="state" [options]="estudantes" [(ngModel)]="estudanteSelecionado" placeholder="Seleccionar"
+                optionLabel="nome" optionValue=""></p-dropdown>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label>Tipo Encontro</label>
+            <!-- appendTo="body" -->
+            <p-dropdown optionLabel="name" optionValue="code" inputId="meioLocalEncontro" [options]="meiosLocal" 
+            [(ngModel)]="meioLocalSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+        </div>
+
+        <div *ngIf="(meioLocalSelecionado === 'Presencial' || meioLocalSelecionado === 'Ourtro')" class="p-field p-col-12">
+            <label>Local</label>
+            <input id="local" type="text" [(ngModel)]="encontro.local"  pInputText/>
+        </div>
+
+        <div class="p-field p-col-12">
+            <label>Motivo</label>
+            <!-- <input id="local" type="text" [(ngModel)]="encontro.motivo"  pInputText/> -->
+            <textarea id="descricao" [rows]="4" pInputTextarea [(ngModel)]="encontro.motivo"></textarea>
+        </div>
+
+        <div class="p-field p-col-12 p-md-12">
+            <label>Data do Encontro</label>
+            <p-calendar id="calendar" inline="true" [(ngModel)]="encontro.data" dateFormat="dd/mm/yy"></p-calendar>
+            <small class="p-invalid" *ngIf="validar && !encontro.data">Campo Obrigatório.</small>
+        </div>
+        
+    </div>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+    </ng-template>
+</p-dialog>
+
+<!---------------------------- modal -------------------------------->
+<p-dialog [header]="detalhesCabecario" [(visible)]="exibirDetalhesEncontro" [modal]="true" [style]="{width: '40vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <!-- <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-12 p-md-12">
+            <label for="state">Estudante</label>
+            <p-dropdown inputId="state" [options]="estudantes" [(ngModel)]="estudanteSelecionado" placeholder="Seleccionar"
+                optionLabel="nome" optionValue=""></p-dropdown>
+        </div>
+        <div class="p-field p-col-12 p-md-12">
+            <label>Tipo Encontro</label>
+            <p-dropdown optionLabel="name" optionValue="code" inputId="meioLocalEncontro" [options]="meiosLocal" 
+            [(ngModel)]="meioLocalSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+        </div>
+
+        <div *ngIf="(meioLocalSelecionado === 'Presencial' || meioLocalSelecionado === 'Ourtro')" class="p-field p-col-12">
+            <label>Local</label>
+            <input id="local" type="text" [(ngModel)]="encontro.local"  pInputText/>
+        </div>
+
+        <div class="p-field p-col-12">
+            <label>Motivo</label>
+            <textarea id="descricao" [rows]="4" pInputTextarea [(ngModel)]="encontro.motivo"></textarea>
+        </div>
+
+        <div class="p-field p-col-12 p-md-12">
+            <label>Data do Encontro</label>
+            <p-calendar id="calendar" inline="true" [(ngModel)]="encontro.data" dateFormat="dd/mm/yy"></p-calendar>
+            <small class="p-invalid" *ngIf="validar && !encontro.data">Campo Obrigatório.</small>
+        </div>
+        
+    </div> -->
+    <!-- <ng-template pTemplate="footer">
+        <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+    </ng-template> -->
+    <p-panel header="ENCONTRO">
+        <div class="p-grid">
+            <div class="p-col-12 p-md-12"><span style="font-weight: bold">LOCAL: </span> {{encontro?.local}}</div>
+            <!-- <div class="p-col-12 p-md-4"><span style="font-weight: bold">PROFESSOR:</span> {{encontro?.descricao}}</div> -->
+            <div class="p-col-12 p-md-12"><span style="font-weight: bold">DATA:</span> {{encontro?.data | date:'dd/MM/yyyy'}}</div>
+            <div class="p-col-12 p-md-12"><span style="font-weight: bold">MOTIVO:</span> {{encontro?.motivo}}</div>
+            
+        </div>
+    </p-panel>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-dialog header="DETALHES DO ENCONTRO" [(visible)]="exibirDetalhes" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <app-detalhes-encontro [encontro]="encontro"></app-detalhes-encontro>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-confirmDialog [style]="{width: '500px'}" #cd>
+    <p-footer>
+        <button type="button" pButton pRipple icon="pi pi-check" label="Sim" (click)="cd.accept()"></button>
+        <button type="button" pButton pRipple icon="fa fa-fw fa-times" label="Não" (click)="cd.reject()"></button>
+    </p-footer>
+</p-confirmDialog>

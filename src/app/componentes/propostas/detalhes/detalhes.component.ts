@@ -3,8 +3,8 @@ import { Area } from 'src/app/modelo/entidades/area';
 import { Candidato } from 'src/app/modelo/entidades/candidato';
 import { Funcionario } from 'src/app/modelo/entidades/funcionario';
 import { Orgao } from 'src/app/modelo/entidades/orgao';
-import { Proposta } from 'src/app/modelo/entidades/proposta';
-import { EstadoProposta } from 'src/app/modelo/enumerados/estadoProposta';
+import { TFC } from 'src/app/modelo/entidades/tfc';
+import { EstadoTFC } from 'src/app/modelo/enumerados/estadoTFC';
 import { CandidatoServico } from 'src/app/servicos/candidatoservico.service';
 import { FuncionarioServico } from 'src/app/servicos/funcionarioservico.service';
 import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
@@ -16,11 +16,11 @@ import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
 })
 export class DetalhesComponent implements OnInit {
 
-  private _proposta: Proposta;
+  private _tfc: TFC;
 
-  estadoPropostaSelecionado: EstadoProposta;
+  estadoTFCSelecionado: EstadoTFC;
 
-  estadoPropostas: any[] = [
+  estadoTFCs: any[] = [
     { name: 'Proposta', code: 0 },
     { name: 'Reprovado', code: 1 },
     { name: 'Aprovado', code: 2 },
@@ -33,13 +33,13 @@ export class DetalhesComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  get proposta(): Proposta {
-    return this._proposta;
+  get tfc(): TFC {
+    return this._tfc;
   }
 
   @Input()
-  set proposta(proposta: Proposta) {
-    this._proposta = proposta; 
+  set tfc(tfc: TFC) {
+    this._tfc = tfc; 
   }
 
 //----- 

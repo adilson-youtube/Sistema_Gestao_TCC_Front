@@ -1,5 +1,5 @@
 import { EstadoTarefa } from "../enumerados/estadoTarefa";
-import { Proposta } from "./proposta";
+import { TFC } from "./tfc";
 
 export class Tarefa {
     id?: number;
@@ -8,6 +8,10 @@ export class Tarefa {
     dataEntrega?: Date;
     dataTerminada?: Date;
     estadoTarefa?: EstadoTarefa;
-    idProposta?: number;
-    // proposta? = new Proposta();
+    idFicheiroResposta?: string;
+    idFicheiroCorrecao?: string;
+    comentarioCorrecao?: string;
+    // anexo?: any;
+    idTFC?: number;
+    // proposta? = new TFC();
 }

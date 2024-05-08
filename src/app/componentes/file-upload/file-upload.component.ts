@@ -22,6 +22,7 @@ export class FileUploadComponent implements OnInit {
         console.log('Ficheiro enviado com sucesso:', response);
       },
       error => {
+        console.error('Id do Ficheiro:', error.error.text);
         console.error('Erro ao enviar o ficheiro:', error);
       }
     );

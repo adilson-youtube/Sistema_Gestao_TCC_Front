@@ -8,13 +8,13 @@ import { Subscription } from 'rxjs';
 import { Area } from 'src/app/modelo/entidades/area';
 import { Estudante } from 'src/app/modelo/entidades/estudante';
 import { Professor } from 'src/app/modelo/entidades/professor';
-import { Proposta } from 'src/app/modelo/entidades/proposta';
+import { TFC } from 'src/app/modelo/entidades/tfc';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
 import { AreaService } from 'src/app/servicos/area.service';
 import { AuthenticationService } from 'src/app/servicos/authentication.service';
 import { EstudanteService } from 'src/app/servicos/estudante.service';
 import { ProfessorService } from 'src/app/servicos/professor.service';
-import { PropostaService } from 'src/app/servicos/proposta.service';
+import { TFCService } from 'src/app/servicos/tfc.service';
 
 @Component({
   selector: 'app-enviar',
@@ -29,8 +29,8 @@ export class EnviarComponent implements OnInit {
   validar: boolean;
   parametro: string;
   exibirDetalhes = false;
-  proposta = new Proposta();
-  propostas: Array<Proposta>;
+  tfc = new TFC();
+  tfcs: Array<TFC>;
   professores: Array<Professor>;
   professorSelecionado: Professor;
   areas: Array<Area>;
@@ -63,7 +63,7 @@ export class EnviarComponent implements OnInit {
     // private funcionarioServico: FuncionarioServico,
     //private confirmationService: ConfirmationService,
     private authenticationService: AuthenticationService,
-    private propostaServico: PropostaService,
+    private tfcServico: TFCService,
     private areaServico: AreaService,
     private professorServico: ProfessorService,
     private estudanteService: EstudanteService, 
@@ -90,7 +90,7 @@ export class EnviarComponent implements OnInit {
         this.deviceMd = result.mqAlias === 'md' ? true : false;
         this.deviceLg = result.mqAlias === 'lg' ? true : false;
     });
-    this.proposta = new Proposta();
+    this.tfc = new TFC();
 
     this.config.setTranslation(this.translation.translation);
 
@@ -100,14 +100,14 @@ export class EnviarComponent implements OnInit {
   
 
   get cabecario(): string {
-    const texto = this.proposta ? 'Adiconar Proposta' : 'Editar Proposta';
+    const texto = this.tfc ? 'Adiconar Proposta' : 'Editar Proposta';
     return texto;
   }
 
 
-  modal(proposta?: Proposta): void {
-    // this.propostaServico.procurarPropostaPorCodigo(proposta.codigoDoCandidato).subscribe( resultado => { this.proposta = resultado; }); 
-    this.proposta = proposta;
+  modal(tfc?: TFC): void {
+    // this.tfcServico.procurarTFCPorCodigo(tfc.codigoDoCandidato).subscribe( resultado => { this.tfc = resultado; }); 
+    this.tfc = tfc;
     this.exibir = true;
     this.validar = false;
   }
@@ -115,35 +115,37 @@ export class EnviarComponent implements OnInit {
   cancelar(): void {
     this.exibir = false;
     this.validar = false;
-    this.proposta = new Proposta();
+    this.areaSelecionado = new Area();
+    this.professorSelecionado = new Professor();
+    this.tfc = new TFC();
   }
 
   salvar(): void {
     this.validar = true;
     if (this.isRole("Estudante")) {
-      this.proposta.idEstudante = Number(this.userInfo.id);
-      this.proposta.idProfessor = this.professorSelecionado.id;
-      this.proposta.professor = this.professorSelecionado;
-      this.proposta.respostaEstudante = true;
+      this.tfc.idEstudante = Number(this.userInfo.id);
+      this.tfc.idProfessor = this.professorSelecionado.id;
+      this.tfc.professor = this.professorSelecionado;
+      this.tfc.respostaEstudante = true;
       this.estudanteService.procurarEstudantePorId(Number(this.userInfo.id)).subscribe( resultado => {
-        this.proposta.estudante = resultado;
+        this.tfc.estudante = resultado;
       });
     }
     
     if (this.isRole("Professor")) {
-      this.proposta.idProfessor = Number(this.userInfo.id);
-      this.proposta.respostaProfessor = true;
+      this.tfc.idProfessor = Number(this.userInfo.id);
+      this.tfc.respostaProfessor = true;
       this.professorServico.procurarProfessorPorId(Number(this.userInfo.id)).subscribe( resultado => {
-        this.proposta.professor = resultado;
+        this.tfc.professor = resultado;
       });
     }
     
-    this.proposta.idArea = this.areaSelecionado.id;
-    this.proposta.area = this.areaSelecionado;
+    this.tfc.idArea = this.areaSelecionado.id;
+    this.tfc.area = this.areaSelecionado;
 
-    if (this.proposta) {
-      this.propostaServico.salvarProposta(this.proposta).subscribe(resultado => {
-        this.notificacaoMsg("success", "Proposta Evniada", "A Proposta foi enviada com sucesso!");
+    if (this.tfc) {
+      this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
+        this.notificacaoMsg("success", "Proposta de TFC", "A Proposta foi enviada com sucesso!");
         this.cancelar();
       }); 
     }
@@ -154,8 +156,8 @@ export class EnviarComponent implements OnInit {
     tabela.clear();
   }
 
-  modalDetalhes(proposta: Proposta): void {
-    this.proposta = proposta;
+  modalDetalhes(tfc: TFC): void {
+    this.tfc = tfc;
     this.exibirDetalhes = true;
   }
 

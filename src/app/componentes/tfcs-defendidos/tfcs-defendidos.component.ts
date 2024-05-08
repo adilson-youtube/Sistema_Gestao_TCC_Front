@@ -2,30 +2,26 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
+import { PrimeNGConfig, ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Area } from 'src/app/modelo/entidades/area';
 import { Funcionario } from 'src/app/modelo/entidades/funcionario';
 import { Professor } from 'src/app/modelo/entidades/professor';
 import { TFC } from 'src/app/modelo/entidades/tfc';
-import { Estado } from 'src/app/modelo/enumerados/Estado';
 import { EstadoTFC } from 'src/app/modelo/enumerados/estadoTFC';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
-import { AreaService } from 'src/app/servicos/area.service';
 import { AuthenticationService } from 'src/app/servicos/authentication.service';
-import { CandidatoServico } from 'src/app/servicos/candidatoservico.service';
 import { EstudanteService } from 'src/app/servicos/estudante.service';
-import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
 import { ProfessorService } from 'src/app/servicos/professor.service';
 import { TFCService } from 'src/app/servicos/tfc.service';
 
 @Component({
-  selector: 'app-reservado',
-  templateUrl: './reservado.component.html',
-  styleUrls: ['./reservado.component.css']
+  selector: 'app-tfcs-defendidos',
+  templateUrl: './tfcs-defendidos.component.html',
+  styleUrls: ['./tfcs-defendidos.component.css']
 })
-export class ReservadoComponent implements OnInit {
+export class TfcsDefendidosComponent implements OnInit {
 
   nova = true;
   exibir = false;
@@ -44,9 +40,9 @@ export class ReservadoComponent implements OnInit {
     { name: 'Proposta', code: 0 },
     { name: 'Reprovado', code: 1 },
     { name: 'Aprovado', code: 2 },
-    // { name: 'Em Desenvolvimento', code: 3 },
-    // { name: 'Finalizado', code: 4 },
-    // { name: 'Defendido', code: 5 }
+    { name: 'Em Desenvolvimento', code: 3 },
+    { name: 'Finalizado', code: 4 },
+    { name: 'Defendido', code: 5 }
   ];
   
   userInfo: any;
@@ -92,44 +88,36 @@ export class ReservadoComponent implements OnInit {
 
     this.getInfoUser();
 
-    if(this.isRole("Estudante")) {
-      const id = Number(this.userInfo.id);
-      this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
-        this.tfcs = resultados; 
-        console.log("TFCs: "+JSON.stringify(this.tfcs));
-      });
-    }
+    const id = Number(this.userInfo.id);
+    this.tfcServico.ListarTFCsDefendidos().subscribe( resultados => { 
+      this.tfcs = resultados; 
+      console.log("TFCs: "+JSON.stringify(this.tfcs));
+    });
 
-    if(this.isRole("Professor")) {
-      const id = Number(this.userInfo.id);
-      this.tfcServico.TFCProfessor(id).subscribe( resultados => { 
-        this.tfcs = resultados; 
-        console.log("TFCs: "+JSON.stringify(this.tfcs));
-      });
-    }
+    // if(this.isRole("Estudante")) {
+    //   const id = Number(this.userInfo.id);
+    //   this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
+    //     this.tfcs = resultados; 
+    //     console.log("TFCs: "+JSON.stringify(this.tfcs));
+    //   });
+    // }
 
-    if(this.isRole("Coordenador")) {
-      console.log("O role dele é de Coordenador!");
-      const id = Number(this.userInfo.id);
-      this.tfcServico.listarTFCs().subscribe( resultados => { 
-        this.tfcs = resultados; 
-        console.log("TFCs: "+JSON.stringify(this.tfcs));
-      });
-    }
+    // if(this.isRole("Professor")) {
+    //   const id = Number(this.userInfo.id);
+    //   this.tfcServico.TFCProfessor(id).subscribe( resultados => { 
+    //     this.tfcs = resultados; 
+    //     console.log("TFCs: "+JSON.stringify(this.tfcs));
+    //   });
+    // }
 
-    // this.tfcServico.listarTFCs().subscribe( resultados => { 
-    //   this.tfcs = resultados; 
-    //   console.log("TFCs: "+JSON.stringify(this.tfcs));
-    // });
-
-    
-    /*this.dadosDeUso = new DadosDeUso();
-    this.dadosDeUso.os = deviceInfo.os;
-    this.dadosDeUso.browser = deviceInfo.browser;
-    this.dadosDeUso.type = this.deviceService.isMobile ? ''Telefone :
-    (this.deviceService.isTablet ? 'Tablet' : 'Desktop');
-    this.dadosDeUso.userAgent = deviceInfo.userAgent;
-    this.servico.salvarDadosDeUso(this.dadosDeUso);*/
+    // if(this.isRole("Coordenador")) {
+    //   console.log("O role dele é de Coordenador!");
+    //   const id = Number(this.userInfo.id);
+    //   this.tfcServico.ListarTFCsDefendidos().subscribe( resultados => { 
+    //     this.tfcs = resultados; 
+    //     console.log("TFCs: "+JSON.stringify(this.tfcs));
+    //   });
+    // }
 
     this.authenticationService.showMenuEmitter.subscribe( show => this.showAllMenu = show );
     this.authenticationService.showRegisterEmitter.subscribe( register => this.showregister = register );
@@ -171,11 +159,6 @@ export class ReservadoComponent implements OnInit {
     this.validar = true;
 
     if (this.tfc?.id>=1) {
-
-      if(this.isRole("Coordenador")) {
-        this.tfc.idCoordenador = Number(this.userInfo.id);
-      }
-      console.log("Id Coordenador: "+this.tfc?.idCoordenador);
       this.tfcServico.actualizarTFC(this.tfc.id, this.tfc).subscribe(resultado => {
         this.cancelar();
       }); 
@@ -309,21 +292,5 @@ export class ReservadoComponent implements OnInit {
     // this.router.navigate(["/listarActividades",  {id: id}]);
   }
 
-  reportTFCs() {
-    this.tfcServico.reportTFCs().subscribe(
-      response => {
-        const blob = new Blob([response], { type: 'application/pdf' }); // Defina o tipo MIME correto
-        const url = window.URL.createObjectURL(blob);
-        window.open(url);
-      },
-      error => {
-        const blob = new Blob([error.error.text], { type: 'application/pdf' }); // Defina o tipo MIME correto
-        const url = window.URL.createObjectURL(blob);
-        window.open(url);
-        console.error('O ficheiro:', JSON.stringify(error));
-        console.error('Error downloading file:', error);
-      }
-    );
-  }
 
 }

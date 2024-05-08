@@ -1,0 +1,35 @@
+
+<!-- <p-toast></p-toast> -->
+
+<p-panel header="ENCONTRO">
+    <div class="p-grid">
+        <div class="p-col-12 p-md-12"><span style="font-weight: bold">LOCAL: </span> {{encontro?.local}}</div>
+        <!-- <div class="p-col-12 p-md-4"><span style="font-weight: bold">PROFESSOR:</span> {{encontro?.descricao}}</div> -->
+        <div class="p-col-12 p-md-12"><span style="font-weight: bold">DATA:</span> {{encontro?.data | date:'dd/MM/yyyy'}}</div>
+        <div class="p-col-12 p-md-12"><span style="font-weight: bold">MOTIVO:</span> {{encontro?.motivo}}</div>
+        <div class="p-col-12 p-md-12"><span style="font-weight: bold">CONFIRMAÇÃO DO ENCONTRO:</span> 
+            <div class="p-grid p-p-4">
+
+                <div class="p-field-checkbox p-col-6 p-md-6">
+                    <p-checkbox [disabled]="(encontro.confirmacaoEstudante || !isRole('Estudante'))" 
+                    [(ngModel)]="encontro.confirmacaoEstudante" binary="true" inputId="binary"></p-checkbox>
+                    <label for="binary">Confirmação do Estudante</label>
+                </div>
+                <!-- <div class="p-mr-auto"></div> -->
+                <div class="p-field-checkbox p-col-6 p-md-6">
+                    <p-checkbox [disabled]="(encontro.confirmacaoProfessor || !isRole('Professor'))" 
+                    [(ngModel)]="encontro.confirmacaoProfessor" binary="false" inputId="binary"></p-checkbox>
+                    <label for="binary">Confirmação do Professor</label>
+                </div>
+
+            </div>
+        </div>
+        <button *ngIf="isRole('Estudante') || isRole('Professor')" class="p-ml-auto" type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+        <!-- <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button> -->
+        
+    </div>
+    <!-- <ng-template pTemplate="footer">
+    </ng-template> -->
+</p-panel>
+
+

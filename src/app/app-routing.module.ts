@@ -17,7 +17,6 @@ import { DadosUsuarioVeterinarioComponent } from './componentes/veterinario/regi
 import { DadosPessoaisVeterinarioComponent } from './componentes/veterinario/registar-veterinario/dados-pessoais-veterinario/dados-pessoais-veterinario.component';
 import { ConfirmacaoVeterinarioComponent } from './componentes/veterinario/registar-veterinario/confirmacao-veterinario/confirmacao-veterinario.component';
 import { ServicosComponent } from './componentes/servicos/servicos.component';
-import { PropostasComponent } from './componentes/propostas/propostas.component';
 import { EnviarComponent } from './componentes/propostas/enviar/enviar.component';
 import { ActividadesComponent } from './componentes/actividades/actividades.component';
 import { HeaderComponent } from './componentes/comum/header/header.component';
@@ -25,6 +24,9 @@ import { NotificacaoComponent } from './componentes/notificacao/notificacao.comp
 import { EnviarNotificacaoComponent } from './componentes/notificacao/enviar-notificacao/enviar-notificacao.component';
 import { ReservadoComponent } from './componentes/reservado/reservado.component';
 import { FileUploadComponent } from './componentes/file-upload/file-upload.component';
+import { TFCsComponent } from './componentes/propostas/tfcs.component';
+import { EncotrosComponent } from './componentes/encotros/encotros.component';
+import { TfcsDefendidosComponent } from './componentes/tfcs-defendidos/tfcs-defendidos.component';
 
 
 const routes: Routes = [
@@ -58,9 +60,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: '', component: AuthUserComponent, canActivate: [AdminGuard], children: [
     { path: '', component: HeaderComponent, children: [
-      { path: '', component: PropostasComponent },
+      // { path: '', component: TFCsComponent },
+      { path: '', component: ReservadoComponent },
       { path: 'areas', component: AreasComponent},
-      { path: 'listarPropostas', component: PropostasComponent },
+      // { path: 'listarPropostas', component: TFCsComponent },
+      { path: 'listarPropostas', component: ReservadoComponent },
       { path: 'PropostaReservada', component: ReservadoComponent },
       { path: 'enviarProposta', component: EnviarComponent },
       { path: 'listarActividades', component: ActividadesComponent },
@@ -69,9 +73,11 @@ const routes: Routes = [
       { path: 'notificacoes', component: NotificacaoComponent },
       { path: 'enviarNotificacao', component: EnviarNotificacaoComponent },
       { path: 'fileUpload', component: FileUploadComponent },
+      { path: 'encontros', component: EncotrosComponent},
+      { path: 'listarTFCsDefendidos', component: TfcsDefendidosComponent},
     ] },
       // { path: '', redirectTo: 'proposta', pathMatch: 'full'},
-      // { path: '', component: PropostasComponent },
+      // { path: '', component: TFCsComponent },
       // { path: 'contactos', component: ContactosComponent },
       // { path: 'areas', component: AreasComponent}
     ]

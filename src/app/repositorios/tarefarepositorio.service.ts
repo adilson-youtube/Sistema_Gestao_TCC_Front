@@ -25,8 +25,8 @@ export class TarefaRepositorio {
     return this.http.get<Array<Tarefa>>(`${this.baseUrl}${path}`);
   }
 
-  listarTarefasProposta(id: number): Observable<Array<Tarefa>> {
-    const path = `Tarefa/PorIdProposta/${id}`;
+  listarTarefasTFC(id: number): Observable<Array<Tarefa>> {
+    const path = `Tarefa/PorIdTFC/${id}`;
     return this.http.get<Array<Tarefa>>(`${this.baseUrl}${path}`);
   }
 

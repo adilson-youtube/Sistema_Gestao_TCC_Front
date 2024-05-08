@@ -1,6 +1,7 @@
 <!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header>
 <app-nav [showMenu]="showMenu"></app-nav> -->
 <!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+<p-toast appendTo="body"></p-toast>
 
 <!--------------------- tabela --------------------------------------->
 <p-card>
@@ -55,7 +56,7 @@
                         BigAnt <p-columnFilter type="text" field="detalhes.bigAnt" display="menu"></p-columnFilter>
                     </div>
                 </th> -->
-                <th style="width:9rem;text-align:center" style="width:12rem">Operação</th>
+                <th style="width:9rem;text-align:center" style="width:14rem">Operação</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-tarefa>
@@ -67,42 +68,74 @@
                 <td>{{findTarefa(tarefa?.estadoTarefa)}}</td>
                 
                 <td style="text-align:center">
-                    <p-checkbox id="{{tarefa.id}}" [(ngModel)]="checkboxEstado" [binary]="true" (onChange)="alterarEstado(tarefa)"></p-checkbox>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text p-mr-2" (click)="modal(tarefa)" pTooltip="Editar" tooltipPosition="bottom"></button>
-                    <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" (click)="modalDetalhes(tarefa)" pTooltip="Detalhes" tooltipPosition="bottom"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="eliminarTarefa(tarefa.id)" pTooltip="Eliminar" tooltipPosition="bottom"></button>
-                    <!-- <button *ngIf="parametro!=='dsics-admin'" pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" (click)="modalDetalhes(tarefa)" pTooltip="Detalhes" tooltipPosition="bottom"></button> -->
+
+                    <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" 
+                    (click)="modalDetalhes(tarefa)" pTooltip="Detalhes da Tarefa" tooltipPosition="bottom"></button>
+
+                    <!-- <button *ngIf="findTarefa(tarefa?.estadoTarefa)=='Concluida'" 
+                    pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-danger p-button-text" id="{{tarefa.id}}" 
+                    pTooltip="Visualizar Resposta da Tarefa" (click)="visualizarAnexo(tarefa.idFicheiroResposta)"></button> -->
+
+                    <button *ngIf="findTarefa(tarefa?.estadoTarefa)=='Concluida'" 
+                    pButton pRipple icon="pi pi-download" class="p-button-rounded p-button-danger p-button-text" id="{{tarefa.id}}" 
+                    pTooltip="Baixar Resposta do Estudante" (click)="downloadFile(tarefa.idFicheiroResposta)"></button>
+
+                    <!-- <button pButton pRipple icon="pi pi-pencil pi-check-square" class="p-button-rounded p-button-success p-button-text p-mr-2" (click)="modal(tarefa)" pTooltip="Editar" tooltipPosition="bottom"></button> -->
+                    <button *ngIf="(findTarefa(tarefa?.estadoTarefa)!='Concluida' && isRole('Estudante'))
+                     || (isRole('Estudante') && tarefa?.idFicheiroResposta)" 
+                    pButton pRipple icon="pi pi-user-edit" class="p-button-rounded p-button-help p-button-text" 
+                    (click)="modalAnexarFicheiro(tarefa)" pTooltip="Concluir Tarefa" tooltipPosition="bottom"></button>
+
+                    <!-- <button *ngIf="tarefa?.idFicheiroCorrecao && (isRole('Estudante') || isRole('Professor'))" 
+                    pButton pRipple icon="pi pi-file" class="p-button-rounded p-button-danger p-button-text" id="{{tarefa.id}}" 
+                    pTooltip="Visualizar Correção" (click)="visualizarAnexo(tarefa.idFicheiroCorrecao)"></button> -->
+
+                    <button *ngIf="tarefa?.idFicheiroCorrecao && (isRole('Estudante') || isRole('Professor'))" 
+                    pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success p-button-text" id="{{tarefa.id}}" 
+                    pTooltip="Ver Correção" (click)="modalBaixarCorrecao(tarefa)"></button>
+
+                    <button *ngIf="findTarefa(tarefa?.estadoTarefa)=='Concluida' && isRole('Professor')" 
+                    pButton pRipple icon="pi pi-user-edit" class="p-button-rounded p-button-danger p-button-text" id="{{tarefa.id}}" 
+                    pTooltip="Fazer Correção" (click)="modalAnexarFicheiro(tarefa)"></button>
+                    <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-text" (click)="eliminarTarefa(tarefa.id)" pTooltip="Eliminar" tooltipPosition="bottom"></button> -->
+                    
+                    <!-- <button *ngIf="findTarefa(tarefa?.estadoTarefa)!='Concluida' && isRole('Estudante')"  
+                    pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-danger p-button-text" 
+                    id="{{tarefa.id}}" pTooltip="Concluir Tarefa" (click)="concluirTarefa(tarefa)"></button> -->
+
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="5" style="text-align:center">LISTA DE TEMAS SUGERIDOS VAZIA.</td>
+                <td colspan="5" style="text-align:center">LISTA DE TAREFAS VAZIA.</td>
             </tr>
         </ng-template>
     </p-table>
-    <ng-template pTemplate="footer">
+
+    <!-- <ng-template pTemplate="footer">
         <div class="p-grid p-nogutter p-jc-between">
             <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
             <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
         </div>
-    </ng-template>
+    </ng-template> -->
     <!-- <ng-template pTemplate="content">
     </ng-template> -->
 </p-card>
 
 <!--------------------- modal --------------------------------------->
-<p-dialog #formActividade appendTo="body" [header]="cabecario" [(visible)]="exibirAddTarefa" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+<p-dialog #formActividade appendTo="body" [header]="cabecario" [(visible)]="exibirAddTarefa" [modal]="true" [style]="{width: '30vw'}" [draggable]="false" [resizable]="false">
     <div class="p-fluid p-formgrid p-grid">
-        <div class="p-field p-col-12 p-md-6">
+        <div class="p-field p-col-12 p-md-12">
             <label>Titulo *</label>
             <input id="titulo" type="text" [(ngModel)]="tarefa.titulo" pInputText> 
             <small class="p-invalid" *ngIf="validar && !tarefa.titulo">Campo Obrigatório.</small>
         </div>
 
-        <div class="p-field p-col-12 p-md-6">
+        <div class="p-field p-col-12 p-md-12">
             <label>Descrição</label>
-            <input id="descricao" type="text" [(ngModel)]="tarefa.descricao" pInputText> 
+            <!-- <input id="descricao" type="text" [(ngModel)]="tarefa.descricao" pInputText>  -->
+            <textarea id="descricao" [rows]="4" pInputTextarea [(ngModel)]="tarefa.descricao"></textarea>
             <small class="p-invalid" *ngIf="validar && !tarefa.descricao">Campo Obrigatório.</small>
         </div>
 
@@ -118,14 +151,11 @@
             <small class="p-invalid" *ngIf="validar && !tarefa.dataTerminada">Campo Obrigatório.</small>
         </div>  -->
 
-        <div class="p-field p-col-12 p-md-12">
+        <!-- <div class="p-field p-col-12 p-md-12">
             <label>Estado</label>
             <p-dropdown optionLabel="name" optionValue="code" appendTo="body" inputId="estado" [options]="estadoTarefas" [(ngModel)]="tarefa.estadoTarefa" placeholder="-- Seleccionar --"></p-dropdown>
-            <!-- <input id="estadoTarefa" type="text" [(ngModel)]="tarefa.estadoTarefa" pInputText>  -->
             <small class="p-invalid" *ngIf="validar && !tarefa.estadoTarefa">Campo Obrigatório.</small>
-        </div> 
-
-        
+        </div>  -->
     </div>
     <ng-template pTemplate="footer">
         <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
@@ -134,9 +164,9 @@
 </p-dialog>
 
 <!--------------------- modal --------------------------------------->
-<p-dialog #formActividade appendTo="body" [header]="cabecario" [(visible)]="exibirTerminarTarefa" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+<p-dialog #formActividade appendTo="body" [header]="tarefaHeader" [(visible)]="exibirAnexarFicheiro" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
     <div class="p-fluid p-formgrid p-grid">
-        <div class="p-field p-col-12 p-md-6">
+        <!-- <div class="p-field p-col-12 p-md-6">
             <label>Titulo *</label>
             <input id="titulo" type="text" [(ngModel)]="tarefa.titulo" pInputText> 
             <small class="p-invalid" *ngIf="validar && !tarefa.titulo">Campo Obrigatório.</small>
@@ -146,33 +176,94 @@
             <label>Descrição</label>
             <input id="descricao" type="text" [(ngModel)]="tarefa.descricao" pInputText> 
             <small class="p-invalid" *ngIf="validar && !tarefa.descricao">Campo Obrigatório.</small>
+        </div> -->
+
+        <div *ngIf="isRole('Professor')" class="p-field p-col-12 p-md-12">
+            <label>Comentario</label>
+            <textarea id="comentarioCorrecao" [rows]="5" type="text" [(ngModel)]="tarefa.comentarioCorrecao" pInputTextarea></textarea>
+            <small class="p-invalid" *ngIf="validar && !tarefa.comentarioCorrecao">Campo Obrigatório.</small>
         </div>
 
-        <div class="p-field p-col-12 p-md-12">
+        <div class="file-input-wrapper">
+            <!-- <button onclick="document.getElementById('file').click()" class="btn">Escolher arquivo</button> -->
+            <button type="button" pButton pRipple class="p-button-success" 
+            icon="pi pi-cloud-upload" onclick="document.getElementById('file').click()" label="Escolher arquivo"></button>
+            <!-- <button pButton pRipple icon="pi pi-cloud-upload" class="p-button-rounded p-button-success p-button-text" id="{{tarefa.id}}" 
+            pTooltip="Escolher arquivo" onclick="document.getElementById('file').click()"></button> -->
+            <span id="file-name"></span>
+
+            <input *ngIf="isRole('Estudante')" type="file" 
+            (change)="uploadFile($event, 'respostaEstudante')" name="file" id="file" class="file-input">
+
+            <input *ngIf="isRole('Professor')"type="file" 
+            (change)="uploadFile($event, 'correcaoProfessor')" name="file" id="file" class="file-input">
+        </div>
+        
+
+        <!-- <input type="file" (change)="uploadFile($event)"> -->
+
+        <!-- <p-fileUpload
+            mode="basic"
+            chooseLabel="Buacar"
+            name="demo[]"
+            [auto]="true"
+            accept="image/*"
+            [maxFileSize]="1000000"
+            (onUpload)="onUploadFile($event)"
+        ></p-fileUpload> -->
+
+
+
+        <!-- <div class="p-field p-col-12 p-md-12">
             <label>Data de Entrega</label>
             <p-calendar id="calendar" inline="true" [(ngModel)]="dataEntrega" dateFormat="dd/mm/yy"></p-calendar>
             <small class="p-invalid" *ngIf="validar && !tarefa.dataEntrega">Campo Obrigatório.</small>
-        </div>
+        </div> -->
 
-        <div class="p-field p-col-12 p-md-12">
+        <!-- <div class="p-field p-col-12 p-md-12">
             <label>Estado</label>
             <p-dropdown optionLabel="name" optionValue="code" appendTo="body" inputId="estado" [options]="estadoTarefas" [(ngModel)]="tarefa.estadoTarefa" placeholder="-- Seleccionar --"></p-dropdown>
-            <!-- <input id="estadoTarefa" type="text" [(ngModel)]="tarefa.estadoTarefa" pInputText>  -->
             <small class="p-invalid" *ngIf="validar && !tarefa.estadoTarefa">Campo Obrigatório.</small>
-        </div> 
+        </div>  -->
 
         
     </div>
     <ng-template pTemplate="footer">
-        <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+        <button *ngIf="isRole('Estudante')" type="button" pButton pRipple 
+        icon="pi pi-save"  (click)="concluirTarefa(tarefa)" label="Concluir"></button>
+        <button *ngIf="isRole('Professor')" type="button" pButton pRipple 
+        icon="pi pi-save"  (click)="correcaoTarefa(tarefa)" label="Concluir"></button>
         <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
     </ng-template>
 </p-dialog>
 
 <!--------------------- modal --------------------------------------->
-<!-- <p-dialog header="DETALHES DO TEMA" [(visible)]="exibirDetalhes" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
-    <app-detalhes [tarefa]="tarefa"></app-detalhes>
-</p-dialog> -->
+<p-dialog #formActividade appendTo="body" [header]="visualizarCorrecaoHeader" [(visible)]="exibirBaixarCorrecao" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+    <div class="p-fluid p-formgrid p-grid">
+
+        <div *ngIf="isRole('Estudante') || isRole('Professor')" class="p-field p-col-12 p-md-12">
+            <label>Comentario</label>
+            <textarea [disabled] = "true" id="comentarioCorrecao" [rows]="5" type="text" [(ngModel)]="tarefa.comentarioCorrecao" pInputTextarea></textarea>
+            <small class="p-invalid" *ngIf="validar && !tarefa.comentarioCorrecao">Campo Obrigatório.</small>
+        </div>
+
+        
+    </div>
+    <ng-template pTemplate="footer">
+
+        <button type="button" pButton pRipple icon="pi pi-times" 
+        (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+
+        <button *ngIf="tarefa?.idFicheiroCorrecao && (isRole('Estudante') || isRole('Professor'))" 
+        pButton pRipple icon="pi pi-download" class="p-button-success" id="{{tarefa.id}}" 
+        pTooltip="Baixar Correção" label="Baixar" (click)="downloadFile(tarefa.idFicheiroCorrecao)"></button>
+    </ng-template>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-dialog header="DETALHES DA TAREFA" [(visible)]="exibirDetalhes" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <app-detalhes-tarefa [tarefa]="tarefa"></app-detalhes-tarefa>
+</p-dialog>
 
 <!--------------------- modal --------------------------------------->
 <p-confirmDialog [style]="{width: '50vw'}" #cd>

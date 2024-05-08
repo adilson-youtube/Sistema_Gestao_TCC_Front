@@ -3,7 +3,7 @@ import { Apresentacao } from "./apresentacao";
 import { Banca } from "./banca";
 import { Estudante } from "./estudante";
 import { Professor } from "./professor";
-import { Proposta } from "./proposta";
+import { TFC } from "./tfc";
 import { Usuario } from "./usuario";
 
 export class TCC {
@@ -11,11 +11,11 @@ export class TCC {
     tema? = '';
     resumo? = '';
     estado? = 1;
-    idProposta? = 0;
+    idTFC? = 0;
     dataInicio? = new Date();
     dataApresentacao? = new Date();
     idUsuario? = 0;
     anexos? = new Array<Anexo>();
-    // proposta? = new Proposta();
+    // proposta? = new TFC();
     apresentacoes? = new Array<Apresentacao>();
 }

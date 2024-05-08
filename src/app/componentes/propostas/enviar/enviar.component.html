@@ -9,7 +9,7 @@
         <div class="p-fluid p-formgrid p-grid">
             <div class="p-field p-col-12 p-md-12">
                 <label for="nome">Titulo</label>
-                <input id="nome" [(ngModel)]="proposta.titulo" type="text" pInputText>
+                <input id="nome" [(ngModel)]="tfc.titulo" type="text" pInputText>
             </div>
             <div *ngIf='isRole("Professor")' class="p-field p-col-12">
                 <label for="state">Areas de Conhecimento</label>
@@ -42,9 +42,9 @@
                 </p-editor>
             </div> -->
             <div class="p-field p-col-12 p-md-12">
-                <label for="telefone">Descrição</label>
+                <label for="descricao">Descrição</label>
                 <!-- <textarea [rows]="5" [cols]="90" pInputTextarea autoResize="true"></textarea> -->
-                <textarea id="telefone" [rows]="9" pInputTextarea [(ngModel)]="proposta.Descricao"></textarea>
+                <textarea id="descricao" [rows]="9" pInputTextarea [(ngModel)]="tfc.Descricao"></textarea>
             </div>
             <!-- <div class="p-field p-col-12 p-md-4">
                 <label for="dataNascimento">Data de Nascimento</label>
@@ -52,7 +52,7 @@
             </div>
             <div class="p-field p-col-12 p-md-4">
                 <label for="telefone">Telefone</label>
-                <input id="telefone" [(ngModel)]="proposta.telefone" type="text" pInputText>
+                <input id="telefone" [(ngModel)]="tfc.telefone" type="text" pInputText>
             </div> -->
             <div class="p-field p-col-12 p-md-6">
             </div>
@@ -64,7 +64,7 @@
     </ng-template>
     <ng-template pTemplate="footer">
         <div class="p-grid p-nogutter p-jc-between">
-            <p-button label="Cancelar" (onClick)="retroceder()" icon="pi pi-close" class="p-button-danger"></p-button>
+            <p-button label="Limpar" (onClick)="cancelar()" icon="pi pi-breash" class="p-button-danger"></p-button>
             <p-button label="Salvar" (onClick)="salvar()" icon="pi pi-save" iconPos="right"></p-button>
         </div>
     </ng-template>

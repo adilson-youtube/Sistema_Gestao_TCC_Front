@@ -19,8 +19,8 @@ export class TarefaService {
         return this.repositorio.listarTarefasEstudante(id);
     }
 
-    listarTarefasProposta(id: number): Observable<Array<Tarefa>> {
-        return this.repositorio.listarTarefasProposta(id);
+    listarTarefasTFC(id: number): Observable<Array<Tarefa>> {
+        return this.repositorio.listarTarefasTFC(id);
     }
 
     procurarTarefaPorId(codigo: number): Observable<Tarefa> {

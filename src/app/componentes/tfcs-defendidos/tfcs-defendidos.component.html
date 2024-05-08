@@ -1,0 +1,145 @@
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header>
+<app-nav [showMenu]="showMenu"></app-nav> -->
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+<p-toast></p-toast>
+
+<!--------------------- tabela --------------------------------------->
+<p-card>
+    
+    <h3>TFC DEFENDIDOS</h3>
+    <p-table #dt [value]="tfcs" [rows]="10" 
+            [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="id" 
+            [globalFilterFields]="['tfc.estudante.nome','tfc.titulo','tfc.area.descricao','tfc.professor.nome','tfc.estado']"
+            [showCurrentPageReport]="true" currentPageReportTemplate="{first} até {last} de {totalRecords} Propostas" styleClass="p-datatable-customers p-datatable-gridlines">
+        <ng-template pTemplate="caption">
+            <!-- <div class="p-d-flex p-nogutter p-jc-between">
+                <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limparTabela(dt)"></button>
+                <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button>
+                <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button>
+            </div> -->
+            <div class="p-d-flex">
+                <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limpar(dt)"></button>
+                <span class="p-input-icon-left p-ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Pesquisar..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center">
+                        Estudante <p-columnFilter type="text" field="tfc.estudante.nome" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center">
+                        Tema <p-columnFilter type="text" field="tfc.titulo" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center">
+                        Area <p-columnFilter type="text" field="tfc.area.descricao" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center">
+                        Professor <p-columnFilter type="text" field="tfc.professor.nome" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center">
+                        Estado <p-columnFilter type="text" field="tfc.estado" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                
+                <th style="width:18%;text-align:center">Operação</th>
+                
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tfc>
+            <tr>
+                <td>{{tfc?.estudante?.nome}}</td>
+                <td>{{tfc.titulo}}</td>
+                <td>{{tfc?.area?.descricao}}</td>
+                <td>{{tfc?.professor?.nome}}</td>
+                <td>{{findEstadoTFC(tfc?.estado)}}</td>
+                
+                <td style="text-align:center">
+                    <!-- <button *ngIf='isRole("Admin")||isRole("Coordenador")' pButton pRipple icon="pi pi-pencil" 
+                    class="p-button-rounded p-button-success p-button-text p-mr-2" (click)="modal(tfc)" pTooltip="Editar" tooltipPosition="bottom"></button> -->
+                    <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" 
+                    (click)="modalDetalhes(tfc)" pTooltip="Detalhes" tooltipPosition="bottom"></button>
+                    
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6" style="text-align:center">LISTA DE PROPOSTAS DE TFC VAZIA.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
+            <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+    <!-- <ng-template pTemplate="content">
+    </ng-template> -->
+</p-card>
+
+<!--------------------- modal --------------------------------------->
+<p-dialog #formTFC [header]="cabecario" appendTo="body" [(visible)]="exibir" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <div class="p-fluid p-formgrid p-grid">
+        <div class="p-field p-col-12 p-md-8">
+            <label>Titulo *</label>
+            <input id="titulo" type="text" [(ngModel)]="tfc.titulo" pInputText> 
+            <small class="p-invalid" *ngIf="validar && !tfc.titulo">Campo Obrigatório.</small>
+        </div>
+
+        <div class="p-field p-col-12 p-md-4">
+            <label>Estado</label>
+            <p-dropdown optionLabel="name" optionValue="code" inputId="estado" [options]="estadoTFCs" [(ngModel)]="tfc.estado" placeholder="-- Seleccionar --"></p-dropdown>
+            <!-- <input id="estadoTarefa" type="text" [(ngModel)]="tarefa.estadoTarefa" pInputText>  -->
+            <small class="p-invalid" *ngIf="validar && !tfc.estado">Campo Obrigatório.</small>
+        </div> 
+
+        <div class="p-field p-col-12 p-md-12">
+            <label>Descrição</label>
+            <textarea id="descricao" type="text" [(ngModel)]="tfc.descricao" pInputTextarea></textarea>
+            <!-- <input id="descricao" type="text" [(ngModel)]="tfc.descricao" pInputTextarea>  -->
+            <small class="p-invalid" *ngIf="validar && !tfc.descricao">Campo Obrigatório.</small>
+        </div> 
+
+        <!-- <div class="p-field p-col-12 p-md-12">
+            <label>Aceitar TFC</label>
+            <button pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-help p-button-text" (click)="alterarEstado(tfc)" pTooltip="Aceitar TFC" tooltipPosition="bottom"></button>
+            Icones para Aceitar TFC pi-thumbs-up, pi-check
+            <p-checkbox *ngIf="!tfc.respostaEstudante" id="{{tfc.id}}" [(ngModel)]="tfc.respostaEstudante" [binary]="true" (onChange)="alterarEstado(tfc)"></p-checkbox>
+            <small class="p-invalid" *ngIf="validar && !tfc.respostaEstudante">Campo Obrigatório.</small>
+        </div>  -->
+
+        
+    </div>
+    <ng-template pTemplate="footer">
+        <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+    </ng-template>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-dialog header="DETALHES DO TEMA" appendTo="body" [(visible)]="exibirDetalhes" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+    <app-detalhes [tfc]="tfc"></app-detalhes>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-confirmDialog [style]="{width: '500px'}" #cd>
+    <p-footer>
+        <button class="p-button-success" type="button" pButton pRipple icon="pi pi-check" label="Sim" (click)="cd.accept()"></button>
+        <button class="p-button-danger" type="button" pButton pRipple icon="pi pi-times" label="Não" (click)="cd.reject()"></button>
+    </p-footer>
+</p-confirmDialog>

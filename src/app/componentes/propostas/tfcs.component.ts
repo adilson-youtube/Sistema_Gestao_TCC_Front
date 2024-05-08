@@ -6,31 +6,28 @@ import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api'
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Area } from 'src/app/modelo/entidades/area';
-import { Candidato } from 'src/app/modelo/entidades/candidato';
-import { Funcionario } from 'src/app/modelo/entidades/funcionario';
-import { Orgao } from 'src/app/modelo/entidades/orgao';
+
 import { Professor } from 'src/app/modelo/entidades/professor';
-import { Proposta } from 'src/app/modelo/entidades/proposta';
+import { TFC } from 'src/app/modelo/entidades/tfc';
 import { Estado } from 'src/app/modelo/enumerados/Estado';
-import { EstadoProposta } from 'src/app/modelo/enumerados/estadoProposta';
+import { EstadoTFC } from 'src/app/modelo/enumerados/estadoTFC';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
 import { AreaService } from 'src/app/servicos/area.service';
 import { AuthenticationService } from 'src/app/servicos/authentication.service';
-import { CandidatoServico } from 'src/app/servicos/candidatoservico.service';
+
 import { CoordenadorService } from 'src/app/servicos/coordenador.service';
 import { EstudanteService } from 'src/app/servicos/estudante.service';
-import { FuncionarioServico } from 'src/app/servicos/funcionarioservico.service';
-import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
+
 import { ProfessorService } from 'src/app/servicos/professor.service';
-import { PropostaService } from 'src/app/servicos/proposta.service';
+import { TFCService } from 'src/app/servicos/tfc.service';
 
 @Component({
-  selector: 'app-propostas',
-  templateUrl: './propostas.component.html',
-  styleUrls: ['./propostas.component.css'],
+  selector: 'app-tfcs',
+  templateUrl: './tfcs.component.html',
+  styleUrls: ['./tfcs.component.css'],
   providers:[ConfirmationService, MessageService],
 })
-export class PropostasComponent implements OnInit {
+export class TFCsComponent implements OnInit {
 
   nova = true;
   exibir = false;
@@ -39,13 +36,13 @@ export class PropostasComponent implements OnInit {
   areas: Array<Area>;
   //dadosDeUso: DadosDeUso;
   exibirDetalhes = false;
-  proposta = new Proposta();
-  propostas: Array<Proposta>;
+  tfc = new TFC();
+  tfcs: Array<TFC>;
   professores: Array<Professor>;
 
-  estadoPropostaSelecionado: EstadoProposta;
+  estadoTFCSelecionado: EstadoTFC;
 
-  estadoPropostas: any[] = [
+  estadoTFCs: any[] = [
     { name: 'Proposta', code: 0 },
     { name: 'Reprovado', code: 1 },
     { name: 'Aprovado', code: 2 },
@@ -86,7 +83,7 @@ export class PropostasComponent implements OnInit {
     private coordenadorServico: CoordenadorService,
     private areaService: AreaService,
     private estudanteService: EstudanteService,
-    private propostaServico: PropostaService,
+    private tfcServico: TFCService,
     private confirmationService: ConfirmationService, 
     private messageService: MessageService
   ) { }
@@ -101,30 +98,30 @@ export class PropostasComponent implements OnInit {
     // }); 
 
     if(this.isRole("Estudante")) {
-      this.propostaServico.ListarPropostasDisponiveisParaEstudante().subscribe( resultados => { 
-        this.propostas = resultados; 
-        console.log("Propostas: "+JSON.stringify(this.propostas));
+      this.tfcServico.ListarTFCsDisponiveisParaEstudante().subscribe( resultados => { 
+        this.tfcs = resultados; 
+        console.log("TFCs: "+JSON.stringify(this.tfcs));
       });
     }
 
     if(this.isRole("Professor")) {
-      this.propostaServico.ListarPropostasDisponiveisParaProfessor().subscribe( resultados => { 
-        this.propostas = resultados; 
-        console.log("Propostas: "+JSON.stringify(this.propostas));
+      this.tfcServico.ListarTFCsDisponiveisParaProfessor().subscribe( resultados => { 
+        this.tfcs = resultados; 
+        console.log("TFCs: "+JSON.stringify(this.tfcs));
       });
     }
 
     if(this.isRole("Coordenador")) {
-      this.propostaServico.listarPropostas().subscribe( resultados => { 
-        this.propostas = resultados;
-        console.log("Propostas: "+JSON.stringify(this.propostas));
+      this.tfcServico.listarTFCs().subscribe( resultados => { 
+        this.tfcs = resultados;
+        console.log("TFCs: "+JSON.stringify(this.tfcs));
       });
     }
 
 
-    // this.propostaServico.listarPropostas().subscribe( resultados => { 
-    //   this.propostas = resultados; 
-    //   console.log("Propostas: "+JSON.stringify(this.propostas));
+    // this.tfcServico.listarTFCs().subscribe( resultados => { 
+    //   this.tfcs = resultados; 
+    //   console.log("TFCs: "+JSON.stringify(this.tfcs));
     // });
 
     
@@ -155,13 +152,13 @@ export class PropostasComponent implements OnInit {
   
 
   get cabecario(): string {
-    return 'Editar Proposta';
+    return 'Editar TFC';
   }
 
 
-  modal(proposta?: Proposta): void {
-    // this.propostaServico.procurarPropostaPorCodigo(proposta.codigoDoCandidato).subscribe( resultado => { this.proposta = resultado; }); 
-    this.proposta = proposta;
+  modal(tfc?: TFC): void {
+    // this.tfcServico.procurarTFCPorCodigo(tfc.codigoDoCandidato).subscribe( resultado => { this.tfc = resultado; }); 
+    this.tfc = tfc;
     this.exibir = true;
     this.validar = false;
   }
@@ -169,92 +166,102 @@ export class PropostasComponent implements OnInit {
   cancelar(): void {
     this.exibir = false;
     this.validar = false;
-    this.proposta = new Proposta();
+    this.tfc = new TFC();
   }
 
   salvar(): void {
     this.validar = true;
 
-    if (this.proposta?.id>=1) {
-      this.propostaServico.actualizarProposta(this.proposta.id, this.proposta).subscribe(resultado => {
-        this.proposta = resultado;
-        this.notificacaoMsg("success", "Proposta", "O estado Tema foi aceite com Sucesso!");
+    if (this.tfc?.id>=1) {
+      if (this.isRole("Coordenador")) {
+        // this.tfc.respostaEstudante = true;
+        this.tfc.idCoordenador = Number(this.authenticationService.getDecodedToken().id);
+        // this.tfc.estado = this.estadoTFCSelecionado;
+        console.log("Id do Coordenador: "+this.tfc.idCoordenador);
+        this.coordenadorServico.procurarCoordenadorPorId(this.tfc.idCoordenador).subscribe((coordenador)=> {
+          this.tfc.coordenador = coordenador;
+          // tfc.estado = EstadoTFC.Aprovado;
+        })
+      }
+      this.tfcServico.actualizarTFC(this.tfc.id, this.tfc).subscribe(resultado => {
+        this.tfc = resultado;
+        this.notificacaoMsg("success", "TFC", "O estado Tema foi aceite com Sucesso!");
         this.cancelar();
       }); 
     } else {
-      this.propostaServico.salvarProposta(this.proposta).subscribe(resultado => {
-        this.propostas.unshift(this.proposta);
+      this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
+        this.tfcs.unshift(this.tfc);
         this.cancelar();
       }); 
 
     }
 
-    // if (this.proposta) {
-    //   this.propostaServico.salvarProposta(this.proposta).subscribe(resultado => {
-    //     this.propostas.unshift(this.proposta);
+    // if (this.tfc) {
+    //   this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
+    //     this.tfcs.unshift(this.tfc);
     //     this.cancelar();
     //   }); 
     // }
 
   }
 
-  alterarEstado(proposta: Proposta) {
-    this.proposta = proposta;
-    console.log("Os Dados da Proposta: "+JSON.stringify(this.proposta));
+  alterarEstado(tfc: TFC) {
+    this.tfc = tfc;
+    console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
     this.confirmationService.confirm({
       message: "Deseja Aceitar o Tema?",
       accept: () => {
         console.log("Tema Aceita com Sucesso!");
-        console.log("Os Dados da Proposta: "+JSON.stringify(this.proposta));
-        if (proposta) {
+        console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
+        if (tfc) {
           if (this.isRole("Estudante")) {
-            this.proposta.respostaEstudante = true;
-            this.proposta.idEstudante = Number(this.authenticationService.getDecodedToken().id);
-            this.estudanteService.procurarEstudantePorId(this.proposta.idEstudante).subscribe((estudante)=> {
-              this.proposta.estudante = estudante;
+            this.tfc.respostaEstudante = true;
+            this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
+            this.estudanteService.procurarEstudantePorId(this.tfc.idEstudante).subscribe((estudante)=> {
+              this.tfc.estudante = estudante;
             })
           } else if (this.isRole("Professor")) {
-            this.proposta.respostaProfessor = true;
-            this.proposta.idProfessor = Number(this.authenticationService.getDecodedToken().id);
-            this.propfessorServico.procurarProfessorPorId(this.proposta.idProfessor).subscribe((professor)=> {
-              this.proposta.professor = professor;
+            this.tfc.respostaProfessor = true;
+            this.tfc.idProfessor = Number(this.authenticationService.getDecodedToken().id);
+            this.propfessorServico.procurarProfessorPorId(this.tfc.idProfessor).subscribe((professor)=> {
+              this.tfc.professor = professor;
             })
           }
           if (this.isRole("Coordenador")) {
-            // this.proposta.respostaEstudante = true;
-            this.proposta.idCoordenador = Number(this.authenticationService.getDecodedToken().id);
-            this.proposta.estado = this.estadoPropostaSelecionado;
-            this.coordenadorServico.procurarCoordenadorPorId(this.proposta.idCoordenador).subscribe((coordenador)=> {
-              this.proposta.coordenador = coordenador;
-              // proposta.estado = EstadoProposta.Aprovado;
+            // this.tfc.respostaEstudante = true;
+            this.tfc.idCoordenador = Number(this.authenticationService.getDecodedToken().id);
+            this.tfc.estado = this.estadoTFCSelecionado;
+            this.coordenadorServico.procurarCoordenadorPorId(this.tfc.idCoordenador).subscribe((coordenador)=> {
+              this.tfc.coordenador = coordenador;
+              // tfc.estado = EstadoTFC.Aprovado;
             })
           }
-          if (proposta.respostaEstudante==true && proposta.respostaProfessor==true) {
-            proposta.estado = EstadoProposta.Aprovado;
+          if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
+            tfc.estado = EstadoTFC.Aprovado;
           }
-          console.log("O estado foi alterado: "+JSON.stringify(this.proposta));
+          console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
           this.salvar();
           this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
         }
       },
       reject: () => {
         this.notificacaoMsg("error", "Alteração de Estado", "O estado do Tema não foi alterado!");
-        if (proposta) {
+        if (tfc) {
           if (this.isRole("Estudante")) {
-            this.proposta.respostaEstudante = true;
-            this.proposta.idEstudante = Number(this.authenticationService.getDecodedToken().id);
+            this.tfc.respostaEstudante = true;
+            this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
           } else if (this.isRole("Professor")) {
-            this.proposta.respostaProfessor = true;
-            this.proposta.idProfessor = Number(this.authenticationService.getDecodedToken().id);
+            this.tfc.respostaProfessor = true;
+            this.tfc.idProfessor = Number(this.authenticationService.getDecodedToken().id);
           }
-          if (proposta.respostaEstudante==true && proposta.respostaProfessor==true) {
-            proposta.estado = EstadoProposta.Aprovado;
+          if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
+            tfc.estado = EstadoTFC.Aprovado;
           }
-          console.log("O estado foi alterado: "+JSON.stringify(this.proposta));
+          console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
           this.salvar();
           this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
         }
-        console.log("Os Dados da Proposta Após Ser Rejeitada: "+JSON.stringify(this.proposta));
+        console.log("Os Dados da TFC Após Ser Rejeitada: "+JSON.stringify(this.tfc));
       }
     });
   }
@@ -264,7 +271,7 @@ export class PropostasComponent implements OnInit {
   }
 
   temTarefa(idTarefa: number): boolean {
-    // this.proposta
+    // this.tfc
     return idTarefa>=1 ? true : false;
   }
 
@@ -272,13 +279,13 @@ export class PropostasComponent implements OnInit {
     tabela.clear();
   }
 
-  modalDetalhes(proposta: Proposta): void {
-    this.proposta = proposta;
+  modalDetalhes(tfc: TFC): void {
+    this.tfc = tfc;
     this.exibirDetalhes = true;
   }
 
-  findEstadoProposta(estadoProposta: EstadoProposta): string  {
-    switch (estadoProposta) {
+  findEstadoTFC(estadoTFC: EstadoTFC): string  {
+    switch (estadoTFC) {
       case 0:
         return "Proposta"
         break;
@@ -313,6 +320,19 @@ export class PropostasComponent implements OnInit {
     console.log("Enviou id "+id);
     this.router.navigateByUrl("/listarActividades", {state: {id}});
     // this.router.navigate(["/listarActividades",  {id: id}]);
+  }
+
+  reportTFCs() {
+    this.tfcServico.reportTFCs().subscribe(
+      response => {
+        const blob = new Blob([response], { type: 'application/pdf' }); // Defina o tipo MIME correto
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+      error => {
+        console.error('Error downloading file:', error);
+      }
+    );
   }
 
   // findArea(id: number): string  {

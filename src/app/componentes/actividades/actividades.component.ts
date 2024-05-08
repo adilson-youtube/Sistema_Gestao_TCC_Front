@@ -1,23 +1,26 @@
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { isNull } from '@angular/compiler/src/output/output_ast';
 import { isDefined } from '@angular/compiler/src/util';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { ConfirmationService, PrimeNGConfig } from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
+import { FileUpload } from 'primeng/fileupload';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { isEmpty } from 'rxjs/operators';
-import { Proposta } from 'src/app/modelo/entidades/proposta';
+import { TFC } from 'src/app/modelo/entidades/tfc';
 import { Tarefa } from 'src/app/modelo/entidades/tarefa';
 import { EstadoTarefa } from 'src/app/modelo/enumerados/estadoTarefa';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
 import { AreaService } from 'src/app/servicos/area.service';
 import { AuthenticationService } from 'src/app/servicos/authentication.service';
 import { CandidatoServico } from 'src/app/servicos/candidatoservico.service';
+import { GridfsService } from 'src/app/servicos/gridfs.service';
 import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
 import { ProfessorService } from 'src/app/servicos/professor.service';
-import { PropostaService } from 'src/app/servicos/proposta.service';
+import { TFCService } from 'src/app/servicos/tfc.service';
 import { TarefaService } from 'src/app/servicos/tarefa.service';
 
 @Component({
@@ -29,22 +32,25 @@ export class ActividadesComponent implements OnInit {
 
   nova = true;
   exibirAddTarefa = false;
-  exibirTerminarTarefa = false;
+  exibirAnexarFicheiro = false;
+  exibirBaixarCorrecao = false;
+  anexouFicheiro = false;
   validar: boolean;
   parametro: string;
   //dadosDeUso: DadosDeUso;
   exibirDetalhes = false;
   tarefa = new Tarefa();
   tarefas: Array<Tarefa>;
-  // proposta = new Proposta();
-  // propostas: Array<Proposta>;
+  // tfc = new TFC();
+  // tfcs: Array<TFC>;
   estadoTarefa: boolean;
   dataEntrega: Date;
   dataTerminada: Date;
   checkboxEstado: boolean;
+  // tarefaHeader: string = "Concluir Tarefa";
   
   userInfo: any;
-  idProposta: number;
+  idTFC: number;
 
   estadoTarefaSelecionado: EstadoTarefa;
 
@@ -80,8 +86,10 @@ export class ActividadesComponent implements OnInit {
     private deviceService: DeviceDetectorService,
     private authenticationService: AuthenticationService,
     private tarefaServico: TarefaService,
-    private propostaServico: PropostaService,
-    private confirmationService: ConfirmationService
+    private tfcServico: TFCService,
+    private gridfsService: GridfsService,
+    private confirmationService: ConfirmationService, 
+    private messageService: MessageService
   ) {  
 
     this.getInfoUser();
@@ -93,24 +101,19 @@ export class ActividadesComponent implements OnInit {
       });
     }
 
-    if(this.isRole("Professor")) {
-      // const noIsId = this.router.getCurrentNavigation().extras ?? true; 
-      // isEmpty(this.router.getCurrentNavigation().extras);
+    if(this.isRole("Professor") || this.isRole("Coordenador")) {
       if (this.router.getCurrentNavigation() && this.router.getCurrentNavigation().extras 
       && this.router.getCurrentNavigation().extras.state && this.router.getCurrentNavigation().extras.state.id) {
-        this.idProposta = Number(this.router.getCurrentNavigation().extras.state.id);
-        // this.sub = this.activatedRoute.queryParams.subscribe(data => {
-        //   console.log("Recebeu id "+data['id']);
-        //   this.idProposta = Number(data['id']);
-        // });
-        console.log("O id da Proposta é "+this.router.getCurrentNavigation().extras.state.id);
-        this.tarefaServico.listarTarefasProposta(this.idProposta).subscribe( resultados => { 
+        this.idTFC = Number(this.router.getCurrentNavigation().extras.state.id);
+
+        console.log("O id do TFC é "+this.router.getCurrentNavigation().extras.state.id);
+        this.tarefaServico.listarTarefasTFC(this.idTFC).subscribe( resultados => { 
           this.tarefas = resultados;
         });
         
       } else {
         console.log("Chegou até no else ");
-        this.router.navigateByUrl("listarPropostas");
+        this.router.navigateByUrl("PropostaReservada");
       }
     }
 
@@ -121,32 +124,6 @@ export class ActividadesComponent implements OnInit {
 
     const deviceInfo = this.deviceService.getDeviceInfo();
 
-    // this.areaService.listarAreas().subscribe( resultados => { 
-    //   this.areas = resultados; 
-    // });  
-
-    // this.propfessorServico.listarProfessores().subscribe( resultados => { 
-    //   this.professores = resultados; 
-    // });
-
-    
-
-    // this.propostaServico.listarPropostas().subscribe( resultados => {
-    //   this.proposta = resultados.shift();
-    // });
-
-    // this.tarefaServico.listarTarefas().subscribe( resultados => { 
-    //   this.tarefas = resultados; 
-    // });
-
-    
-    /*this.dadosDeUso = new DadosDeUso();
-    this.dadosDeUso.os = deviceInfo.os;
-    this.dadosDeUso.browser = deviceInfo.browser;
-    this.dadosDeUso.type = this.deviceService.isMobile ? ''Telefone :
-    (this.deviceService.isTablet ? 'Tablet' : 'Desktop');
-    this.dadosDeUso.userAgent = deviceInfo.userAgent;
-    this.servico.salvarDadosDeUso(this.dadosDeUso);*/
 
     this.authenticationService.showMenuEmitter.subscribe( show => this.showAllMenu = show );
     this.authenticationService.showRegisterEmitter.subscribe( register => this.showregister = register );
@@ -167,7 +144,15 @@ export class ActividadesComponent implements OnInit {
   
 
   get cabecario(): string {
-    return this.tarefa.id ? 'Editar Actividade' : 'Adicionar Actividade';
+    return this.tarefa?.id ? 'Editar Actividade' : 'Adicionar Actividade';
+  }
+
+  get tarefaHeader(): string {
+    return "Concluir Tarefa";
+  }
+
+  get visualizarCorrecaoHeader(): string {
+    return "Correção da Tarefa";
   }
 
 
@@ -187,44 +172,196 @@ export class ActividadesComponent implements OnInit {
   }
 
 
-  modalTerminarTarefa(tarefa?: Tarefa): void {
+  modalAnexarFicheiro(tarefa?: Tarefa): void {
     // this.tarefaServico.procurarTarefaPorCodigo(tarefa.codigoDoCandidato).subscribe( resultado => { this.tarefa = resultado; }); 
     this.tarefa = tarefa;
-    if (tarefa.dataEntrega) {
+    if (tarefa?.dataEntrega) {
       this.dataEntrega = new Date(tarefa.dataEntrega);
     }
-    if (tarefa.dataTerminada) {
+    if (tarefa?.dataTerminada) {
       this.dataTerminada = new Date(tarefa.dataTerminada);
     }
     
     // console.log("Dados da Tarefa: "+JSON.stringify(tarefa));
-    this.exibirAddTarefa = true;
+    this.exibirAnexarFicheiro = true;
+    this.validar = false;
+  }
+
+
+  modalBaixarCorrecao(tarefa?: Tarefa): void {
+    // this.tarefaServico.procurarTarefaPorCodigo(tarefa.codigoDoCandidato).subscribe( resultado => { this.tarefa = resultado; }); 
+    this.tarefa = tarefa;
+    if (tarefa?.dataEntrega) {
+      this.dataEntrega = new Date(tarefa.dataEntrega);
+    }
+    if (tarefa?.dataTerminada) {
+      this.dataTerminada = new Date(tarefa.dataTerminada);
+    }
+    
+    // console.log("Dados da Tarefa: "+JSON.stringify(tarefa));
+    this.exibirBaixarCorrecao = true;
     this.validar = false;
   }
 
   cancelar(): void {
     this.exibirAddTarefa = false;
+    this.exibirAnexarFicheiro = false;
+    this.exibirBaixarCorrecao = false;
+    this.anexouFicheiro = false;
     this.validar = false;
     this.dataEntrega = null;
     this.dataTerminada = null;
     this.tarefa = new Tarefa();
   }
 
+  displayFileName(): void {
+    const input: HTMLInputElement | null = document.getElementById('file') as HTMLInputElement;
+    const fileNameSpan: HTMLSpanElement | null = document.getElementById('file-name') as HTMLSpanElement;
+    if (input && fileNameSpan && input.files && input.files.length > 0) {
+        fileNameSpan.textContent = input.files[0].name;
+    } else {
+        if (fileNameSpan) fileNameSpan.textContent = '';
+    }
+}
+
+
+  async onUploadFile($event: FileUpload) {
+    const file = $event.files[0];
+    this.gridfsService.uploadFile(file).subscribe(
+      response => {
+        console.log('Ficheiro enviado com sucesso:', response);
+      },
+      error => {
+        this.tarefa.idFicheiroResposta = error.error.text;
+        console.error('Erro ao enviar o ficheiro:', error);
+      }
+    );
+  }
+
+  uploadFile(event: any, tipoOperacao: string) {
+    const file = event.target.files[0];
+    // const input: HTMLInputElement | null = document.getElementById('file') as HTMLInputElement;
+    const fileNameSpan: HTMLSpanElement | null = document.getElementById('file-name') as HTMLSpanElement;
+    fileNameSpan.textContent = file.name;
+    this.gridfsService.uploadFile(file).subscribe(
+      response => {
+        console.log('Ficheiro enviado com sucesso:', response);
+      },
+      error => {
+        if (tipoOperacao==="respostaEstudante") {
+          this.tarefa.idFicheiroResposta = error.error.text;
+          this.anexouFicheiro = true;
+          console.error('Id do Ficheiro:', this.tarefa.idFicheiroResposta);
+          console.error('Erro ao enviar o ficheiro:', error);
+        }
+        if (tipoOperacao==="correcaoProfessor") {
+          this.tarefa.idFicheiroCorrecao = error.error.text;
+          console.error('Id do Ficheiro:', this.tarefa.idFicheiroCorrecao);
+          this.anexouFicheiro = true;
+          console.error('Erro ao enviar o ficheiro:', error);
+        }
+      }
+    );
+  }
+
+  // visualizarAnexo(fileId: string) {
+  //   this.gridfsService.downloadFile(fileId).subscribe(
+  //     response => {
+  //       const blob = new Blob([response.body], { type: 'application/octet-stream' }); // Defina o tipo MIME correto
+  //       const url = window.URL.createObjectURL(blob);
+  //       window.open(url);
+  //     },
+  //     error => {
+  //       console.error('Erro ao baixar o ficheiro:', error);
+  //     }
+  //   );
+  // }
+
+  visualizarAnexo(fileId: string) {
+    this.gridfsService.downloadFile(fileId).subscribe(
+      (response: HttpResponse<Blob> | HttpErrorResponse) => {
+        if (response instanceof HttpResponse) {
+          const contentDispositionHeader = response.headers.get('Content-Disposition');
+          const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          const matches = fileNameRegex.exec(contentDispositionHeader);
+          const fileName = matches != null && matches[1] ? matches[1].replace(/['"]/g, '') : 'downloadedFile';
+
+          console.log("Conteudo do Cabeçario: "+JSON.stringify(response.headers.keys()))
+
+          const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+
+          const url = window.URL.createObjectURL(blob);
+          window.open(url);
+        } else {
+          console.error('Erro ao baixar o ficheiro: ', response.error);
+        }
+      },
+      error => {
+        console.error('Erro ao baixar o ficheiro: ', error);
+      }
+    );
+  }
+
+  downloadFile(fileId: string) {
+    this.gridfsService.downloadFile(fileId).subscribe(
+      (response: HttpResponse<Blob> | HttpErrorResponse) => {
+        if (response instanceof HttpResponse) {
+          const contentDispositionHeader = response.headers.get('Content-Disposition');
+          const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          const matches = fileNameRegex.exec(contentDispositionHeader);
+          const fileName = matches != null && matches[1] ? matches[1].replace(/['"]/g, '') : 'downloadedFile';
+
+          console.log("Conteudo do Cabeçario: "+JSON.stringify(response.headers.keys()))
+
+          const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        } else {
+          console.error('Error downloading file:', response.error);
+        }
+      },
+      error => {
+        console.error('Error downloading file:', error);
+      }
+    );
+  }
+
   salvar(): void {
     this.validar = true;
-    this.tarefa.idProposta = this.idProposta;
+    this.tarefa.idTFC = this.idTFC;
     this.tarefa.dataEntrega = this.dataEntrega;
-    this.tarefa.dataTerminada = this.dataTerminada;
+    // this.tarefa.dataTerminada = this.dataTerminada;
     // this.tarefa.estadoTarefa = this.estadoTarefaSelecionado;
     console.log("Tarefa Dada: "+JSON.stringify(this.tarefa));
 
     if (this.tarefa.id>=1) {
+      if (this.tarefa && this.tarefa?.idFicheiroResposta?.length>=6) {
+        if (this.tarefa.dataEntrega) {
+          this.dataEntrega = new Date(this.tarefa.dataEntrega);
+        }
+        this.tarefa.dataTerminada = new Date();
+        this.tarefa.estadoTarefa = EstadoTarefa.Concluido;
       this.tarefaServico.actualizarTarefa(this.tarefa.id, this.tarefa).subscribe(resultado => {
+        this.notificacaoMsg("success", "Tarefa", "A Tarefa foi Concluida com Sucesso!");
         this.cancelar();
       }); 
-    } else {
+      } else {
+        this.notificacaoMsg("warn", "Tarefa", "Não foi anexado nenhum ficheiro a Tarefa!");
+      }
+      this.anexouFicheiro = false;
+
+    } 
+    else {
       this.tarefaServico.salvarTarefa(this.tarefa).subscribe(resultado => {
         this.tarefas.unshift(this.tarefa);
+        this.notificacaoMsg("success", "Tarefa", "A Tarefa foi Criada com Sucesso!");
         this.cancelar();
       }); 
 
@@ -241,17 +378,47 @@ export class ActividadesComponent implements OnInit {
     this.exibirDetalhes = true;
   }
 
-  alterarEstado(tarefa: Tarefa) {
+  concluirTarefa(tarefa: Tarefa) {
     this.tarefa = tarefa;
-    if (tarefa) {
+    console.log("Info da Tarefa: "+JSON.stringify(this.tarefa));
+    // if (tarefa && tarefa?.idFicheiroResposta.length>=6) {
+    if (tarefa && this.anexouFicheiro) {
       if (tarefa.dataEntrega) {
         this.dataEntrega = new Date(tarefa.dataEntrega);
       }
       this.dataTerminada = new Date();
-      // this.checkboxEstado = false;
       this.tarefa.estadoTarefa = 3;
-      this.salvar()
+
+      this.tarefa.idFicheiroResposta = tarefa.idFicheiroResposta;
+
+      this.salvar();
       console.log("O estado foi alterado: "+JSON.stringify(this.tarefa));
+    } 
+    else {
+      this.notificacaoMsg("warn", "Tarefa", "Deves anexar o ficheiro, para Concluir a Tarefa!");
+      
+    }
+  }
+
+  correcaoTarefa(tarefa: Tarefa) {
+    this.tarefa = tarefa;
+    console.log("Info da Tarefa: "+JSON.stringify(this.tarefa));
+    // if (tarefa && tarefa?.idFicheiroCorrecao.length>=6) {
+    if (tarefa && this.anexouFicheiro) {
+      if (tarefa.dataEntrega) {
+        this.dataEntrega = new Date(tarefa.dataEntrega);
+      }
+      // this.dataTerminada = new Date();
+      // this.tarefa.estadoTarefa = 3;
+
+      this.tarefa.idFicheiroCorrecao = tarefa.idFicheiroCorrecao;
+
+      this.salvar();
+      console.log("O estado foi alterado: "+JSON.stringify(this.tarefa));
+    } 
+    else {
+      this.notificacaoMsg("warn", "Tarefa", "Deves anexar o ficheiro, para Correção da Tarefa!");
+      
     }
   }
 
@@ -274,6 +441,10 @@ export class ActividadesComponent implements OnInit {
 
   getInfoUser() {
     this.userInfo = this.authenticationService.getDecodedToken();
+  }
+
+  notificacaoMsg(tipoNotificacao?: string, cabecario?: string, msg?: string) {
+    this.messageService.add({severity: tipoNotificacao, summary:cabecario, detail: msg});
   }
 
   // findArea(id: number): string  {

@@ -55,7 +55,9 @@
     <div class="p-fluid p-formgrid p-grid"> 
         <div class="p-field p-col-12 p-md-12">
             <label>Seleciona o Serviço</label>
-            <p-dropdown optionLabel="name" optionValue="code" appendTo="body" inputId="genero" [options]="tiposServicos" [(ngModel)]="servicoSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+            <!-- appendTo="body" -->
+            <p-dropdown optionLabel="name" optionValue="code" inputId="genero" [options]="tiposServicos" 
+            [(ngModel)]="servicoSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
         </div>
         <div class="field col-12 p-md-12">
             <label>Tipo de Serviço</label>
@@ -70,18 +72,24 @@
         </div>
         <div class="p-field p-col-12 p-md-12">
             <label>Tipo de Pagamento</label>
-            <p-dropdown optionLabel="name" optionValue="code" appendTo="body" inputId="genero" [options]="tiposPagamentos" [(ngModel)]="tipoPagamentoSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+            <!-- appendTo="body" -->
+            <p-dropdown optionLabel="name" optionValue="code" inputId="genero" [options]="tiposPagamentos" 
+            [(ngModel)]="tipoPagamentoSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
         </div>
-        <div *ngIf="(servicoSelecionado === 'Consulta'||servicoSelecionado === 'Cirurgia'||servicoSelecionado === 'Exame')" class="p-field p-col-12 p-md-12">
+
+        <div *ngIf="(servicoSelecionado === 'Consulta' || servicoSelecionado === 'Cirurgia' || servicoSelecionado === 'Exame')" 
+        class="p-field p-col-12 p-md-12">
             <label>Observação</label>
             <input id="descricao" type="text" [(ngModel)]="servico.descricao" pInputText>
             <small class="p-invalid p-error" *ngIf="validar && !servico.descricao">Campo Obrigatório.</small>
         </div>
+
         <div *ngIf="(servicoSelecionado === 'Vacina')" class="p-field p-col-12 p-md-12">
             <label>Nome</label>
             <input id="nome" type="text" [(ngModel)]="servico.nome" pInputText>
             <small class="p-invalid p-error" *ngIf="validar && !servico.nome">Campo Obrigatório.</small>
         </div>
+
         <div *ngIf="(servicoSelecionado === 'Vacina')" class="p-field p-col-12 p-md-12">
             <label>Periodo</label>
             <!--<p-calendar appendTo="body" [(ngModel)]="servico.periodo" showButtonBar="true" showIcon="true"></p-calendar>-->

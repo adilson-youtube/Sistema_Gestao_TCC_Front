@@ -1,7 +1,7 @@
 import { Banca } from "./banca";
 import { Estudante } from "./estudante";
 import { Professor } from "./professor";
-import { Proposta } from "./proposta";
+import { TFC } from "./tfc";
 import { TCC } from "./tcc";
 import { Usuario } from "./usuario";
 

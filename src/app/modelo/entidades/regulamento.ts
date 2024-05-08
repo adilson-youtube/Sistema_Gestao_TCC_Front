@@ -2,7 +2,7 @@ import { Apresentacao } from "./apresentacao";
 import { Banca } from "./banca";
 import { BancaProfessor } from "./bancaprofessor";
 import { Professor } from "./professor";
-import { Proposta } from "./proposta";
+import { TFC } from "./tfc";
 import { Usuario } from "./usuario";
 
 export class Regulamento {
