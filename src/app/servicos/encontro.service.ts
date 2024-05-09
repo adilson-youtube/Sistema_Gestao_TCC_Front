@@ -15,6 +15,14 @@ export class EncontroService {
         return this.repositorio.listarEncontros();
     }
 
+    listarEncontrosTFC(id: number): Observable<Array<Encontro>> {
+        return this.repositorio.listarEncontrosTFC(id);
+    }
+
+    listarEncontrosEstudante(id: number): Observable<Array<Encontro>> {
+        return this.repositorio.listarEncontrosEstudante(id);
+    }
+
     procurarEncontroPorId(codigo: number): Observable<Encontro> {
         return this.repositorio.procurarEncontroPorId(codigo);
     }

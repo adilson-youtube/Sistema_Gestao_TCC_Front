@@ -309,6 +309,12 @@ export class ReservadoComponent implements OnInit {
     // this.router.navigate(["/listarActividades",  {id: id}]);
   }
 
+  verEncontros(id: number) {
+    console.log("Enviou id "+id);
+    this.router.navigateByUrl("/encontros", {state: {id}});
+    // this.router.navigate(["/encontros",  {id: id}]);
+  }
+
   reportTFCs() {
     this.tfcServico.reportTFCs().subscribe(
       response => {

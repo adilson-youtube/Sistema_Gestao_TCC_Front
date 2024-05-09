@@ -29,7 +29,7 @@
             <button class="texts-color" mat-button routerLink=""><mat-icon class="icons-color"> home
                 </mat-icon>INICIO</button>
 
-            <button *ngIf='isRole("Estudante")||isRole("Coordenador")' class="texts-color" mat-button [matMenuTriggerFor]="menuProposta"><mat-icon class="icons-color">
+            <button *ngIf='isRole("Estudante") || isRole("Coordenador")' class="texts-color" mat-button [matMenuTriggerFor]="menuProposta"><mat-icon class="icons-color">
                     book </mat-icon>PROPOSTA</button>
             <mat-menu class="custom-menu" #menuProposta="matMenu" xPosition="after">
                 <button *ngIf='isRole("Coordenador")' class="texts-color" mat-menu-item routerLink="/listarPropostas"><mat-icon
@@ -80,7 +80,7 @@
                 </mat-icon>Meus Orientandos</button>
 
 
-            <button *ngIf='isRole("Professor")||isRole("Estudante")' class="texts-color" mat-button routerLink="/encontros">
+            <button *ngIf='isRole("Professor")||isRole("Estudante")||isRole("Coordenador")' class="texts-color" mat-button routerLink="/encontros">
                 <mat-icon class="icons-color"> event</mat-icon>Encontros</button>
 
 

@@ -9,6 +9,7 @@ import { AuthenticationService } from 'src/app/servicos/authentication.service';
 import { TFCService } from 'src/app/servicos/tfc.service';
 import { Estudante } from 'src/app/modelo/entidades/estudante';
 import { TFC } from 'src/app/modelo/entidades/tfc';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-encotros',
@@ -27,6 +28,7 @@ export class EncotrosComponent implements OnInit, OnDestroy {
   estudantes: Array<Estudante>;
   tfc = new TFC();
   tfcs: Array<TFC>;
+  idTFC: number;
   
   userInfo: any;
 
@@ -59,11 +61,47 @@ export class EncotrosComponent implements OnInit, OnDestroy {
   
   
   constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private encontroServico: EncontroService,
     private confirmationService: ConfirmationService,
     private tfcServico: TFCService,
     private authenticationService: AuthenticationService
-  ) { }
+  ) {
+      
+    this.estudantes = new Array<Estudante>();
+
+    this.getInfoUser();
+
+    if(this.isRole("Estudante")) {
+      const id = Number(this.userInfo.id);
+      // this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
+      //   this.encontros = resultados;
+      //   console.log("TFCs: "+JSON.stringify(this.encontros));
+      // });
+      this.encontroServico.listarEncontrosEstudante(id).subscribe( resultados => {
+        this.encontros = resultados;
+      });
+    }
+
+    if(this.isRole("Professor") || this.isRole("Coordenador")) {
+      // console.log("Valor do parametro: "+JSON.stringify(this.router.getCurrentNavigation()));
+      if (this.router.getCurrentNavigation() && this.router.getCurrentNavigation().extras 
+      && this.router.getCurrentNavigation().extras.state && this.router.getCurrentNavigation().extras.state.id) {
+        this.idTFC = Number(this.router.getCurrentNavigation().extras.state.id);
+
+        console.log("O id do TFC é "+this.router.getCurrentNavigation().extras.state.id);
+        this.encontroServico.listarEncontrosTFC(this.idTFC).subscribe( resultados => { 
+          this.encontros = resultados;
+        });
+        
+      } else {
+        console.log("Chegou até no else ");
+        this.router.navigateByUrl("PropostaReservada");
+      }
+    }
+    
+  }
 
   ngOnInit(): void {
     
@@ -73,33 +111,7 @@ export class EncotrosComponent implements OnInit, OnDestroy {
       //     {status: 'Shipped', date: '15/10/2020 16:15', icon: PrimeIcons.ENVELOPE, color: '#FF9800'},
       //     {status: 'Delivered', date: '16/10/2020 10:00', icon: PrimeIcons.CHECK, color: '#607D8B'}
       // ];
-      
-      this.estudantes = new Array<Estudante>();
 
-      this.getInfoUser();
-  
-      if(this.isRole("Estudante")) {
-        const id = Number(this.userInfo.id);
-        this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
-          this.encontros = resultados;
-          console.log("TFCs: "+JSON.stringify(this.encontros));
-        });
-      }
-  
-      if(this.isRole("Professor")) {
-        const id = Number(this.userInfo.id);
-        this.tfcServico.TFCProfessor(id).subscribe( resultados => { 
-          this.tfcs = resultados; 
-          console.log("TFCs: "+JSON.stringify(this.tfcs));
-          this.tfcs.forEach(tfc => {
-            this.estudantes.push(tfc.estudante);
-          });
-        });
-      }
-
-    this.encontroServico.listarEncontros().subscribe(resultados => {
-      this.encontros = resultados; 
-    });
   }
 
   ngOnDestroy(): void {

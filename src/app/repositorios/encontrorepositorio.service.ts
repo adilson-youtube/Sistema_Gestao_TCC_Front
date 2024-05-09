@@ -20,6 +20,16 @@ export class EncontroRepositorio {
     return this.http.get<Array<Encontro>>(`${this.baseUrl}${path}`);
   }
 
+  listarEncontrosTFC(id: number): Observable<Array<Encontro>> {
+    const path = `Encontro/PorIdTFC/${id}`;
+    return this.http.get<Array<Encontro>>(`${this.baseUrl}${path}`);
+  }
+
+  listarEncontrosEstudante(id: number): Observable<Array<Encontro>> {
+    const path = `Encontro/EncontrosEstudante/${id}`;
+    return this.http.get<Array<Encontro>>(`${this.baseUrl}${path}`);
+  }
+
   procurarEncontroPorId(id: number): Observable<Encontro> {
     const path = `Encontro/${id}`;
     return this.http.get<Encontro>(`${this.baseUrl}${path}`);
