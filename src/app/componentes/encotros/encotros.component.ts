@@ -10,6 +10,7 @@ import { TFCService } from 'src/app/servicos/tfc.service';
 import { Estudante } from 'src/app/modelo/entidades/estudante';
 import { TFC } from 'src/app/modelo/entidades/tfc';
 import { ActivatedRoute, Router } from '@angular/router';
+import { EstudanteService } from 'src/app/servicos/estudante.service';
 
 @Component({
   selector: 'app-encotros',
@@ -66,10 +67,14 @@ export class EncotrosComponent implements OnInit, OnDestroy {
     private encontroServico: EncontroService,
     private confirmationService: ConfirmationService,
     private tfcServico: TFCService,
+    private estudanteService: EstudanteService,
     private authenticationService: AuthenticationService
   ) {
       
-    this.estudantes = new Array<Estudante>();
+    
+    this.estudanteService.listarEstudantes().subscribe(resultado => {
+      this.estudantes = resultado;
+    });
 
     this.getInfoUser();
 

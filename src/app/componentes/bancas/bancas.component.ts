@@ -1,31 +1,32 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
+import { PrimeNGConfig, ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Area } from 'src/app/modelo/entidades/area';
+import { Banca } from 'src/app/modelo/entidades/banca';
+import { BancaProfessor } from 'src/app/modelo/entidades/bancaprofessor';
+import { Estudante } from 'src/app/modelo/entidades/estudante';
 import { Funcionario } from 'src/app/modelo/entidades/funcionario';
 import { Professor } from 'src/app/modelo/entidades/professor';
 import { TFC } from 'src/app/modelo/entidades/tfc';
-import { Estado } from 'src/app/modelo/enumerados/Estado';
 import { EstadoTFC } from 'src/app/modelo/enumerados/estadoTFC';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
-import { AreaService } from 'src/app/servicos/area.service';
 import { AuthenticationService } from 'src/app/servicos/authentication.service';
-import { CandidatoServico } from 'src/app/servicos/candidatoservico.service';
+import { BancaService } from 'src/app/servicos/banca.service';
+import { BancaProfessorService } from 'src/app/servicos/bancaprofessor.service';
 import { EstudanteService } from 'src/app/servicos/estudante.service';
-import { OrgaoServico } from 'src/app/servicos/orgaoservico.service';
 import { ProfessorService } from 'src/app/servicos/professor.service';
 import { TFCService } from 'src/app/servicos/tfc.service';
 
 @Component({
-  selector: 'app-reservado',
-  templateUrl: './reservado.component.html',
-  styleUrls: ['./reservado.component.css']
+  selector: 'app-bancas',
+  templateUrl: './bancas.component.html',
+  styleUrls: ['./bancas.component.css']
 })
-export class ReservadoComponent implements OnInit {
+export class BancasComponent {
 
   nova = true;
   exibir = false;
@@ -34,10 +35,19 @@ export class ReservadoComponent implements OnInit {
   areas: Array<Area>;
   exibirDetalhes = false;
   tfc = new TFC();
-  tfcInfo = new TFC();
   funcionario = new Funcionario;
   tfcs: Array<TFC>;
-  professores: Array<Professor>;
+  professores: Array<Professor> = new Array<Professor>();
+  professoresSelecionados: Array<Professor> = new Array<Professor>();
+  presidente: Professor = new Professor();
+  primeiroVogal: Professor = new Professor();
+  segundoVogal: Professor = new Professor();
+  estudantes: Array<Estudante>;
+  estudanteSelecionado: Estudante;
+  bancasProfessores: Array<BancaProfessor>;
+  bancas: Array<Banca> = new Array<Banca>();
+  banca: Banca = new Banca();
+  dataHoraApresentacao: Date;
 
   estadoTFCSelecionado: EstadoTFC;
 
@@ -78,6 +88,8 @@ export class ReservadoComponent implements OnInit {
     private propfessorServico: ProfessorService,
     private estudanteService: EstudanteService,
     private tfcServico: TFCService,
+    private bancaServico: BancaService,
+    private bancaProfessorServico: BancaProfessorService,
     private confirmationService: ConfirmationService, 
     private messageService: MessageService
   ) { }
@@ -87,28 +99,31 @@ export class ReservadoComponent implements OnInit {
 
     const deviceInfo = this.deviceService.getDeviceInfo();
 
+    // this.professoresSelecionados = new Array<Professor>();
+
     // this.propfessorServico.listarProfessores().subscribe( resultados => { 
     //   this.professores = resultados; 
     // }); 
 
     this.getInfoUser();
 
+    this.estudanteService.listarEstudantes().subscribe( resultados => { 
+      this.estudantes = resultados; 
+      // console.log("TFCs: "+JSON.stringify(this.estudantes));
+    });
+
     if(this.isRole("Estudante")) {
       const id = Number(this.userInfo.id);
-      this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
-        this.tfcs = resultados; 
-        this.tfcInfo = resultados.slice().shift();
-        // console.log("TFCs: "+JSON.stringify(this.tfcs));
-      });
+      // this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
+      //   this.tfcs = resultados; 
+      //   console.log("TFCs: "+JSON.stringify(this.tfcs));
+      // });
     }
 
-    if(this.isRole("Professor")) {
-      const id = Number(this.userInfo.id);
-      this.tfcServico.TFCProfessor(id).subscribe( resultados => { 
-        this.tfcs = resultados; 
-        // console.log("TFCs: "+JSON.stringify(this.tfcs));
-      });
-    }
+    this.propfessorServico.listarProfessores().subscribe( resultados => {
+      this.professores = resultados; 
+      this.professoresSelecionados = resultados; 
+    });
 
     if(this.isRole("Coordenador")) {
       console.log("O role dele é de Coordenador!");
@@ -124,14 +139,11 @@ export class ReservadoComponent implements OnInit {
     //   console.log("TFCs: "+JSON.stringify(this.tfcs));
     // });
 
-    
-    /*this.dadosDeUso = new DadosDeUso();
-    this.dadosDeUso.os = deviceInfo.os;
-    this.dadosDeUso.browser = deviceInfo.browser;
-    this.dadosDeUso.type = this.deviceService.isMobile ? ''Telefone :
-    (this.deviceService.isTablet ? 'Tablet' : 'Desktop');
-    this.dadosDeUso.userAgent = deviceInfo.userAgent;
-    this.servico.salvarDadosDeUso(this.dadosDeUso);*/
+    this.bancaServico.listarBancas().subscribe( resultado => {
+      this.bancas = resultado;
+      // console.log("Bancas Encontradas: "+JSON.stringify(this.bancas));
+
+    });
 
     this.authenticationService.showMenuEmitter.subscribe( show => this.showAllMenu = show );
     this.authenticationService.showRegisterEmitter.subscribe( register => this.showregister = register );
@@ -152,39 +164,78 @@ export class ReservadoComponent implements OnInit {
   
 
   get cabecario(): string {
-    return 'Editar TFC';
+    return this.banca?.id ? 'Editar Banca' : 'Adicionar Banca';
   }
 
 
-  modal(tfc?: TFC): void {
+  modal(banca?: Banca): void {
     // this.tfcServico.procurarTFCPorCodigo(tfc.codigoDoCandidato).subscribe( resultado => { this.tfc = resultado; }); 
-    this.tfc = tfc;
+    this.banca = banca;
     this.exibir = true;
     this.validar = false;
   }
 
   cancelar(): void {
+    this.banca = new Banca();
+    this.estudanteSelecionado = new Estudante();
+    this.presidente = new Professor();
+    this.primeiroVogal = new Professor();
+    this.segundoVogal = new Professor();
     this.exibir = false;
     this.validar = false;
-    this.tfc = new TFC();
   }
 
   salvar(): void {
     this.validar = true;
 
-    if (this.tfc?.id>=1) {
+    if (this.banca?.id>=1) {
 
       if(this.isRole("Coordenador")) {
         this.tfc.idCoordenador = Number(this.userInfo.id);
       }
-      console.log("Id Coordenador: "+this.tfc?.idCoordenador);
-      this.tfcServico.actualizarTFC(this.tfc.id, this.tfc).subscribe(resultado => {
+      // console.log("Id Coordenador: "+this.banca?.id);
+      this.bancaServico.actualizarBanca(this.banca.id, this.banca).subscribe(resultado => {
         this.cancelar();
       }); 
     } else {
-      this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
-        this.tfcs.unshift(this.tfc);
-        this.cancelar();
+      this.banca.dataApresentacao = this.dataHoraApresentacao;
+      this.tfcServico.TFCEstudante(this.estudanteSelecionado.id).subscribe( tfc => {
+        this.banca.tfc = tfc.shift();
+        this.banca.idTFC = this.banca.tfc.id;
+        // console.log("TFC: "+JSON.stringify(this.banca.tfc));
+
+        const bancaprofessor1: BancaProfessor = new BancaProfessor();
+        const bancaprofessor2: BancaProfessor = new BancaProfessor();
+        const bancaprofessor3: BancaProfessor = new BancaProfessor();
+  
+        bancaprofessor1.categoria = "Presidente";
+        // bancaprofessor1.professor = this.presidente;
+        bancaprofessor1.idProfessor = this.presidente.id;
+        bancaprofessor1.idBanca = this.banca?.id;
+        // bancaprofessor1.Banca = this.banca;
+        
+        bancaprofessor2.categoria = "1º Vogal";
+        // bancaprofessor2.professor = this.primeiroVogal;
+        bancaprofessor2.idProfessor = this.primeiroVogal.id;
+        bancaprofessor2.idBanca = this.banca?.id;
+        // bancaprofessor2.Banca = this.banca;
+  
+        bancaprofessor3.categoria = "2º Vogal";
+        // bancaprofessor3.professor = this.segundoVogal;
+        bancaprofessor3.idProfessor = this.segundoVogal.id;
+        bancaprofessor3.idBanca = this.banca?.id;
+        // bancaprofessor3.Banca = this.banca;
+  
+        this.banca.bancasProfessores = new Array<BancaProfessor>();
+        this.banca.bancasProfessores.push(bancaprofessor1, bancaprofessor2, bancaprofessor3);
+  
+        this.bancaServico.salvarBanca(this.banca).subscribe(resultado => {
+          this.banca = resultado;
+          // console.log("A banca que foi Inserida: "+JSON.stringify(this.banca));
+          this.bancas.unshift(this.banca);
+          this.cancelar();
+        });
+
       }); 
 
     }
@@ -268,8 +319,8 @@ export class ReservadoComponent implements OnInit {
     tabela.clear();
   }
 
-  modalDetalhes(tfc: TFC): void {
-    this.tfc = tfc;
+  modalDetalhes(banca: Banca): void {
+    this.banca = banca;
     this.exibirDetalhes = true;
   }
 
@@ -333,5 +384,6 @@ export class ReservadoComponent implements OnInit {
       }
     );
   }
+
 
 }

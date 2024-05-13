@@ -5,9 +5,10 @@ import { TFC } from "./tfc";
 import { Usuario } from "./usuario";
 
 export class BancaProfessor {
-    // Id = 0;
-    idBanca = 0;
-    idProfessor = 0;
-    // Bancas = new Professor();
-    // Banca = new Banca();
+    id?;
+    idBanca?: number;
+    idProfessor?: number;
+    categoria?: string;
+    // professor?: Professor;
+    // banca?: Banca;
 }

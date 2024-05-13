@@ -12,5 +12,5 @@ export class Professor extends Usuario {
     // TFC = new TFC();
     // Usuario = new Usuario();
     // Bancas = new Array<Banca>();
-    // BancasProfessores = new Array<BancaProfessor>();
+    bancasProfessores = new Array<BancaProfessor>();
 }

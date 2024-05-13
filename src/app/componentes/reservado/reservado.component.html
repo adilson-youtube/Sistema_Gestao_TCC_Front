@@ -3,6 +3,101 @@
 <!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
 <p-toast></p-toast>
 
+<p-card *ngIf="isRole('Estudante')">
+    <div class="p-fluid p-formgrid p-grid">
+        <div class="p-col-12 p-md-3">
+            <p-card>
+                <div class="p-col-12 p-md-12">
+                    <h2 style="font-weight:bold">Dados do Estudante</h2>
+                    <div class="p-grid">
+                        <div class="p-col-4"></div>
+                        <div class="p-col-4">
+                            <mat-icon style="font-size: 6rem">account_circle</mat-icon>
+                        </div>
+                        <div class="p-col-4"></div>
+                    </div>
+                    
+                </div>
+                <div class="p-col-12 p-md-12">
+                    <div>
+                        <label>Nome</label>
+                        <input disabled="true" [(ngModel)]="tfcInfo?.estudante.nome" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{tfcInfo?.estudante?.nome}}>
+                    </div>
+                    <div>
+                        <label>Email</label>
+                        <input disabled="true" [(ngModel)]="tfcInfo?.estudante.email" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder="Digite o email">
+                    </div>
+                    <div>
+                        <label>Telefone</label>
+                        <input disabled="true" [(ngModel)]="tfcInfo?.estudante.telefone" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{tfcInfo?.estudante?.nome}}>
+                    </div>
+    
+                </div>
+                <div class="p-col-12 p-md-12"></div>
+                
+            </p-card>
+        </div>
+
+
+        <div class="p-col-12 p-md-9">
+            <p-card>
+                <div class="p-grid">
+                    <div class="p-col-10 p-md-10">
+                        <h2 style="font-weight:bold">Dados do TFC</h2>
+                    </div>
+                    <div class="p-col-2 p-md-2">
+                        <!-- <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" 
+                        (click)="modal(tfcInfo)" pTooltip="Novo" tooltipPosition="bottom"></button> -->
+                        <button *ngIf='findEstadoTFC(tfcInfo?.estado)==="Aprovado" || findEstadoTFC(tfcInfo?.estado)==="Em Desenvolvimento"' pButton pRipple 
+                        icon="pi pi-list" class="p-button-rounded p-button-text" label="Ver Tarefas" (click)="verTarefas(tfcInfo.id)" pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
+                        <button *ngIf='findEstadoTFC(tfcInfo?.estado)==="Aprovado" || findEstadoTFC(tfcInfo?.estado)==="Em Desenvolvimento"' pButton pRipple 
+                        icon="pi pi-users" class="p-button-rounded p-button-text" label="Ver Encontros" (click)="verEncontros(tfcInfo.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
+                    </div>
+                </div>
+                <div class="p-grid">
+                    <div class="p-col-12 p-md-10">
+                        <label>Tema</label>
+                        <input disabled="true" [(ngModel)]="tfcInfo.titulo" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{tfcInfo?.titulo}}>
+                    </div>
+                    <div class="p-col-12 p-md-2">
+                        <label>Estado</label>
+                        <input disabled="true" (ngModel)="findEstadoTFC(tfcInfo.estado)" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{findEstadoTFC(tfcInfo.estado)}}>
+                    </div>
+                    <div class="p-col-12 p-md-12">
+                        <label>Descrição</label>
+                        <textarea [disabled]="true" id="descricao" type="text" class="p-mb-4" 
+                        placeholder={{tfcInfo?.descricao}} [(ngModel)]="tfcInfo.descricao" pInputTextarea></textarea>
+                        <!-- <input disabled="true" [(ngModel)]="tfcInfo.descricao" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{tfcInfo?.descricao}}> -->
+                    </div>
+                    <div class="p-col-12 p-md-8">
+                        <label>Tutor</label>
+                        <input disabled="true" [(ngModel)]="tfcInfo?.professor.nome" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{tfcInfo?.professor?.nome}}>
+                    </div>
+                    <div class="p-col-12 p-md-4">
+                        <label>Area de Conhecimeto</label>
+                        <input disabled="true" [(ngModel)]="tfcInfo?.area.descricao" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{tfcInfo?.area?.descricao}}>
+                    </div>
+                    <div class="p-col-12 p-md-12">
+                        <label>Tema</label>
+                        <input disabled="true" [(ngModel)]="tfcInfo.titulo" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{tfcInfo?.titulo}}>
+                    </div>
+
+                </div>
+                
+            </p-card>
+        </div>
+    </div>
+</p-card>
+
 <!--------------------- tabela --------------------------------------->
 <p-card>
     <!-- <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-help p-button-text" 

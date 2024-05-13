@@ -51,6 +51,7 @@ import {TooltipModule} from 'primeng/tooltip';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import {BadgeModule} from 'primeng/badge';
+import {PickListModule} from 'primeng/picklist';
 // import { NgxDocViewerModule } from 'ngx-doc-viewer';
 
 // import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -119,6 +120,8 @@ import { FileUploadComponent } from './componentes/file-upload/file-upload.compo
 import { EncotrosComponent } from './componentes/encotros/encotros.component';
 import { TfcsDefendidosComponent } from './componentes/tfcs-defendidos/tfcs-defendidos.component';
 import { DetalhesEncontroComponent } from './componentes/encotros/detalhes-encontro/detalhes-encontro.component';
+import { BancasComponent } from './componentes/bancas/bancas.component';
+import { DetalhesBancaComponent } from './componentes/bancas/detalhes-banca/detalhes-banca.component';
 
 
 @NgModule({
@@ -168,7 +171,9 @@ import { DetalhesEncontroComponent } from './componentes/encotros/detalhes-encon
     EncotrosComponent,
     DetalhesTarefaComponent,
     TfcsDefendidosComponent,
-    DetalhesEncontroComponent
+    DetalhesEncontroComponent,
+    BancasComponent,
+    DetalhesBancaComponent
   ],
   imports: [
     BrowserModule,
@@ -231,6 +236,7 @@ import { DetalhesEncontroComponent } from './componentes/encotros/detalhes-encon
     MessagesModule,
     MessageModule,
     BadgeModule,
+    PickListModule,
     // NgxDocViewerModule
     // PdfViewerModule
   ],

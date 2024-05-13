@@ -6,11 +6,13 @@ import { Regulamento } from "./regulamento";
 import { Usuario } from "./usuario";
 
 export class Banca {
-    // Id = 0;
-    data = new Date();
-    hora = new Date();
-    membros = new Array<Professor>();
-    // BancasProfessores = new Array<BancaProfessor>();
+    id?;
+    dataApresentacao?: Date;
+    idTFC?: number;
+    // hora = new Date();
+    // membros = new Array<Professor>();
+    bancasProfessores?: Array<BancaProfessor>;
+    tfc?: TFC;
     // Apresentacoes = new Array<Apresentacao>();
     // Regulamento= new Regulamento();
 }

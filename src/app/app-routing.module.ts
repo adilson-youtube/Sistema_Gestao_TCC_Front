@@ -27,6 +27,7 @@ import { FileUploadComponent } from './componentes/file-upload/file-upload.compo
 import { TFCsComponent } from './componentes/propostas/tfcs.component';
 import { EncotrosComponent } from './componentes/encotros/encotros.component';
 import { TfcsDefendidosComponent } from './componentes/tfcs-defendidos/tfcs-defendidos.component';
+import { BancasComponent } from './componentes/bancas/bancas.component';
 
 
 const routes: Routes = [
@@ -75,6 +76,7 @@ const routes: Routes = [
       { path: 'fileUpload', component: FileUploadComponent },
       { path: 'encontros', component: EncotrosComponent},
       { path: 'listarTFCsDefendidos', component: TfcsDefendidosComponent},
+      { path: 'listarBancas', component: BancasComponent},
     ] },
       // { path: '', redirectTo: 'proposta', pathMatch: 'full'},
       // { path: '', component: TFCsComponent },
