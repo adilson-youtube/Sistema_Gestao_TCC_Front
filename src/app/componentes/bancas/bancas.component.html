@@ -18,7 +18,7 @@
         <ng-template pTemplate="caption">
             <div class="p-d-flex">
                 <span class="p-input-icon-left p-mr-auto">
-                    <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal(banca)" pTooltip="Novo" tooltipPosition="bottom"></button>
+                    <button *ngIf="isRole('Coordenador')" pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal(banca)" pTooltip="Novo" tooltipPosition="bottom"></button>
                 </span>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
@@ -87,19 +87,20 @@
                 <!-- <td>{{findArea(tfc.ultimaActualizacaoLaboral?.areaId)}} ({{findOrgao(tfc.ultimaActualizacaoLaboral?.orgaoId)}})</td> {{contacto.area.denominacao}} ({{contacto.area.orgao.sigla}}) -->
                 <!--<td>{{tfc.ultimaActualizacaoLaboral?.cargo?.estruturaCargo}}</td>  {{contacto.tfc.cargo}} -->
                 <td style="text-align:center">
-                    <button *ngIf='isRole("Admin")||isRole("Coordenador")' pButton pRipple icon="pi pi-pencil" 
-                    class="p-button-rounded p-button-success p-button-text p-mr-2" (click)="modal(banca)" pTooltip="Editar" tooltipPosition="bottom"></button>
                     <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" 
                     (click)="modalDetalhes(banca)" pTooltip="Detalhes" tooltipPosition="bottom"></button>
-                    <!-- <p-checkbox *ngIf="!tfc.respostaEstudante" id="{{tfc.id}}" [(ngModel)]="tfc.respostaEstudante" [binary]="true" (onChange)="alterarEstado(tfc)"></p-checkbox> -->
-                    <button *ngIf='findEstadoTFC(banca?.tfc?.estado)==="Proposta" && isRole("Professor")||isRole("Estudante")'
-                     pButton pRipple icon="pi pi-thumbs-up" class="p-button-rounded p-button-text" (click)="alterarEstado(banca.tfc)" 
-                     pTooltip="Alterar Estado da Proposta" tooltipPosition="bottom"></button>
-                    <button *ngIf='findEstadoTFC(banca?.tfc?.estado)==="Aprovado" || findEstadoTFC(banca?.tfc?.estado)==="Em Desenvolvimento" && isRole("Coordenador")' 
-                    pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-text" (click)="verTarefas(banca?.tfc?.id)" 
-                    pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
-                    <button *ngIf='findEstadoTFC(banca?.tfc?.estado)==="Aprovado" || findEstadoTFC(banca?.tfc?.estado)==="Em Desenvolvimento"' pButton pRipple 
-                    icon="pi pi-users" class="p-button-rounded p-button-text" (click)="verEncontros(banca?.tfc?.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
+
+                    <button 
+                    pButton pRipple icon="pi pi-download" class="p-button-rounded p-button-danger p-button-text" id="{{banca.id}}" 
+                    pTooltip="Baixar Resposta do Estudante" (click)="downloadFile(banca?.tfc?.id)"></button>
+
+                    <button 
+                    pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success p-button-text" id="{{tarefa.id}}" 
+                    pTooltip="Ver Correção" (click)="modalBaixarCorrecao(banca)"></button>
+
+                    <button 
+                    pButton pRipple icon="pi pi-user-edit" class="p-button-rounded p-button-danger p-button-text" id="{{tarefa.id}}" 
+                    pTooltip="Fazer Correção" (click)="modalAnexarFicheiro(banca)"></button>
                 </td>
             </tr>
         </ng-template>
@@ -199,7 +200,7 @@
 
 <!--------------------- modal --------------------------------------->
 <p-dialog header="DETALHES DA BANCA" appendTo="body" [(visible)]="exibirDetalhes" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
-    <app-detalhes-banca [banca]="banca"></app-detalhes-banca>
+    <app-detalhes-banca [banca]="banca" [bancasProfessores]="banca.bancasProfessores"></app-detalhes-banca>
 </p-dialog>
 
 <!--------------------- modal --------------------------------------->

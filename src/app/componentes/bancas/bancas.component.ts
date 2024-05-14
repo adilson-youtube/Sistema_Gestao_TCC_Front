@@ -1,3 +1,4 @@
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Router } from '@angular/router';
@@ -11,6 +12,7 @@ import { BancaProfessor } from 'src/app/modelo/entidades/bancaprofessor';
 import { Estudante } from 'src/app/modelo/entidades/estudante';
 import { Funcionario } from 'src/app/modelo/entidades/funcionario';
 import { Professor } from 'src/app/modelo/entidades/professor';
+import { Tarefa } from 'src/app/modelo/entidades/tarefa';
 import { TFC } from 'src/app/modelo/entidades/tfc';
 import { EstadoTFC } from 'src/app/modelo/enumerados/estadoTFC';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
@@ -18,6 +20,7 @@ import { AuthenticationService } from 'src/app/servicos/authentication.service';
 import { BancaService } from 'src/app/servicos/banca.service';
 import { BancaProfessorService } from 'src/app/servicos/bancaprofessor.service';
 import { EstudanteService } from 'src/app/servicos/estudante.service';
+import { GridfsService } from 'src/app/servicos/gridfs.service';
 import { ProfessorService } from 'src/app/servicos/professor.service';
 import { TFCService } from 'src/app/servicos/tfc.service';
 
@@ -51,6 +54,15 @@ export class BancasComponent {
 
   estadoTFCSelecionado: EstadoTFC;
 
+  exibirAddTarefa = false;
+  exibirAnexarFicheiro = false;
+  exibirBaixarCorrecao = false;
+  anexouFicheiro = false;
+  tarefa = new Tarefa();
+
+  dataEntrega: Date;
+  dataTerminada: Date;
+  
   estadoTFCs: any[] = [
     { name: 'Proposta', code: 0 },
     { name: 'Reprovado', code: 1 },
@@ -90,7 +102,9 @@ export class BancasComponent {
     private tfcServico: TFCService,
     private bancaServico: BancaService,
     private bancaProfessorServico: BancaProfessorService,
+    private professorServico: ProfessorService,
     private confirmationService: ConfirmationService, 
+    private gridfsService: GridfsService,
     private messageService: MessageService
   ) { }
 
@@ -141,7 +155,7 @@ export class BancasComponent {
 
     this.bancaServico.listarBancas().subscribe( resultado => {
       this.bancas = resultado;
-      // console.log("Bancas Encontradas: "+JSON.stringify(this.bancas));
+      // console.log("Bancas Encontradas: "+JSON.stringify(this.bancas.slice().shift().bancasProfessores));
 
     });
 
@@ -356,18 +370,6 @@ export class BancasComponent {
     this.messageService.add({severity: tipoNotificacao, summary:cabecario, detail: msg});
   }
 
-  verTarefas(id: number) {
-    console.log("Enviou id "+id);
-    this.router.navigateByUrl("/listarActividades", {state: {id}});
-    // this.router.navigate(["/listarActividades",  {id: id}]);
-  }
-
-  verEncontros(id: number) {
-    console.log("Enviou id "+id);
-    this.router.navigateByUrl("/encontros", {state: {id}});
-    // this.router.navigate(["/encontros",  {id: id}]);
-  }
-
   reportTFCs() {
     this.tfcServico.reportTFCs().subscribe(
       response => {
@@ -383,6 +385,69 @@ export class BancasComponent {
         console.error('Error downloading file:', error);
       }
     );
+  }
+
+  downloadFile(fileId: string) {
+    this.gridfsService.downloadFile(fileId).subscribe(
+      (response: HttpResponse<Blob> | HttpErrorResponse) => {
+        if (response instanceof HttpResponse) {
+          const contentDispositionHeader = response.headers.get('Content-Disposition');
+          const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          const matches = fileNameRegex.exec(contentDispositionHeader);
+          const fileName = matches != null && matches[1] ? matches[1].replace(/['"]/g, '') : 'downloadedFile';
+
+          console.log("Conteudo do Cabeçario: "+JSON.stringify(response.headers.keys()))
+
+          const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        } else {
+          console.error('Error downloading file:', response.error);
+        }
+      },
+      error => {
+        console.error('Error downloading file:', error);
+      }
+    );
+  }
+
+
+  modalBaixarCorrecao(tarefa?: Tarefa): void {
+    // this.tarefaServico.procurarTarefaPorCodigo(tarefa.codigoDoCandidato).subscribe( resultado => { this.tarefa = resultado; }); 
+    this.tarefa = tarefa;
+    if (tarefa?.dataEntrega) {
+      this.dataEntrega = new Date(tarefa.dataEntrega);
+    }
+    if (tarefa?.dataTerminada) {
+      this.dataTerminada = new Date(tarefa.dataTerminada);
+    }
+    
+    // console.log("Dados da Tarefa: "+JSON.stringify(tarefa));
+    this.exibirBaixarCorrecao = true;
+    this.validar = false;
+  }
+
+
+  modalAnexarFicheiro(tarefa?: Tarefa): void {
+    // this.tarefaServico.procurarTarefaPorCodigo(tarefa.codigoDoCandidato).subscribe( resultado => { this.tarefa = resultado; }); 
+    this.tarefa = tarefa;
+    if (tarefa?.dataEntrega) {
+      this.dataEntrega = new Date(tarefa.dataEntrega);
+    }
+    if (tarefa?.dataTerminada) {
+      this.dataTerminada = new Date(tarefa.dataTerminada);
+    }
+    
+    // console.log("Dados da Tarefa: "+JSON.stringify(tarefa));
+    this.exibirAnexarFicheiro = true;
+    this.validar = false;
   }
 
 

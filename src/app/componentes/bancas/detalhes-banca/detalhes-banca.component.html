@@ -8,8 +8,9 @@
         <div class="p-col-12 p-md-6"><span style="font-weight: bold">DATA:</span> {{banca?.dataApresentacao | date:'dd/MM/yyyy'}}</div>
         <div class="p-col-12 p-md-6"><span style="font-weight: bold">HORA:</span> {{banca?.dataApresentacao | date:'HH:mm'}}</div>
         <div class="p-col-12 p-md-12 p-ml-auto"><span style="font-weight: bold;">BANCA</span></div>
-        <!-- <div class="p-col-12 p-md-12"><span style="font-weight: bold">PRESIDENTE:</span> 
-            {{ findBancaProfessor(banca?.bancasProfessores, "Presidente") }}</div> -->
+        <div class="p-col-12 p-md-12"><span style="font-weight: bold">PRESIDENTE:</span> {{ presidente?.nome }}</div>
+        <div class="p-col-12 p-md-12"><span style="font-weight: bold">1º VOGAL:</span> {{ primeiroVogal?.nome }}</div>
+        <div class="p-col-12 p-md-12"><span style="font-weight: bold">2º VOGAL:</span> {{ segundoVogal?.nome }}</div>
         <!-- <div class="p-col-12 p-md-4"><span style="font-weight: bold">PROFESSOR:</span> {{banca?.descricao}}</div> -->
         
         <!-- <div class="p-col-12"><span style="font-weight: bold">Área:</span> {{area?.denominacao}}</div>

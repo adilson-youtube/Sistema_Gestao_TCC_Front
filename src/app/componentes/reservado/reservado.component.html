@@ -45,17 +45,26 @@
         <div class="p-col-12 p-md-9">
             <p-card>
                 <div class="p-grid">
-                    <div class="p-col-10 p-md-10">
-                        <h2 style="font-weight:bold">Dados do TFC</h2>
+                    <div class="p-d-flex p-nogutter p-jc-between p-col-12 p-md-12">
+                        <div class="">
+                            <h2 style="font-weight:bold">Dados do TFC</h2>
+                        </div>
+                        <div class="">
+                            <!-- <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" 
+                            (click)="modal(tfcInfo)" pTooltip="Novo" tooltipPosition="bottom"></button> -->
+                            <button *ngIf='findEstadoTFC(tfcInfo?.estado)==="Aprovado" || findEstadoTFC(tfcInfo?.estado)==="Em Desenvolvimento"' pButton pRipple 
+                            icon="pi pi-list" class="p-button-rounded p-button-text" (click)="verTarefas(tfcInfo.id)" pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
+                            <button *ngIf='findEstadoTFC(tfcInfo?.estado)==="Aprovado" || findEstadoTFC(tfcInfo?.estado)==="Em Desenvolvimento"' pButton pRipple 
+                            icon="pi pi-calendar-plus" class="p-button-rounded p-button-text" (click)="verEncontros(tfcInfo.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
+                        </div>
+
                     </div>
-                    <div class="p-col-2 p-md-2">
-                        <!-- <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" 
-                        (click)="modal(tfcInfo)" pTooltip="Novo" tooltipPosition="bottom"></button> -->
-                        <button *ngIf='findEstadoTFC(tfcInfo?.estado)==="Aprovado" || findEstadoTFC(tfcInfo?.estado)==="Em Desenvolvimento"' pButton pRipple 
-                        icon="pi pi-list" class="p-button-rounded p-button-text" label="Ver Tarefas" (click)="verTarefas(tfcInfo.id)" pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
-                        <button *ngIf='findEstadoTFC(tfcInfo?.estado)==="Aprovado" || findEstadoTFC(tfcInfo?.estado)==="Em Desenvolvimento"' pButton pRipple 
-                        icon="pi pi-users" class="p-button-rounded p-button-text" label="Ver Encontros" (click)="verEncontros(tfcInfo.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
-                    </div>
+                    <!-- <div class="p-d-flex p-nogutter p-jc-between">
+                        <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limparTabela(dt)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button>
+                        <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button>
+                    </div> -->
+
                 </div>
                 <div class="p-grid">
                     <div class="p-col-12 p-md-10">
@@ -70,7 +79,7 @@
                     </div>
                     <div class="p-col-12 p-md-12">
                         <label>Descrição</label>
-                        <textarea [disabled]="true" id="descricao" type="text" class="p-mb-4" 
+                        <textarea [rows]="6" [cols]="30" [disabled]="true" id="descricao" type="text" class="p-mb-4" 
                         placeholder={{tfcInfo?.descricao}} [(ngModel)]="tfcInfo.descricao" pInputTextarea></textarea>
                         <!-- <input disabled="true" [(ngModel)]="tfcInfo.descricao" class="p-mb-4" type="text" pInputText name="" id=""
                             placeholder={{tfcInfo?.descricao}}> -->
@@ -85,11 +94,11 @@
                         <input disabled="true" [(ngModel)]="tfcInfo?.area.descricao" class="p-mb-4" type="text" pInputText name="" id=""
                             placeholder={{tfcInfo?.area?.descricao}}>
                     </div>
-                    <div class="p-col-12 p-md-12">
+                    <!-- <div class="p-col-12 p-md-12">
                         <label>Tema</label>
                         <input disabled="true" [(ngModel)]="tfcInfo.titulo" class="p-mb-4" type="text" pInputText name="" id=""
                             placeholder={{tfcInfo?.titulo}}>
-                    </div>
+                    </div> -->
 
                 </div>
                 
@@ -99,20 +108,15 @@
 </p-card>
 
 <!--------------------- tabela --------------------------------------->
-<p-card>
+<p-card *ngIf='isRole("Professor")||isRole("Coordenador")'>
     <!-- <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-help p-button-text" 
                     (click)="reportTFCs()" pTooltip="Relatorios" tooltipPosition="bottom"></button> -->
     
     <h3>TFC</h3>
-    <p-table *ngIf='isRole("Estudante")' #dt [value]="tfcs" [rows]="5" [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="id" 
+    <!-- <p-table *ngIf='isRole("Estudante")' #dt [value]="tfcs" [rows]="5" [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="id" 
             [globalFilterFields]="['titulo','area.descricao','professor.nome']"
             [showCurrentPageReport]="true" currentPageReportTemplate="{first} até {last} de {totalRecords} tfcs" styleClass="p-datatable-customers p-datatable-gridlines">
         <ng-template pTemplate="caption">
-            <!-- <div class="p-d-flex p-nogutter p-jc-between">
-                <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limparTabela(dt)"></button>
-                <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button>
-                <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" (click)="modal()" pTooltip="Novo" tooltipPosition="bottom"></button>
-            </div> -->
             <div class="p-d-flex">
                 <button pButton label="Todos" class="p-button-outlined" icon="pi pi-filter-slash" (click)="limpar(dt)"></button>
                 <span class="p-input-icon-left p-ml-auto">
@@ -143,23 +147,7 @@
                         Estado <p-columnFilter type="text" field="tfc.estado" display="menu"></p-columnFilter>
                     </div>
                 </th>
-                <!-- <th style="width:14rem">
-                    <div class="p-d-flex p-jc-between p-ai-center">
-                        Telefone de Serviço <p-columnFilter type="text" field="detalhes.telefone1" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="width:10rem">
-                    <div class="p-d-flex p-jc-between p-ai-center">
-                        Voip <p-columnFilter type="text" field="area.voip" display="menu"></p-columnFilter>
-                    </div>
-                </th>
-                <th style="width:10rem">
-                    <div class="p-d-flex p-jc-between p-ai-center">
-                        BigAnt <p-columnFilter type="text" field="detalhes.bigAnt" display="menu"></p-columnFilter>
-                    </div>
-                </th> -->
                 <th style="width:18%;text-align:center">Operação</th>
-                <!-- <th class="p-d-flex p-jc-between p-ai-center">Operação</th> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-tfc>
@@ -168,19 +156,11 @@
                 <td>{{tfc?.area?.descricao}}</td>
                 <td>{{tfc?.professor?.nome}}</td>
                 <td>{{findEstadoTFC(tfc?.estado)}}</td>
-                <!-- <td>{{findArea(tfc?.idArea)}}</td>
-                <td>{{findProfessor(tfc?.idProfessor)}}</td> -->
-                <!-- <td>{{tfc.Professor.Nome}}</td> -->
-                 <!--<td>{{findNomeCompleto(tfc.codigoDoCandidato)}}</td> {{contacto.tfc.nome}}-->
-                <!-- <td>{{findArea(tfc.ultimaActualizacaoLaboral?.areaId)}} ({{findOrgao(tfc.ultimaActualizacaoLaboral?.orgaoId)}})</td> {{contacto.area.denominacao}} ({{contacto.area.orgao.sigla}}) -->
-                <!--<td>{{tfc.ultimaActualizacaoLaboral?.cargo?.estruturaCargo}}</td>  {{contacto.tfc.cargo}} -->
                 <td style="text-align:center">
                     <button *ngIf='isRole("Admin")||isRole("Professor")' pButton pRipple icon="pi pi-pencil" 
                     class="p-button-rounded p-button-success p-button-text p-mr-2" (click)="modal(tfc)" pTooltip="Editar" tooltipPosition="bottom"></button>
                     <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" 
                     (click)="modalDetalhes(tfc)" pTooltip="Detalhes" tooltipPosition="bottom"></button>
-                    <!-- <p-checkbox *ngIf="!tfc.respostaEstudante" id="{{tfc.id}}" [(ngModel)]="tfc.respostaEstudante" [binary]="true" (onChange)="alterarEstado(tfc)"></p-checkbox> -->
-                    <!-- <button *ngIf='findEstadoTFC(tfc?.estado)==="Proposta"' pButton pRipple icon="pi pi-thumbs-up" class="p-button-rounded p-button-text" (click)="alterarEstado(tfc)" pTooltip="Aceitar TFC" tooltipPosition="bottom"></button> -->
                     <button *ngIf='findEstadoTFC(tfc?.estado)==="Aprovado" || findEstadoTFC(tfc?.estado)==="Em Desenvolvimento"' pButton pRipple 
                     icon="pi pi-list" class="p-button-rounded p-button-text" (click)="verTarefas(tfc.id)" pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
                     <button *ngIf='findEstadoTFC(tfc?.estado)==="Aprovado" || findEstadoTFC(tfc?.estado)==="Em Desenvolvimento"' pButton pRipple 
@@ -193,7 +173,7 @@
                 <td colspan="5" style="text-align:center">LISTA DE TFC VAZIA.</td>
             </tr>
         </ng-template>
-    </p-table>
+    </p-table> -->
 
 
     <p-table *ngIf='isRole("Professor")' #dt [value]="tfcs" [rows]="10" 
@@ -273,7 +253,7 @@
                     <button *ngIf='findEstadoTFC(tfc?.estado)==="Aprovado" || findEstadoTFC(tfc?.estado)==="Em Desenvolvimento"' pButton pRipple 
                     icon="pi pi-list" class="p-button-rounded p-button-text" (click)="verTarefas(tfc.id)" pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
                     <button *ngIf='findEstadoTFC(tfc?.estado)==="Aprovado" || findEstadoTFC(tfc?.estado)==="Em Desenvolvimento"' pButton pRipple 
-                    icon="pi pi-users" class="p-button-rounded p-button-text" (click)="verEncontros(tfc.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
+                    icon="pi pi-calendar-plus" class="p-button-rounded p-button-text" (click)="verEncontros(tfc.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
                 </td>
             </tr>
         </ng-template>
@@ -373,7 +353,7 @@
                     pButton pRipple icon="pi pi-list" class="p-button-rounded p-button-text" (click)="verTarefas(tfc?.id)" 
                     pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
                     <button *ngIf='findEstadoTFC(tfc?.estado)==="Aprovado" || findEstadoTFC(tfc?.estado)==="Em Desenvolvimento"' pButton pRipple 
-                    icon="pi pi-users" class="p-button-rounded p-button-text" (click)="verEncontros(tfc?.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
+                    icon="pi pi-calendar-plus" class="p-button-rounded p-button-text" (click)="verEncontros(tfc?.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
                 </td>
             </tr>
         </ng-template>

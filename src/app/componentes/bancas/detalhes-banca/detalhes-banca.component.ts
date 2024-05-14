@@ -12,37 +12,88 @@ import { ProfessorService } from 'src/app/servicos/professor.service';
 export class DetalhesBancaComponent {
 
   private _banca: Banca;
+  presidente: Professor;
+  primeiroVogal: Professor;
+  segundoVogal: Professor;
+  private _bancasProfessores: Array<BancaProfessor>;
   
 
   constructor(private professorServico: ProfessorService) { 
   }
 
   ngOnInit(): void {
-    console.log("A banca professor enviada é: "+JSON.stringify(this.banca.bancasProfessores));
+    // console.log("A banca professor enviada é: "+JSON.stringify(this._banca));
   }
 
   get banca(): Banca {
     return this._banca;
   }
 
-  findBancaProfessor(bancasProfessores: Array<BancaProfessor>, categoria: string): Professor {
-    var bancaProfessorAux: BancaProfessor = new BancaProfessor();
-    var professor = new Professor();
-    bancaProfessorAux = bancasProfessores.find((bp) => {
-      bp.categoria == categoria;
-    });
-    this.professorServico.procurarProfessorPorId(bancaProfessorAux.idProfessor).subscribe( resultado => {
-      professor = resultado;
-      console.log("Professor Encontrado: "+professor);
-      return professor;
-    });
-    return professor;
-  }
-
   @Input()
   set banca(banca: Banca) {
     this._banca = banca; 
+    // console.log("A Banca enviada esta constituida Por: "+JSON.stringify(this._banca.bancasProfessores));
   }
+
+  @Input()
+  set bancasProfessores(bancasProfessores: Array<BancaProfessor>) {
+    this._bancasProfessores = bancasProfessores; 
+    this.findBancaPresidente(this._bancasProfessores);
+    this.findBancaPrimeiroVogal(this._bancasProfessores);
+    this.findBancaSegundoVogal(this._bancasProfessores);
+    console.log("A Banca enviada esta constituida Por: "+JSON.stringify(this._banca.bancasProfessores));
+    
+  }
+
+  findBancaPresidente(bancasProfessores: Array<BancaProfessor>) {
+    var bancaProfessorAux: BancaProfessor = new BancaProfessor();
+    if (bancasProfessores) {
+      bancasProfessores.find((bp) => {
+        if (bp.categoria == "Presidente") {
+          bancaProfessorAux = bp;
+        }
+      });
+
+      this.professorServico.procurarProfessorPorId(bancaProfessorAux.idProfessor).subscribe( resultado => {
+        this.presidente = resultado;
+      });
+      
+    }
+
+  }
+
+  findBancaPrimeiroVogal(bancasProfessores: Array<BancaProfessor>) {
+    var bancaProfessorAux: BancaProfessor = new BancaProfessor();
+    if (bancasProfessores) {
+      bancasProfessores.find((bp) => {
+        if (bp.categoria == "1º Vogal") {
+          bancaProfessorAux = bp;
+        }
+      });
+
+      this.professorServico.procurarProfessorPorId(bancaProfessorAux.idProfessor).subscribe( resultado => {
+        this.primeiroVogal = resultado;
+      });
+      
+    }
+  }
+
+  findBancaSegundoVogal(bancasProfessores: Array<BancaProfessor>) {
+    var bancaProfessorAux: BancaProfessor = new BancaProfessor();
+    if (bancasProfessores) {
+      bancasProfessores.find((bp) => {
+        if (bp.categoria == "2º Vogal") {
+          bancaProfessorAux = bp;
+        }
+      });
+      this.professorServico.procurarProfessorPorId(bancaProfessorAux.idProfessor).subscribe( resultado => {
+        this.segundoVogal = resultado;
+      });
+      
+    }
+
+  }
+
 
 //----- 
 
