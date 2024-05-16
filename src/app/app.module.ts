@@ -52,6 +52,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import {BadgeModule} from 'primeng/badge';
 import {PickListModule} from 'primeng/picklist';
+import {OrderListModule} from 'primeng/orderlist';
 // import { NgxDocViewerModule } from 'ngx-doc-viewer';
 
 // import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -122,6 +123,7 @@ import { TfcsDefendidosComponent } from './componentes/tfcs-defendidos/tfcs-defe
 import { DetalhesEncontroComponent } from './componentes/encotros/detalhes-encontro/detalhes-encontro.component';
 import { BancasComponent } from './componentes/bancas/bancas.component';
 import { DetalhesBancaComponent } from './componentes/bancas/detalhes-banca/detalhes-banca.component';
+import { EnviarTfcComponent } from './componentes/enviar-tfc/enviar-tfc.component';
 
 
 @NgModule({
@@ -173,7 +175,8 @@ import { DetalhesBancaComponent } from './componentes/bancas/detalhes-banca/deta
     TfcsDefendidosComponent,
     DetalhesEncontroComponent,
     BancasComponent,
-    DetalhesBancaComponent
+    DetalhesBancaComponent,
+    EnviarTfcComponent
   ],
   imports: [
     BrowserModule,
@@ -237,6 +240,7 @@ import { DetalhesBancaComponent } from './componentes/bancas/detalhes-banca/deta
     MessageModule,
     BadgeModule,
     PickListModule,
+    OrderListModule,
     // NgxDocViewerModule
     // PdfViewerModule
   ],

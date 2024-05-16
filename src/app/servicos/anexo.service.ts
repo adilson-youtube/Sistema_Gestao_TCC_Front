@@ -15,6 +15,10 @@ export class AnexoService {
         return this.repositorio.listarAnexos();
     }
 
+    BuscarPorIdTFC(id: number): Observable<Anexo> {
+        return this.repositorio.BuscarPorIdTFC(id);
+    }
+
     procurarAnexoPorId(codigo: number): Observable<Anexo> {
         return this.repositorio.procurarAnexoPorId(codigo);
     }

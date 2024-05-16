@@ -74,8 +74,8 @@
                     </div>
                     <div class="p-col-12 p-md-2">
                         <label>Estado</label>
-                        <input disabled="true" (ngModel)="findEstadoTFC(tfcInfo.estado)" class="p-mb-4" type="text" pInputText name="" id=""
-                            placeholder={{findEstadoTFC(tfcInfo.estado)}}>
+                        <input disabled="true" (ngModel)="findEstadoTFC(tfcInfo?.estado)" class="p-mb-4" type="text" pInputText name="" id=""
+                            placeholder={{findEstadoTFC(tfcInfo?.estado)}}>
                     </div>
                     <div class="p-col-12 p-md-12">
                         <label>Descrição</label>
@@ -332,7 +332,7 @@
         <ng-template pTemplate="body" let-tfc>
             <tr>
                 <td>{{tfc?.estudante?.nome}}</td>
-                <td>{{tfc.titulo}}</td>
+                <td>{{tfc?.titulo}}</td>
                 <td>{{tfc?.area?.descricao}}</td>
                 <td>{{tfc?.professor?.nome}}</td>
                 <td>{{findEstadoTFC(tfc?.estado)}}</td>

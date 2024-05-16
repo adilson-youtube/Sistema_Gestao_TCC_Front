@@ -21,6 +21,11 @@ export class AnexoRepositorio {
     return this.http.get<Array<Anexo>>(`${this.baseUrl}${path}`);
   }
 
+  BuscarPorIdTFC(id: number): Observable<Anexo> {
+    const path = `Anexo/BuscarPorIdTFC/${id}`;
+    return this.http.get<Anexo>(`${this.baseUrl}${path}`);
+  }
+
   procurarAnexoPorId(id: number): Observable<Anexo> {
     const path = `Anexo/${id}`;
     return this.http.get<Anexo>(`${this.baseUrl}${path}`);

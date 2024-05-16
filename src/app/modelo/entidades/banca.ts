@@ -4,6 +4,7 @@ import { Professor } from "./professor";
 import { TFC } from "./tfc";
 import { Regulamento } from "./regulamento";
 import { Usuario } from "./usuario";
+import { Correcao } from "./correcao";
 
 export class Banca {
     id?;
@@ -12,6 +13,7 @@ export class Banca {
     // hora = new Date();
     // membros = new Array<Professor>();
     bancasProfessores?: Array<BancaProfessor>;
+    correcoes?: Array<Correcao>;
     tfc?: TFC;
     // Apresentacoes = new Array<Apresentacao>();
     // Regulamento= new Regulamento();

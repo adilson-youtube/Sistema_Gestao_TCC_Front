@@ -5,8 +5,6 @@
 
 <!--------------------- tabela --------------------------------------->
 <p-card>
-    <!-- <button pButton pRipple icon="pi pi-file-pdf" class="p-button-rounded p-button-help p-button-text" 
-                    (click)="reportTFCs()" pTooltip="Relatorios" tooltipPosition="bottom"></button> -->
     
     <h3>Bancas</h3>
 
@@ -92,14 +90,14 @@
 
                     <button 
                     pButton pRipple icon="pi pi-download" class="p-button-rounded p-button-danger p-button-text" id="{{banca.id}}" 
-                    pTooltip="Baixar Resposta do Estudante" (click)="downloadFile(banca?.tfc?.id)"></button>
+                    pTooltip="Baixar o TFC do Estudante" (click)="baixarTFC(banca?.tfc?.id)"></button>
 
                     <button 
-                    pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success p-button-text" id="{{tarefa.id}}" 
-                    pTooltip="Ver Correção" (click)="modalBaixarCorrecao(banca)"></button>
+                    pButton pRipple icon="pi pi-user-edit" class="p-button-rounded p-button-success p-button-text" id="{{banca.id}}" 
+                    pTooltip="Ver Correção" (click)="modalVisualizarCorrecao(banca)"></button>
 
                     <button 
-                    pButton pRipple icon="pi pi-user-edit" class="p-button-rounded p-button-danger p-button-text" id="{{tarefa.id}}" 
+                    pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-danger p-button-text" id="{{banca.id}}" 
                     pTooltip="Fazer Correção" (click)="modalAnexarFicheiro(banca)"></button>
                 </td>
             </tr>
@@ -130,7 +128,7 @@
                 <label>Estudante *</label>
                 <p-dropdown [filter]="true" filterBy="nome" optionLabel="nome" optionValue="" inputId="estudante" 
                 [options]="estudantes" [(ngModel)]="estudanteSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
-                <!-- <input id="estadoTarefa" type="text" [(ngModel)]="tarefa.estadoTarefa" pInputText>  -->
+                <!-- <input id="estadoTarefa" type="text" [(ngModel)]="banca.estadoTarefa" pInputText>  -->
                 <small class="p-invalid" *ngIf="validar && !estudanteSelecionado">Campo Obrigatório.</small>
             </div>
     
@@ -164,7 +162,6 @@
                 [options]="professores" [(ngModel)]="segundoVogal" placeholder="-- Seleccionar --"></p-dropdown>
                 <small class="p-invalid" *ngIf="validar && !segundoVogal">Campo Obrigatório.</small>
             </div>
-
         </div>
         <div class="p-col-12 p-md-6">
             <div class="p-field p-col-12 p-md-12">
@@ -173,29 +170,76 @@
                 inline="true" [(ngModel)]="dataHoraApresentacao" dateFormat="dd/mm/yy"></p-calendar>
                 <small class="p-invalid" *ngIf="validar && !dataHoraApresentacao">Campo Obrigatório.</small>
             </div>
-
         </div>
-
-        <!-- <div class="p-field p-col-12 p-md-12">
-            <label>Descrição</label>
-            <textarea id="descricao" type="text" [(ngModel)]="banca?.tfc.descricao" pInputTextarea></textarea>
-            <small class="p-invalid" *ngIf="validar && !banca?.tfc.descricao">Campo Obrigatório.</small>
-        </div>  -->
-
-        <!-- <div class="p-field p-col-12 p-md-12">
-            <label>Aceitar Proposta</label>
-            <button pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-help p-button-text" (click)="alterarEstado(tfc)" pTooltip="Aceitar Proposta" tooltipPosition="bottom"></button>
-            Icones para Aceitar Proposta pi-thumbs-up, pi-check
-            <p-checkbox *ngIf="!tfc.respostaEstudante" id="{{tfc.id}}" [(ngModel)]="tfc.respostaEstudante" [binary]="true" (onChange)="alterarEstado(tfc)"></p-checkbox>
-            <small class="p-invalid" *ngIf="validar && !tfc.respostaEstudante">Campo Obrigatório.</small>
-        </div>  -->
-
         
     </div>
     <ng-template pTemplate="footer">
         <button type="button" pButton pRipple icon="pi pi-save"  (click)="salvar()" label="Salvar"></button>
         <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
     </ng-template>
+</p-dialog>
+
+<!--------------------- modal --------------------------------------->
+<p-dialog #formActividade appendTo="body" [header]="visualizarCorrecaoHeader" [(visible)]="exibirBaixarCorrecao" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+    <div class="p-fluid p-formgrid p-grid">
+
+        <div class="p-col-12 p-md-12">
+            <div class="p-grid">
+
+                <div class="p-field p-col-12 p-md-11 p-mt-2">
+                    <label>Comentario</label>
+                    <input [disabled] = 'isRole("Estudante") || isRole("Coordenador")' [(ngModel)]="correcao.Comentario" type="text" pInputText name="" id=""
+                        placeholder={{correcao.Comentario}}>
+                    <!-- <textarea [disabled] = 'isRole("Estudante") || isRole("Coordenador")' id="comentarioCorrecao" 
+                    [rows]="5" type="text" [(ngModel)]="comentario" pInputTextarea></textarea> -->
+                    <small class="p-invalid" *ngIf="validar && !this.correcao.Comentario">Campo Obrigatório.</small>
+                </div>
+                <div class="p-field p-col-12 p-md-1 p-mt-3">
+                    <label></label>
+                    <button pButton pRipple icon="pi pi-plus" class="p-button p-button-help" 
+                    (click)="adicionarCorrecao(banca)" pTooltip="Adicionar" tooltipPosition="bottom"></button>
+                </div>
+    
+                <div class="p-field p-col-12 p-md-12 p-mt-2">
+                    <label>Correções da Banca para o TFC</label>
+                    <p-table #dt [value]="correcoes" [scrollable]="true" scrollHeight="200px">
+                        
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>
+                                    <div class="p-d-flex p-jc-between p-ai-center">
+                                        Correção
+                                        <p-columnFilter type="text" field="correcao?.comentario" display="menu"></p-columnFilter>
+                                    </div>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-correcao>
+                            <tr>
+                                <td>{{correcao?.comentario}}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="1" style="text-align:center">LISTA DE CORREÇÕES VAZIA.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+    <!-- <ng-template pTemplate="footer">
+
+        <button type="button" pButton pRipple icon="pi pi-times" 
+        (click)="cancelar()" label="Cancelar" class="p-button-danger"></button>
+
+        <button *ngIf="isRole('Professor')" 
+        pButton pRipple icon="pi pi-download" class="p-button-success" id="{{banca.id}}" 
+        pTooltip="Baixar Correção" label="Baixar" (click)="{}"></button>
+    </ng-template> -->
 </p-dialog>
 
 <!--------------------- modal --------------------------------------->

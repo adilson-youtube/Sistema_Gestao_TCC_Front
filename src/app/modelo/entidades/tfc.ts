@@ -9,6 +9,7 @@ export class TFC {
     id?;
     titulo?: string = '';
     descricao?: string = '';
+    nota?: string = '';
     estado?: EstadoTFC = EstadoTFC.Proposta;
     respostaEstudante?: boolean = false;
     respostaProfessor?: boolean = false;

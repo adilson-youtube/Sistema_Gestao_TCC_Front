@@ -1,0 +1,43 @@
+
+<!-- <app-header [deviceXs]="deviceXs" [deviceSm]="deviceSm"></app-header> -->
+<p-toast></p-toast>
+
+<p-card class="p-grid p-jc-center p-mt-6">
+    <ng-template pTemplate="content">
+        <h3>Enviar Trabalho de Fim de Curso</h3>
+        <!-- <div class="p-fluid p-formgrid p-grid p-jc-center p-col-12 p-md-12"> -->
+        <div class="p-fluid p-formgrid p-grid">
+            <div class="p-field p-col-12 p-md-12">
+                <label for="nome">Titulo</label>
+                <input id="nome" [(ngModel)]="anexo.nomeFicheiro" type="text" pInputText>
+            </div>
+            
+            <!-- <div class="p-field p-col-12 p-md-12">
+                <label for="descricao">Descrição</label>
+                <textarea [rows]="5" [cols]="90" pInputTextarea autoResize="true"></textarea>
+                <textarea id="descricao" [rows]="9" pInputTextarea [(ngModel)]="tfc.Descricao"></textarea>
+            </div> -->
+
+            <div class="file-input-wrapper">
+                <!-- <button onclick="document.getElementById('file').click()" class="btn">Escolher arquivo</button> -->
+                <button type="button" pButton pRipple class="p-button-success" 
+                icon="pi pi-cloud-upload" onclick="document.getElementById('file').click()" label="Escolher arquivo"></button>
+                <!-- <button pButton pRipple icon="pi pi-cloud-upload" class="p-button-rounded p-button-success p-button-text" id="{{tarefa.id}}" 
+                pTooltip="Escolher arquivo" onclick="document.getElementById('file').click()"></button> -->
+                <span id="file-name"></span>
+    
+                <input *ngIf="isRole('Estudante')" type="file" 
+                (change)="uploadFile($event)" name="file" id="file" class="file-input">
+            </div>
+
+            <div class="p-field p-col-12 p-md-6">
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="p-grid p-nogutter p-jc-between">
+            <p-button label="Limpar" (onClick)="cancelar()" icon="pi pi-breash" class="p-button-danger"></p-button>
+            <p-button label="Salvar" (onClick)="salvar()" icon="pi pi-save" iconPos="right"></p-button>
+        </div>
+    </ng-template>
+</p-card>

@@ -28,6 +28,7 @@ import { TFCsComponent } from './componentes/propostas/tfcs.component';
 import { EncotrosComponent } from './componentes/encotros/encotros.component';
 import { TfcsDefendidosComponent } from './componentes/tfcs-defendidos/tfcs-defendidos.component';
 import { BancasComponent } from './componentes/bancas/bancas.component';
+import { EnviarTfcComponent } from './componentes/enviar-tfc/enviar-tfc.component';
 
 
 const routes: Routes = [
@@ -77,6 +78,7 @@ const routes: Routes = [
       { path: 'encontros', component: EncotrosComponent},
       { path: 'listarTFCsDefendidos', component: TfcsDefendidosComponent},
       { path: 'listarBancas', component: BancasComponent},
+      { path: 'enviarTFC', component: EnviarTfcComponent },
     ] },
       // { path: '', redirectTo: 'proposta', pathMatch: 'full'},
       // { path: '', component: TFCsComponent },

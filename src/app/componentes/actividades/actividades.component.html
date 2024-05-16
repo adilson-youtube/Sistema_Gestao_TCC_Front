@@ -166,17 +166,6 @@
 <!--------------------- modal --------------------------------------->
 <p-dialog #formActividade appendTo="body" [header]="tarefaHeader" [(visible)]="exibirAnexarFicheiro" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
     <div class="p-fluid p-formgrid p-grid">
-        <!-- <div class="p-field p-col-12 p-md-6">
-            <label>Titulo *</label>
-            <input id="titulo" type="text" [(ngModel)]="tarefa.titulo" pInputText> 
-            <small class="p-invalid" *ngIf="validar && !tarefa.titulo">Campo Obrigatório.</small>
-        </div>
-
-        <div class="p-field p-col-12 p-md-6">
-            <label>Descrição</label>
-            <input id="descricao" type="text" [(ngModel)]="tarefa.descricao" pInputText> 
-            <small class="p-invalid" *ngIf="validar && !tarefa.descricao">Campo Obrigatório.</small>
-        </div> -->
 
         <div *ngIf="isRole('Professor')" class="p-field p-col-12 p-md-12">
             <label>Comentario</label>

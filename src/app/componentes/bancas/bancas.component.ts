@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { Area } from 'src/app/modelo/entidades/area';
 import { Banca } from 'src/app/modelo/entidades/banca';
 import { BancaProfessor } from 'src/app/modelo/entidades/bancaprofessor';
+import { Correcao } from 'src/app/modelo/entidades/correcao';
 import { Estudante } from 'src/app/modelo/entidades/estudante';
 import { Funcionario } from 'src/app/modelo/entidades/funcionario';
 import { Professor } from 'src/app/modelo/entidades/professor';
@@ -16,9 +17,11 @@ import { Tarefa } from 'src/app/modelo/entidades/tarefa';
 import { TFC } from 'src/app/modelo/entidades/tfc';
 import { EstadoTFC } from 'src/app/modelo/enumerados/estadoTFC';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
+import { AnexoService } from 'src/app/servicos/anexo.service';
 import { AuthenticationService } from 'src/app/servicos/authentication.service';
 import { BancaService } from 'src/app/servicos/banca.service';
 import { BancaProfessorService } from 'src/app/servicos/bancaprofessor.service';
+import { CorrecaoService } from 'src/app/servicos/correcao.service';
 import { EstudanteService } from 'src/app/servicos/estudante.service';
 import { GridfsService } from 'src/app/servicos/gridfs.service';
 import { ProfessorService } from 'src/app/servicos/professor.service';
@@ -51,6 +54,8 @@ export class BancasComponent {
   bancas: Array<Banca> = new Array<Banca>();
   banca: Banca = new Banca();
   dataHoraApresentacao: Date;
+  correcao: Correcao = new Correcao();
+  correcoes: Array<Correcao> = new Array<Correcao>();
 
   estadoTFCSelecionado: EstadoTFC;
 
@@ -105,6 +110,8 @@ export class BancasComponent {
     private professorServico: ProfessorService,
     private confirmationService: ConfirmationService, 
     private gridfsService: GridfsService,
+    private correcaoService: CorrecaoService,
+    private anexoService: AnexoService,
     private messageService: MessageService
   ) { }
 
@@ -144,7 +151,6 @@ export class BancasComponent {
       const id = Number(this.userInfo.id);
       this.tfcServico.listarTFCs().subscribe( resultados => { 
         this.tfcs = resultados; 
-        // console.log("TFCs: "+JSON.stringify(this.tfcs));
       });
     }
 
@@ -179,6 +185,10 @@ export class BancasComponent {
 
   get cabecario(): string {
     return this.banca?.id ? 'Editar Banca' : 'Adicionar Banca';
+  }
+
+  get visualizarCorrecaoHeader(): string {
+    return "Correção da Tarefa";
   }
 
 
@@ -263,57 +273,19 @@ export class BancasComponent {
 
   }
 
-  alterarEstado(tfc: TFC) {
-    this.tfc = tfc;
-    console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
-    this.confirmationService.confirm({
-      message: "Deseja Aceitar o Tema?",
-      accept: () => {
-        console.log("Tema Aceita com Sucesso!");
-        console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
-        if (tfc) {
-          if (this.isRole("Estudante")) {
-            this.tfc.respostaEstudante = true;
-            this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
-            this.estudanteService.procurarEstudantePorId(this.tfc.idEstudante).subscribe((estudante)=> {
-              this.tfc.estudante = estudante;
-            })
-          } else if (this.isRole("Professor")) {
-            this.tfc.respostaProfessor = true;
-            this.tfc.idProfessor = Number(this.authenticationService.getDecodedToken().id);
-            this.propfessorServico.procurarProfessorPorId(this.tfc.idProfessor).subscribe((professor)=> {
-              this.tfc.professor = professor;
-            })
-            this.tfc.coordenador = tfc.coordenador;
-          }
-          // if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
-          //   tfc.estado = EstadoTFC.Aprovado;
-          // }
-          console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
-          this.salvar();
-          this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
-        }
-      },
-      reject: () => {
-        this.notificacaoMsg("error", "Alteração de Estado", "O estado do Tema não foi alterado!");
-        // if (tfc) {
-        //   if (this.isRole("Estudante")) {
-        //     this.tfc.respostaEstudante = true;
-        //     this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
-        //   } else if (this.isRole("Professor")) {
-        //     this.tfc.respostaProfessor = true;
-        //     this.tfc.idProfessor = Number(this.authenticationService.getDecodedToken().id);
-        //   }
-        //   if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
-        //     tfc.estado = EstadoTFC.Aprovado;
-        //   }
-        //   console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
-        //   this.salvar();
-        //   this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
-        // }
-        console.log("Os Dados da TFC Após Ser Rejeitada: "+JSON.stringify(this.tfc));
-      }
-    });
+  adicionarCorrecao(banca: Banca) {
+    if (banca?.id) {
+      this.correcao.idBanca = banca.id;
+      this.correcaoService.salvarCorrecao(this.correcao).subscribe(resultado => {
+        this.correcao = resultado;
+        this.correcoes.push(this.correcao);
+        this.limparCampos();
+      });
+    }
+  }
+
+  limparCampos(): void {
+    this.correcao = new Correcao();
   }
 
   isRole(role: string): boolean {
@@ -338,34 +310,6 @@ export class BancasComponent {
     this.exibirDetalhes = true;
   }
 
-  findEstadoTFC(estadoTFC: EstadoTFC): string  {
-    switch (estadoTFC) {
-      case 0:
-        return "Proposta"
-        break;
-      case 1:
-        return "Reprovado";
-        break;
-      
-      case 2:
-        return "Aprovado";
-        break;
-      case 3:
-        return "Em Desenvolvimento";
-        break;
-      case 4:
-        return "Finalizado";
-        break;
-      case 5:
-        return "Defendido";
-        break;
-    
-      default:
-        return "Proposta";
-        break;
-    }
-  }
-
   notificacaoMsg(tipoNotificacao?: string, cabecario?: string, msg?: string) {
     this.messageService.add({severity: tipoNotificacao, summary:cabecario, detail: msg});
   }
@@ -387,56 +331,57 @@ export class BancasComponent {
     );
   }
 
-  downloadFile(fileId: string) {
-    this.gridfsService.downloadFile(fileId).subscribe(
-      (response: HttpResponse<Blob> | HttpErrorResponse) => {
-        if (response instanceof HttpResponse) {
-          const contentDispositionHeader = response.headers.get('Content-Disposition');
-          const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          const matches = fileNameRegex.exec(contentDispositionHeader);
-          const fileName = matches != null && matches[1] ? matches[1].replace(/['"]/g, '') : 'downloadedFile';
+  baixarTFC(idTFC: number) {
+    
+    this.anexoService.BuscarPorIdTFC(idTFC).subscribe(anexo => {
 
-          console.log("Conteudo do Cabeçario: "+JSON.stringify(response.headers.keys()))
+      this.gridfsService.downloadFile(anexo.idFicheiro).subscribe(
+        (response: HttpResponse<Blob> | HttpErrorResponse) => {
+          if (response instanceof HttpResponse) {
+            const contentDispositionHeader = response.headers.get('Content-Disposition');
+            const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = fileNameRegex.exec(contentDispositionHeader);
+            const fileName = matches != null && matches[1] ? matches[1].replace(/['"]/g, '') : 'downloadedFile';
+  
+            console.log("Conteudo do Cabeçario: "+JSON.stringify(response.headers.keys()))
+  
+            const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+  
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          } else {
+            console.error('Error downloading file:', response.error);
+          }
+        },
+        error => {
+          console.error('Error downloading file:', error);
+        });
 
-          const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+    });
 
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = fileName;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-        } else {
-          console.error('Error downloading file:', response.error);
-        }
-      },
-      error => {
-        console.error('Error downloading file:', error);
-      }
-    );
   }
 
 
-  modalBaixarCorrecao(tarefa?: Tarefa): void {
-    // this.tarefaServico.procurarTarefaPorCodigo(tarefa.codigoDoCandidato).subscribe( resultado => { this.tarefa = resultado; }); 
-    this.tarefa = tarefa;
-    if (tarefa?.dataEntrega) {
-      this.dataEntrega = new Date(tarefa.dataEntrega);
-    }
-    if (tarefa?.dataTerminada) {
-      this.dataTerminada = new Date(tarefa.dataTerminada);
-    }
-    
-    // console.log("Dados da Tarefa: "+JSON.stringify(tarefa));
+  modalVisualizarCorrecao(banca?: Banca): void {
+    this.banca = banca;
+    this.correcoes = this.banca.correcoes;
+    this.correcaoService.ListarCorrecoesBanca(this.banca.id).subscribe(resultado => {
+      this.correcoes = resultado;
+      // console.log("As correções são: "+JSON.stringify(this.correcoes));
+      // console.log("O Id da Banca é: "+JSON.stringify(this.banca.id));
+    });
     this.exibirBaixarCorrecao = true;
     this.validar = false;
   }
 
 
-  modalAnexarFicheiro(tarefa?: Tarefa): void {
-    // this.tarefaServico.procurarTarefaPorCodigo(tarefa.codigoDoCandidato).subscribe( resultado => { this.tarefa = resultado; }); 
+  modalAnexarFicheiro(tarefa?: Tarefa): void { 
     this.tarefa = tarefa;
     if (tarefa?.dataEntrega) {
       this.dataEntrega = new Date(tarefa.dataEntrega);
@@ -444,8 +389,6 @@ export class BancasComponent {
     if (tarefa?.dataTerminada) {
       this.dataTerminada = new Date(tarefa.dataTerminada);
     }
-    
-    // console.log("Dados da Tarefa: "+JSON.stringify(tarefa));
     this.exibirAnexarFicheiro = true;
     this.validar = false;
   }

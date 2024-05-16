@@ -2,27 +2,29 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
+import { PrimeNGConfig, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
+import { Anexo } from 'src/app/modelo/entidades/Anexo';
 import { Area } from 'src/app/modelo/entidades/area';
 import { Estudante } from 'src/app/modelo/entidades/estudante';
 import { Professor } from 'src/app/modelo/entidades/professor';
 import { TFC } from 'src/app/modelo/entidades/tfc';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
+import { AnexoService } from 'src/app/servicos/anexo.service';
 import { AreaService } from 'src/app/servicos/area.service';
 import { AuthenticationService } from 'src/app/servicos/authentication.service';
 import { EstudanteService } from 'src/app/servicos/estudante.service';
+import { GridfsService } from 'src/app/servicos/gridfs.service';
 import { ProfessorService } from 'src/app/servicos/professor.service';
 import { TFCService } from 'src/app/servicos/tfc.service';
 
 @Component({
-  selector: 'app-enviar',
-  templateUrl: './enviar.component.html',
-  styleUrls: ['./enviar.component.css'],
-  providers:[ConfirmationService, MessageService],
+  selector: 'app-enviar-tfc',
+  templateUrl: './enviar-tfc.component.html',
+  styleUrls: ['./enviar-tfc.component.css']
 })
-export class EnviarComponent implements OnInit {
+export class EnviarTfcComponent implements OnInit {
 
   nova = true;
   exibir = false;
@@ -31,10 +33,8 @@ export class EnviarComponent implements OnInit {
   exibirDetalhes = false;
   tfc = new TFC();
   tfcs: Array<TFC>;
-  professores: Array<Professor>;
-  professorSelecionado: Professor;
   areas: Array<Area>;
-  areaSelecionado: Area;
+  anexo: Anexo = new Anexo();
   estudante: Estudante;
   userInfo: any;
 
@@ -65,16 +65,26 @@ export class EnviarComponent implements OnInit {
     private areaServico: AreaService,
     private professorServico: ProfessorService,
     private estudanteService: EstudanteService, 
+    private gridfsService: GridfsService,
+    private anexoService: AnexoService, 
     private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
+    this.getInfoUser();
+
     this.parametro = this.router.url.substring(1, 12);
 
     const deviceInfo = this.deviceService.getDeviceInfo();
-    
-    this.areaServico.listarAreas().subscribe( resultados => { this.areas = resultados; });
-    this.professorServico.listarProfessores().subscribe( resultados => { this.professores = resultados; });
+
+    if(this.isRole("Estudante")) {
+      const id = Number(this.userInfo.id);
+      this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
+        this.tfcs = resultados;
+        this.tfc = this.tfcs.slice().shift(); 
+        console.log("TFCs: "+JSON.stringify(this.tfcs));
+      });
+    }
 
     this.authenticationService.showMenuEmitter.subscribe( show => this.showAllMenu = show );
     this.authenticationService.showRegisterEmitter.subscribe( register => this.showregister = register );
@@ -88,17 +98,14 @@ export class EnviarComponent implements OnInit {
         this.deviceMd = result.mqAlias === 'md' ? true : false;
         this.deviceLg = result.mqAlias === 'lg' ? true : false;
     });
-    this.tfc = new TFC();
 
     this.config.setTranslation(this.translation.translation);
-
-    this.userInfo = this.authenticationService.getDecodedToken();
 
   }
   
 
   get cabecario(): string {
-    const texto = this.tfc ? 'Adiconar Proposta' : 'Editar Proposta';
+    const texto = 'Enviar TFC';
     return texto;
   }
 
@@ -112,41 +119,45 @@ export class EnviarComponent implements OnInit {
   cancelar(): void {
     this.exibir = false;
     this.validar = false;
-    this.areaSelecionado = new Area();
-    this.professorSelecionado = new Professor();
+    this.anexo = new Anexo();
     this.tfc = new TFC();
   }
 
   salvar(): void {
     this.validar = true;
-    if (this.isRole("Estudante")) {
-      this.tfc.idEstudante = Number(this.userInfo.id);
-      this.tfc.idProfessor = this.professorSelecionado.id;
-      this.tfc.professor = this.professorSelecionado;
-      this.tfc.respostaEstudante = true;
-      this.estudanteService.procurarEstudantePorId(Number(this.userInfo.id)).subscribe( resultado => {
-        this.tfc.estudante = resultado;
-      });
-    }
-    
-    if (this.isRole("Professor")) {
-      this.tfc.idProfessor = Number(this.userInfo.id);
-      this.tfc.respostaProfessor = true;
-      this.professorServico.procurarProfessorPorId(Number(this.userInfo.id)).subscribe( resultado => {
-        this.tfc.professor = resultado;
-      });
-    }
-    
-    this.tfc.idArea = this.areaSelecionado.id;
-    this.tfc.area = this.areaSelecionado;
-
-    if (this.tfc) {
-      this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
+    if (this.anexo) {
+      this.anexo.idTFC = this.tfc.id;
+      this.anexoService.salvarAnexo(this.anexo).subscribe(resultado => {
         this.notificacaoMsg("success", "Proposta de TFC", "A Proposta foi enviada com sucesso!");
         this.cancelar();
-      }); 
+      });
     }
 
+    // if (this.tfc) {
+    //   this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
+    //     this.notificacaoMsg("success", "Proposta de TFC", "A Proposta foi enviada com sucesso!");
+    //     this.cancelar();
+    //   }); 
+    // }
+
+  }
+
+  uploadFile(event: any) {
+    const file = event.target.files[0];
+    // const input: HTMLInputElement | null = document.getElementById('file') as HTMLInputElement;
+    const fileNameSpan: HTMLSpanElement | null = document.getElementById('file-name') as HTMLSpanElement;
+    fileNameSpan.textContent = file.name;
+    this.gridfsService.uploadFile(file).subscribe(
+      response => {
+        console.log('Ficheiro enviado com sucesso:', response);
+      },
+      error => {
+        this.anexo.idFicheiro = error.error.text;
+        // this.anexouFicheiro = true;
+        console.error('Id do Ficheiro:', this.anexo.idFicheiro);
+        console.error('Erro ao enviar o ficheiro:', error);
+      }
+    );
   }
 
   limpar(tabela: Table) {
@@ -169,5 +180,6 @@ export class EnviarComponent implements OnInit {
   notificacaoMsg(tipoNotificacao?: string, cabecario?: string, msg?: string) {
     this.messageService.add({severity: tipoNotificacao, summary:cabecario, detail: msg});
   }
-  
+
+
 }
