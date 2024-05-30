@@ -10,6 +10,8 @@ import { NotificacaoService } from 'src/app/servicos/notificacao.service';
 import {Message, MessageService} from 'primeng//api';
 import { Messages } from 'primeng/messages';
 import { BadgeDirective } from 'primeng/badge';
+import { TFCService } from 'src/app/servicos/tfc.service';
+import { TFC } from 'src/app/modelo/entidades/tfc';
 
 @Component({
   selector: 'app-header',
@@ -47,6 +49,8 @@ export class HeaderComponent implements OnInit {
   quantNotificacoes = 0;
   msgs: Message[] = [];
   userInfo: any;
+  tfcInfo = new TFC();
+  tfcs: Array<TFC>;
 
   changePassword: boolean = false;
 
@@ -54,7 +58,7 @@ export class HeaderComponent implements OnInit {
   @ViewChild('mensagemComponent') componentBadge: BadgeDirective;
 
   constructor(private authenticationService: AuthenticationService, private notificationService: NotificacaoService, 
-    private messageService: MessageService, private router: Router) {
+    private messageService: MessageService, private router: Router, private tfcServico: TFCService) {
     this.subscription = this.notificationService.getNotifications().subscribe(
       (notification) => {
         // console.log("Entrou no serviço de Notificações!"+ JSON.stringify(notification));
@@ -76,6 +80,15 @@ export class HeaderComponent implements OnInit {
     );
 
     this.getInfoUser();
+
+    if(this.isRole("Estudante")) {
+      const id = Number(this.userInfo.id);
+      this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
+        this.tfcs = resultados; 
+        this.tfcInfo = resultados.slice().shift();
+        console.log("TFCs: "+JSON.stringify(this.tfcs));
+      });
+    }
 
   }
 

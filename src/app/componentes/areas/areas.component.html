@@ -3,7 +3,7 @@
 
 <!--------------------- tabela --------------------------------------->
 <p-card>
-    <h3>Areas</h3>
+    <h3>Areas de Investigação</h3>
     <p-table #dt [value]="areas" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,25,50]" [rowHover]="true" dataKey="Id" [globalFilterFields]="['Descricao']" 
              [showCurrentPageReport]="true" currentPageReportTemplate="{first} até {last} de {totalRecords} áreas" styleClass="p-datatable-customers p-datatable-gridlines">
         <ng-template pTemplate="caption">
@@ -22,7 +22,7 @@
             <tr>
                 <th>
                     <div class="p-d-flex p-jc-between p-ai-center"> 
-                        Área de Conhecimento<p-columnFilter type="text" field="Descricao" display="menu"></p-columnFilter>
+                        Área de Investigação<p-columnFilter type="text" field="Descricao" display="menu"></p-columnFilter>
                     </div>
                 </th>
                 <th style="width:8rem;text-align:center">Operação</th>
@@ -57,7 +57,7 @@
 <p-dialog [header]="cabecario" [(visible)]="exibir" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
     <div class="p-fluid p-formgrid p-grid">
         <div class="p-field p-col-12">
-            <label>Área </label>
+            <label>Área de Investigação</label>
             <input id="descricao" type="text" [(ngModel)]="area.descricao"  pInputText/>
         </div>
         <!-- <div class="p-field p-col-12 p-md-4">

@@ -121,9 +121,9 @@ import { FileUploadComponent } from './componentes/file-upload/file-upload.compo
 import { EncotrosComponent } from './componentes/encotros/encotros.component';
 import { TfcsDefendidosComponent } from './componentes/tfcs-defendidos/tfcs-defendidos.component';
 import { DetalhesEncontroComponent } from './componentes/encotros/detalhes-encontro/detalhes-encontro.component';
-import { BancasComponent } from './componentes/bancas/bancas.component';
 import { DetalhesBancaComponent } from './componentes/bancas/detalhes-banca/detalhes-banca.component';
 import { EnviarTfcComponent } from './componentes/enviar-tfc/enviar-tfc.component';
+import { BancasComponent } from './componentes/bancas/bancas.component';
 
 
 @NgModule({

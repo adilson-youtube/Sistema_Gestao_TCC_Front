@@ -21,6 +21,12 @@ export class EstudanteRepositorio {
     return this.http.get<Array<Estudante>>(`${this.baseUrl}${path}`);
   }
 
+  //--- Marcacão
+  ListarEstudantesTFCsFinalizados(): Observable<Array<Estudante>> {
+    const path = `Estudante/EstudantesTFCsFinalizados`;
+    return this.http.get<Array<Estudante>>(`${this.baseUrl}${path}`);
+  }
+
   procurarEstudantePorId(id: number): Observable<Estudante> {
     const path = `Estudante/${id}`;
     return this.http.get<Estudante>(`${this.baseUrl}${path}`);

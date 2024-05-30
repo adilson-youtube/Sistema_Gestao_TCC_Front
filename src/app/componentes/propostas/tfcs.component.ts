@@ -215,7 +215,7 @@ export class TFCsComponent implements OnInit {
         console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
         if (tfc) {
           if (this.isRole("Estudante")) {
-            this.tfc.respostaEstudante = true;
+            // this.tfc.respostaEstudante = true;
             this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
             this.estudanteService.procurarEstudantePorId(this.tfc.idEstudante).subscribe((estudante)=> {
               this.tfc.estudante = estudante;
@@ -236,9 +236,9 @@ export class TFCsComponent implements OnInit {
               // tfc.estado = EstadoTFC.Aprovado;
             })
           }
-          if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
-            tfc.estado = EstadoTFC.Aprovado;
-          }
+          // if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
+          //   tfc.estado = EstadoTFC.Aprovado;
+          // }
           console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
           this.salvar();
           this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
@@ -248,15 +248,15 @@ export class TFCsComponent implements OnInit {
         this.notificacaoMsg("error", "Alteração de Estado", "O estado do Tema não foi alterado!");
         if (tfc) {
           if (this.isRole("Estudante")) {
-            this.tfc.respostaEstudante = true;
+            // this.tfc.respostaEstudante = true;
             this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
           } else if (this.isRole("Professor")) {
             this.tfc.respostaProfessor = true;
             this.tfc.idProfessor = Number(this.authenticationService.getDecodedToken().id);
           }
-          if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
-            tfc.estado = EstadoTFC.Aprovado;
-          }
+          // if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
+          //   tfc.estado = EstadoTFC.Aprovado;
+          // }
           console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
           this.salvar();
           this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");

@@ -21,6 +21,16 @@ export class BancaRepositorio {
     return this.http.get<Array<Banca>>(`${this.baseUrl}${path}`);
   }
 
+  listarBancasPorIdEstudante(id: number): Observable<Array<Banca>> {
+    const path = `Banca/BancasPorIdEstudante/${id}`;
+    return this.http.get<Array<Banca>>(`${this.baseUrl}${path}`);
+  }
+
+  listarBancasPorIdProfessor(id: number): Observable<Array<Banca>> {
+    const path = `Banca/BancasPorIdProfessor/${id}`;
+    return this.http.get<Array<Banca>>(`${this.baseUrl}${path}`);
+  }
+
   procurarBancaPorId(id: number): Observable<Banca> {
     const path = `Banca/${id}`;
     return this.http.get<Banca>(`${this.baseUrl}${path}`);

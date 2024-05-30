@@ -1,3 +1,4 @@
+import { PosicaoBanca } from "../enumerados/PosicaoBanca";
 import { Banca } from "./banca";
 import { Estudante } from "./estudante";
 import { Professor } from "./professor";
@@ -8,7 +9,8 @@ export class BancaProfessor {
     id?;
     idBanca?: number;
     idProfessor?: number;
-    categoria?: string;
+    // categoria?: string;
+    posicaoBanca?: PosicaoBanca;
     // professor?: Professor;
     // banca?: Banca;
 }

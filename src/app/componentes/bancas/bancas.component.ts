@@ -15,6 +15,7 @@ import { Funcionario } from 'src/app/modelo/entidades/funcionario';
 import { Professor } from 'src/app/modelo/entidades/professor';
 import { Tarefa } from 'src/app/modelo/entidades/tarefa';
 import { TFC } from 'src/app/modelo/entidades/tfc';
+import { PosicaoBanca } from 'src/app/modelo/enumerados/PosicaoBanca';
 import { EstadoTFC } from 'src/app/modelo/enumerados/estadoTFC';
 import { Traducao } from 'src/app/modelo/traducoes/traducao';
 import { AnexoService } from 'src/app/servicos/anexo.service';
@@ -42,12 +43,12 @@ export class BancasComponent {
   exibirDetalhes = false;
   tfc = new TFC();
   funcionario = new Funcionario;
-  tfcs: Array<TFC>;
+  tfcs: Array<TFC> = new Array<TFC>();
   professores: Array<Professor> = new Array<Professor>();
   professoresSelecionados: Array<Professor> = new Array<Professor>();
-  presidente: Professor = new Professor();
-  primeiroVogal: Professor = new Professor();
-  segundoVogal: Professor = new Professor();
+  presidente: Professor;
+  primeiroVogal: Professor;
+  segundoVogal: Professor;
   estudantes: Array<Estudante>;
   estudanteSelecionado: Estudante;
   bancasProfessores: Array<BancaProfessor>;
@@ -57,6 +58,7 @@ export class BancasComponent {
   correcao: Correcao = new Correcao();
   correcoes: Array<Correcao> = new Array<Correcao>();
 
+  tfcSelecionado: TFC;
   estadoTFCSelecionado: EstadoTFC;
 
   exibirAddTarefa = false;
@@ -64,6 +66,7 @@ export class BancasComponent {
   exibirBaixarCorrecao = false;
   anexouFicheiro = false;
   tarefa = new Tarefa();
+  ficheiroTFC: any;
 
   dataEntrega: Date;
   dataTerminada: Date;
@@ -128,17 +131,25 @@ export class BancasComponent {
 
     this.getInfoUser();
 
-    this.estudanteService.listarEstudantes().subscribe( resultados => { 
+    this.estudanteService.ListarEstudantesTFCsFinalizados().subscribe( resultados => { 
       this.estudantes = resultados; 
       // console.log("TFCs: "+JSON.stringify(this.estudantes));
     });
 
     if(this.isRole("Estudante")) {
       const id = Number(this.userInfo.id);
-      // this.tfcServico.TFCEstudante(id).subscribe( resultados => { 
-      //   this.tfcs = resultados; 
-      //   console.log("TFCs: "+JSON.stringify(this.tfcs));
-      // });
+      this.bancaServico.listarBancasPorIdEstudante(id).subscribe( resultados => { 
+        this.bancas = resultados; 
+        console.log("Bancas: "+JSON.stringify(this.tfcs));
+      });
+    }
+
+    if(this.isRole("Professor")) {
+      const id = Number(this.userInfo.id);
+      this.bancaServico.listarBancasPorIdProfessor(id).subscribe( resultados => { 
+        this.bancas = resultados; 
+        console.log("Bancas: "+JSON.stringify(this.tfcs));
+      });
     }
 
     this.propfessorServico.listarProfessores().subscribe( resultados => {
@@ -152,6 +163,13 @@ export class BancasComponent {
       this.tfcServico.listarTFCs().subscribe( resultados => { 
         this.tfcs = resultados; 
       });
+
+    this.bancaServico.listarBancas().subscribe( resultado => {
+      this.bancas = resultado;
+      // console.log("Bancas Encontradas: "+JSON.stringify(this.bancas.slice().shift().bancasProfessores));
+
+    });
+
     }
 
     // this.tfcServico.listarTFCs().subscribe( resultados => { 
@@ -159,11 +177,9 @@ export class BancasComponent {
     //   console.log("TFCs: "+JSON.stringify(this.tfcs));
     // });
 
-    this.bancaServico.listarBancas().subscribe( resultado => {
-      this.bancas = resultado;
-      // console.log("Bancas Encontradas: "+JSON.stringify(this.bancas.slice().shift().bancasProfessores));
-
-    });
+    // this.bancaServico.listarBancas().subscribe( resultado => {
+    //   this.bancas = resultado;
+    // });
 
     this.authenticationService.showMenuEmitter.subscribe( show => this.showAllMenu = show );
     this.authenticationService.showRegisterEmitter.subscribe( register => this.showregister = register );
@@ -188,7 +204,7 @@ export class BancasComponent {
   }
 
   get visualizarCorrecaoHeader(): string {
-    return "Correção da Tarefa";
+    return "Correção da Banca";
   }
 
 
@@ -213,6 +229,7 @@ export class BancasComponent {
     this.validar = true;
 
     if (this.banca?.id>=1) {
+      console.log("A banca vai ser actualizada!");
 
       if(this.isRole("Coordenador")) {
         this.tfc.idCoordenador = Number(this.userInfo.id);
@@ -221,46 +238,53 @@ export class BancasComponent {
       this.bancaServico.actualizarBanca(this.banca.id, this.banca).subscribe(resultado => {
         this.cancelar();
       }); 
-    } else {
+    } else if(this?.tfcSelecionado?.id && this?.presidente?.id && this?.primeiroVogal?.id && this?.segundoVogal.id && this?.dataHoraApresentacao) {
+      console.log("Estudante Selecionado: "+JSON.stringify(this.estudanteSelecionado));
       this.banca.dataApresentacao = this.dataHoraApresentacao;
-      this.tfcServico.TFCEstudante(this.estudanteSelecionado.id).subscribe( tfc => {
-        this.banca.tfc = tfc.shift();
-        this.banca.idTFC = this.banca.tfc.id;
-        // console.log("TFC: "+JSON.stringify(this.banca.tfc));
+      
+      this.banca.tfc = this.tfcSelecionado;
+      this.banca.idTFC = this.banca.tfc.id;
+      // console.log("TFC: "+JSON.stringify(this.banca.tfc));
 
-        const bancaprofessor1: BancaProfessor = new BancaProfessor();
-        const bancaprofessor2: BancaProfessor = new BancaProfessor();
-        const bancaprofessor3: BancaProfessor = new BancaProfessor();
-  
-        bancaprofessor1.categoria = "Presidente";
-        // bancaprofessor1.professor = this.presidente;
-        bancaprofessor1.idProfessor = this.presidente.id;
-        bancaprofessor1.idBanca = this.banca?.id;
-        // bancaprofessor1.Banca = this.banca;
-        
-        bancaprofessor2.categoria = "1º Vogal";
-        // bancaprofessor2.professor = this.primeiroVogal;
-        bancaprofessor2.idProfessor = this.primeiroVogal.id;
-        bancaprofessor2.idBanca = this.banca?.id;
-        // bancaprofessor2.Banca = this.banca;
-  
-        bancaprofessor3.categoria = "2º Vogal";
-        // bancaprofessor3.professor = this.segundoVogal;
-        bancaprofessor3.idProfessor = this.segundoVogal.id;
-        bancaprofessor3.idBanca = this.banca?.id;
-        // bancaprofessor3.Banca = this.banca;
-  
-        this.banca.bancasProfessores = new Array<BancaProfessor>();
-        this.banca.bancasProfessores.push(bancaprofessor1, bancaprofessor2, bancaprofessor3);
-  
-        this.bancaServico.salvarBanca(this.banca).subscribe(resultado => {
-          this.banca = resultado;
-          // console.log("A banca que foi Inserida: "+JSON.stringify(this.banca));
-          this.bancas.unshift(this.banca);
-          this.cancelar();
-        });
+      const bancaprofessor1: BancaProfessor = new BancaProfessor();
+      const bancaprofessor2: BancaProfessor = new BancaProfessor();
+      const bancaprofessor3: BancaProfessor = new BancaProfessor();
 
-      }); 
+      bancaprofessor1.posicaoBanca = PosicaoBanca.Presidente;
+      // bancaprofessor1.professor = this.presidente;
+      bancaprofessor1.idProfessor = this.presidente.id;
+      bancaprofessor1.idBanca = this.banca?.id;
+      // bancaprofessor1.Banca = this.banca;
+      
+      bancaprofessor2.posicaoBanca = PosicaoBanca.PrimeiroVogal;
+      // bancaprofessor2.professor = this.primeiroVogal;
+      bancaprofessor2.idProfessor = this.primeiroVogal.id;
+      bancaprofessor2.idBanca = this.banca?.id;
+      // bancaprofessor2.Banca = this.banca;
+
+      bancaprofessor3.posicaoBanca = PosicaoBanca.SegundoVogal;
+      // bancaprofessor3.professor = this.segundoVogal;
+      bancaprofessor3.idProfessor = this.segundoVogal.id;
+      bancaprofessor3.idBanca = this.banca?.id;
+      // bancaprofessor3.Banca = this.banca;
+
+      this.banca.bancasProfessores = new Array<BancaProfessor>();
+      this.banca.bancasProfessores.push(bancaprofessor1, bancaprofessor2, bancaprofessor3);
+
+      this.bancaServico.salvarBanca(this.banca).subscribe(resultado => {
+        this.banca = resultado;
+        // console.log("A banca que foi Inserida: "+JSON.stringify(this.banca));
+        this.bancas.unshift(this.banca);
+        this.cancelar();
+      });
+
+
+      // this.tfcServico.TFCEstudante(this.estudanteSelecionado.id).subscribe( tfc => {
+
+      // }); 
+
+    } else {
+      console.log("Deve preencher os dados da banca!");
 
     }
 
@@ -341,7 +365,7 @@ export class BancasComponent {
             const contentDispositionHeader = response.headers.get('Content-Disposition');
             const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
             const matches = fileNameRegex.exec(contentDispositionHeader);
-            const fileName = matches != null && matches[1] ? matches[1].replace(/['"]/g, '') : 'downloadedFile';
+            const fileName = matches != null && matches[1] ? matches[1].replace(/['"]/g, '') : anexo.nomeFicheiro;
   
             console.log("Conteudo do Cabeçario: "+JSON.stringify(response.headers.keys()))
   
@@ -367,10 +391,49 @@ export class BancasComponent {
 
   }
 
+  visualizarTFC(idTFC: number) {
+    
+    this.anexoService.BuscarPorIdTFC(idTFC).subscribe(anexo => {
+
+      this.gridfsService.downloadFile(anexo.idFicheiro).subscribe(
+        (response: HttpResponse<Blob> | HttpErrorResponse) => {
+          if (response instanceof HttpResponse) {
+            const contentDispositionHeader = response.headers.get('Content-Disposition');
+            const fileNameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+            const matches = fileNameRegex.exec(contentDispositionHeader);
+            const fileName = matches != null && matches[1] ? matches[1].replace(/['"]/g, '') : anexo.nomeFicheiro;
+  
+            console.log("Conteudo do Cabeçario: "+JSON.stringify(response.headers.keys()))
+  
+            const blob = new Blob([response.body], { type: response.headers.get('Content-Type') });
+  
+            // const url = window.URL.createObjectURL(blob);
+            // const a = document.createElement('a');
+            // a.href = url;
+            // a.download = fileName;
+            // document.body.appendChild(a);
+            // a.click();
+            // window.URL.revokeObjectURL(url);
+            // document.body.removeChild(a);
+            this.ficheiroTFC = window.URL.createObjectURL(blob);
+          } else {
+            console.error('Error downloading file:', response.error);
+          }
+        },
+        error => {
+          console.error('Error downloading file:', error);
+        });
+
+    });
+
+  }
+
 
   modalVisualizarCorrecao(banca?: Banca): void {
     this.banca = banca;
     this.correcoes = this.banca.correcoes;
+    // this.visualizarTFC(banca?.tfc?.id);
+    // console.log("O ficheiro de TFC: "+JSON.stringify(this.ficheiroTFC));
     this.correcaoService.ListarCorrecoesBanca(this.banca.id).subscribe(resultado => {
       this.correcoes = resultado;
       // console.log("As correções são: "+JSON.stringify(this.correcoes));

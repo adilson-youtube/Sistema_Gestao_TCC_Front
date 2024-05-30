@@ -53,7 +53,7 @@
                             <!-- <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded" 
                             (click)="modal(tfcInfo)" pTooltip="Novo" tooltipPosition="bottom"></button> -->
                             <button *ngIf='findEstadoTFC(tfcInfo?.estado)==="Aprovado" || findEstadoTFC(tfcInfo?.estado)==="Em Desenvolvimento"' pButton pRipple 
-                            icon="pi pi-list" class="p-button-rounded p-button-text" (click)="verTarefas(tfcInfo.id)" pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
+                            icon="pi pi-list" class="p-button-rounded p-button-text" (click)="verTarefas(tfcInfo?.id)" pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
                             <button *ngIf='findEstadoTFC(tfcInfo?.estado)==="Aprovado" || findEstadoTFC(tfcInfo?.estado)==="Em Desenvolvimento"' pButton pRipple 
                             icon="pi pi-calendar-plus" class="p-button-rounded p-button-text" (click)="verEncontros(tfcInfo.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
                         </div>
@@ -69,7 +69,7 @@
                 <div class="p-grid">
                     <div class="p-col-12 p-md-10">
                         <label>Tema</label>
-                        <input disabled="true" [(ngModel)]="tfcInfo.titulo" class="p-mb-4" type="text" pInputText name="" id=""
+                        <input disabled="true" [ngModel]="tfcInfo?.titulo" class="p-mb-4" type="text" pInputText name="" id=""
                             placeholder={{tfcInfo?.titulo}}>
                     </div>
                     <div class="p-col-12 p-md-2">
@@ -80,7 +80,7 @@
                     <div class="p-col-12 p-md-12">
                         <label>Descrição</label>
                         <textarea [rows]="6" [cols]="30" [disabled]="true" id="descricao" type="text" class="p-mb-4" 
-                        placeholder={{tfcInfo?.descricao}} [(ngModel)]="tfcInfo.descricao" pInputTextarea></textarea>
+                        placeholder={{tfcInfo?.descricao}} [ngModel]="tfcInfo?.descricao" pInputTextarea></textarea>
                         <!-- <input disabled="true" [(ngModel)]="tfcInfo.descricao" class="p-mb-4" type="text" pInputText name="" id=""
                             placeholder={{tfcInfo?.descricao}}> -->
                     </div>
@@ -90,7 +90,7 @@
                             placeholder={{tfcInfo?.professor?.nome}}>
                     </div>
                     <div class="p-col-12 p-md-4">
-                        <label>Area de Conhecimeto</label>
+                        <label>Area de Investigação</label>
                         <input disabled="true" [(ngModel)]="tfcInfo?.area.descricao" class="p-mb-4" type="text" pInputText name="" id=""
                             placeholder={{tfcInfo?.area?.descricao}}>
                     </div>
@@ -247,13 +247,18 @@
                     <!-- <button *ngIf='isRole("Admin")||isRole("Professor")' pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-button-text p-mr-2" (click)="modal(tfc)" pTooltip="Editar" tooltipPosition="bottom"></button> -->
                     <button pButton pRipple icon="pi pi-search" class="p-button-rounded p-button-help p-button-text" 
                     (click)="modalDetalhes(tfc)" pTooltip="Detalhes" tooltipPosition="bottom"></button>
-                    <!-- <p-checkbox *ngIf="!tfc.respostaEstudante" id="{{tfc.id}}" [(ngModel)]="tfc.respostaEstudante" [binary]="true" (onChange)="alterarEstado(tfc)"></p-checkbox> -->
-                    <button *ngIf='tfc.respostaProfessor===false' pButton pRipple icon="pi pi-thumbs-up" class="p-button-rounded p-button-text" 
-                    (click)="alterarEstado(tfc)" pTooltip="Aceitar TFC" tooltipPosition="bottom"></button>
+                    
+                    <!-- <button *ngIf='tfc.respostaProfessor===false' pButton pRipple icon="pi pi-thumbs-up" class="p-button-rounded p-button-text" 
+                    (click)="alterarEstado(tfc)" pTooltip="Aceitar TFC" tooltipPosition="bottom"></button> -->
+
                     <button *ngIf='findEstadoTFC(tfc?.estado)==="Aprovado" || findEstadoTFC(tfc?.estado)==="Em Desenvolvimento"' pButton pRipple 
                     icon="pi pi-list" class="p-button-rounded p-button-text" (click)="verTarefas(tfc.id)" pTooltip="Ver Tarefas" tooltipPosition="bottom"></button>
+
                     <button *ngIf='findEstadoTFC(tfc?.estado)==="Aprovado" || findEstadoTFC(tfc?.estado)==="Em Desenvolvimento"' pButton pRipple 
                     icon="pi pi-calendar-plus" class="p-button-rounded p-button-text" (click)="verEncontros(tfc.id)" pTooltip="Ver Encontros" tooltipPosition="bottom"></button>
+                    
+                    <button *ngIf='findEstadoTFC(tfc?.estado)==="Aprovado" || findEstadoTFC(tfc?.estado)==="Em Desenvolvimento"' pButton pRipple icon="pi pi-check-square" 
+                    class="p-button-rounded p-button-text" (click)="alterarParaEstadoFinalizado(tfc)" pTooltip="Finalizar TFC" tooltipPosition="bottom"></button>
                 </td>
             </tr>
         </ng-template>
@@ -378,18 +383,33 @@
 <!--------------------- modal --------------------------------------->
 <p-dialog #formTFC [header]="cabecario" appendTo="body" [(visible)]="exibir" [modal]="true" [style]="{width: '60vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
     <div class="p-fluid p-formgrid p-grid">
-        <div class="p-field p-col-12 p-md-8">
+        <div *ngIf='!isActivo(tfc.estado)' class="p-field p-col-12 p-md-11">
             <label>Titulo *</label>
             <input [disabled]='!isRole("Admin")' id="titulo" type="text" [(ngModel)]="tfc.titulo" pInputText> 
             <small class="p-invalid" *ngIf="validar && !tfc.titulo">Campo Obrigatório.</small>
         </div>
 
-        <div class="p-field p-col-12 p-md-4">
+        <div *ngIf='isActivo(tfc.estado)' class="p-field p-col-12 p-md-8">
+            <label>Titulo *</label>
+            <input [disabled]='!isRole("Admin")' id="titulo" type="text" [(ngModel)]="tfc.titulo" pInputText> 
+            <small class="p-invalid" *ngIf="validar && !tfc.titulo">Campo Obrigatório.</small>
+        </div>
+
+        <div *ngIf='isActivo(tfc.estado)'
+         class="p-field p-col-12 p-md-3">
             <label>Estado</label>
             <p-dropdown optionLabel="name" optionValue="code" inputId="estado" [options]="estadoTFCs" [(ngModel)]="tfc.estado" placeholder="-- Seleccionar --"></p-dropdown>
             <!-- <input id="estadoTarefa" type="text" [(ngModel)]="tarefa.estadoTarefa" pInputText>  -->
             <small class="p-invalid" *ngIf="validar && !tfc.estado">Campo Obrigatório.</small>
         </div> 
+
+        <div class="p-field p-col-12 p-md-1">
+            <label>Nota</label>
+            <!-- <input [disabled]='!(findEstadoTFC(tfc.estado)=="Finalizado")' id="nota" type="text" [(ngModel)]="nota" pInputText> -->
+            <p-inputMask [disabled]='!(findEstadoTFC(tfc.estado)=="Finalizado")' mask="99" [(ngModel)]="nota" placeholder=""></p-inputMask>
+            <small class="p-error" *ngIf="nota<10">Note Insuficiente.</small>
+            <small class="p-error" *ngIf="nota>20">Note Invalida.</small>
+        </div>
 
         <div class="p-field p-col-12 p-md-12">
             <label>Descrição</label>

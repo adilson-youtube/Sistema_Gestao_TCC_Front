@@ -96,9 +96,9 @@
                     pButton pRipple icon="pi pi-user-edit" class="p-button-rounded p-button-success p-button-text" id="{{banca.id}}" 
                     pTooltip="Ver Correção" (click)="modalVisualizarCorrecao(banca)"></button>
 
-                    <button 
+                    <!-- <button 
                     pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-danger p-button-text" id="{{banca.id}}" 
-                    pTooltip="Fazer Correção" (click)="modalAnexarFicheiro(banca)"></button>
+                    pTooltip="Fazer Correção" (click)="modalAnexarFicheiro(banca)"></button> -->
                 </td>
             </tr>
         </ng-template>
@@ -126,17 +126,17 @@
         <div class="p-col-12 p-md-6">
             <div class="p-field p-col-12 p-md-12">
                 <label>Estudante *</label>
-                <p-dropdown [filter]="true" filterBy="nome" optionLabel="nome" optionValue="" inputId="estudante" 
-                [options]="estudantes" [(ngModel)]="estudanteSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+                <p-dropdown [filter]="true" filterBy="estudante.nome" optionLabel="estudante.nome" optionValue="" inputId="estudante" 
+                [options]="tfcs" [(ngModel)]="tfcSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
                 <!-- <input id="estadoTarefa" type="text" [(ngModel)]="banca.estadoTarefa" pInputText>  -->
-                <small class="p-invalid" *ngIf="validar && !estudanteSelecionado">Campo Obrigatório.</small>
+                <small class="p-error" *ngIf="validar && !tfcSelecionado">Campo Obrigatório.</small>
             </div>
     
             <div class="p-field p-col-12 p-md-12">
                 <label>Presidente *</label>
                 <p-dropdown [filter]="true" filterBy="nome" optionLabel="nome" optionValue="" inputId="presidente" 
                 [options]="professores" [(ngModel)]="presidente" placeholder="-- Seleccionar --"></p-dropdown>
-                <small class="p-invalid" *ngIf="validar && !presidente">Campo Obrigatório.</small>
+                <small class="p-error" *ngIf="validar && !presidente">Campo Obrigatório.</small>
                 <!-- <p-pickList [metaKeySelection]="true" [dragdrop]="true" filterBy="nome" sourceHeader="Lista de Professores" 
                 targetHeader="Professores Selecionado" [responsive]="true" [source]="professores" [target]="bancasProfessores">
                     <ng-template let-professor pTemplate="item">
@@ -153,14 +153,21 @@
                 <label>1º Vogal *</label>
                 <p-dropdown [filter]="true" filterBy="nome" optionLabel="nome" optionValue="" inputId="primeiroVogal" 
                 [options]="professores" [(ngModel)]="primeiroVogal" placeholder="-- Seleccionar --"></p-dropdown>
-                <small class="p-invalid" *ngIf="validar && !primeiroVogal">Campo Obrigatório.</small>
+                <small class="p-error" *ngIf="validar && !primeiroVogal">Campo Obrigatório.</small>
             </div>
     
             <div #test class="p-field p-col-12 p-md-12">
                 <label>2º Vogal *</label>
                 <p-dropdown appendTo="test" [filter]="true" filterBy="nome" optionLabel="nome" optionValue="" inputId="segundoVogal" 
                 [options]="professores" [(ngModel)]="segundoVogal" placeholder="-- Seleccionar --"></p-dropdown>
-                <small class="p-invalid" *ngIf="validar && !segundoVogal">Campo Obrigatório.</small>
+                <small class="p-error" *ngIf="validar && !segundoVogal">Campo Obrigatório.</small>
+            </div>
+            <div class="p-field p-col-12 p-md-12">
+                <label>Hora da Apresentação</label>
+                <p-calendar [(ngModel)]="dataHoraApresentacao" [showTime]="true" inputId="time"></p-calendar>
+                <!-- <p-calendar id="calendar" [showTime]="true" hourFormat="24"
+                 [(ngModel)]="dataHoraApresentacao" dateFormat="dd/mm/yy"></p-calendar> -->
+                <small class="p-error" *ngIf="validar && !dataHoraApresentacao">Campo Obrigatório.</small>
             </div>
         </div>
         <div class="p-col-12 p-md-6">
@@ -168,7 +175,7 @@
                 <label>Data da Apresentação</label>
                 <p-calendar id="calendar" showTime="true" hourFormat="24"
                 inline="true" [(ngModel)]="dataHoraApresentacao" dateFormat="dd/mm/yy"></p-calendar>
-                <small class="p-invalid" *ngIf="validar && !dataHoraApresentacao">Campo Obrigatório.</small>
+                <small class="p-error" *ngIf="validar && !dataHoraApresentacao">Campo Obrigatório.</small>
             </div>
         </div>
         
@@ -185,8 +192,11 @@
 
         <div class="p-col-12 p-md-12">
             <div class="p-grid">
+                <!-- <div class="p-col-12 p-md-12">
+                    <embed src=this.ficheiroTFC type="">
+                </div> -->
 
-                <div class="p-field p-col-12 p-md-11 p-mt-2">
+                <div *ngIf="isRole('Professor')" class="p-field p-col-12 p-md-11 p-mt-2">
                     <label>Comentario</label>
                     <input [disabled] = 'isRole("Estudante") || isRole("Coordenador")' [(ngModel)]="correcao.Comentario" type="text" pInputText name="" id=""
                         placeholder={{correcao.Comentario}}>
@@ -194,8 +204,8 @@
                     [rows]="5" type="text" [(ngModel)]="comentario" pInputTextarea></textarea> -->
                     <small class="p-invalid" *ngIf="validar && !this.correcao.Comentario">Campo Obrigatório.</small>
                 </div>
-                <div class="p-field p-col-12 p-md-1 p-mt-3">
-                    <label></label>
+                <div *ngIf="isRole('Professor')" class="p-field p-col-12 p-md-1 p-mt-2">
+                    <label>_____</label>
                     <button pButton pRipple icon="pi pi-plus" class="p-button p-button-help" 
                     (click)="adicionarCorrecao(banca)" pTooltip="Adicionar" tooltipPosition="bottom"></button>
                 </div>

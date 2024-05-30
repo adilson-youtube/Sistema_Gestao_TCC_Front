@@ -38,6 +38,7 @@ export class ReservadoComponent implements OnInit {
   funcionario = new Funcionario;
   tfcs: Array<TFC>;
   professores: Array<Professor>;
+  nota: number;
 
   estadoTFCSelecionado: EstadoTFC;
 
@@ -159,6 +160,9 @@ export class ReservadoComponent implements OnInit {
   modal(tfc?: TFC): void {
     // this.tfcServico.procurarTFCPorCodigo(tfc.codigoDoCandidato).subscribe( resultado => { this.tfc = resultado; }); 
     this.tfc = tfc;
+    if (this?.nota) {
+      this.tfc.nota = this.nota;
+    }
     this.exibir = true;
     this.validar = false;
   }
@@ -174,14 +178,30 @@ export class ReservadoComponent implements OnInit {
 
     if (this.tfc?.id>=1) {
 
+      // this.tfc.respostaProfessor = true;
+
       if(this.isRole("Coordenador")) {
         this.tfc.idCoordenador = Number(this.userInfo.id);
       }
       console.log("Id Coordenador: "+this.tfc?.idCoordenador);
+
+      if (this?.nota>=10 && this?.nota<=20) {
+        this.tfc.estado = EstadoTFC.Defendido;
+        this.tfc.nota = this.nota;
+        // this.notificacaoMsg("success", "TFC", "Defendido com Sucesso!");
+      } else {
+        // this.notificacaoMsg("success", "TFC", "Não tem Nota suficiente para Aprovar!");
+
+      }
+
       this.tfcServico.actualizarTFC(this.tfc.id, this.tfc).subscribe(resultado => {
+        this.notificacaoMsg("success", "TFC", "Operação realizada com Sucesso!");
         this.cancelar();
       }); 
     } else {
+
+      // this.tfc.respostaProfessor = true;
+
       this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
         this.tfcs.unshift(this.tfc);
         this.cancelar();
@@ -208,7 +228,7 @@ export class ReservadoComponent implements OnInit {
         console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
         if (tfc) {
           if (this.isRole("Estudante")) {
-            this.tfc.respostaEstudante = true;
+            // this.tfc.respostaEstudante = true;
             this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
             this.estudanteService.procurarEstudantePorId(this.tfc.idEstudante).subscribe((estudante)=> {
               this.tfc.estudante = estudante;
@@ -226,11 +246,58 @@ export class ReservadoComponent implements OnInit {
           // }
           console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
           this.salvar();
-          this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
+          // this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
         }
       },
       reject: () => {
         this.notificacaoMsg("error", "Alteração de Estado", "O estado do Tema não foi alterado!");
+        // if (tfc) {
+        //   if (this.isRole("Estudante")) {
+        //     this.tfc.respostaEstudante = true;
+        //     this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
+        //   } else if (this.isRole("Professor")) {
+        //     this.tfc.respostaProfessor = true;
+        //     this.tfc.idProfessor = Number(this.authenticationService.getDecodedToken().id);
+        //   }
+        //   if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
+        //     tfc.estado = EstadoTFC.Aprovado;
+        //   }
+        //   console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
+        //   this.salvar();
+        //   this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
+        // }
+        console.log("Os Dados da TFC Após Ser Rejeitada: "+JSON.stringify(this.tfc));
+      }
+    });
+  }
+
+  alterarParaEstadoFinalizado(tfc: TFC) {
+    this.tfc = tfc;
+    console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
+    this.confirmationService.confirm({
+      message: "Deseja Finalizar o TFC?",
+      accept: () => {
+        console.log("Tema Aceita com Sucesso!");
+        console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
+        if (tfc) {
+          if (this.isRole("Professor")) {
+            this.tfc.estado = 4;
+            this.tfc.idProfessor = Number(this.authenticationService.getDecodedToken().id);
+            this.propfessorServico.procurarProfessorPorId(this.tfc.idProfessor).subscribe((professor)=> {
+              this.tfc.professor = professor;
+            })
+            this.tfc.coordenador = tfc.coordenador;
+          }
+          // if (tfc.respostaEstudante==true && tfc.respostaProfessor==true) {
+          //   tfc.estado = EstadoTFC.Aprovado;
+          // }
+          console.log("O estado foi alterado: "+JSON.stringify(this.tfc));
+          this.salvar();
+          // this.notificacaoMsg("success", "Alteração de Estado", "O estado Tema foi aceite com Sucesso!");
+        }
+      },
+      reject: () => {
+        this.notificacaoMsg("error", "Alteração do TFC", "O TFC não foi alterado!");
         // if (tfc) {
         //   if (this.isRole("Estudante")) {
         //     this.tfc.respostaEstudante = true;
@@ -332,6 +399,16 @@ export class ReservadoComponent implements OnInit {
         console.error('Error downloading file:', error);
       }
     );
+  }
+
+  isActivo(estadoTFC: EstadoTFC): boolean {
+    if ((estadoTFC == EstadoTFC.Finalizado)) {
+      return false;
+    } else if(estadoTFC == EstadoTFC.Defendido) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
 }

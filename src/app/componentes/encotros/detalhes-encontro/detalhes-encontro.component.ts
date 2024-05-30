@@ -28,6 +28,8 @@ export class DetalhesEncontroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
+    this.getInfoUser();
   
     if(this.isRole("Coordenador")) {
       const id = Number(this.userInfo.id);

@@ -124,29 +124,33 @@
             <label for="state">Estudante</label>
             <p-dropdown inputId="state" [options]="estudantes" [(ngModel)]="estudanteSelecionado" placeholder="Seleccionar"
                 optionLabel="nome" optionValue=""></p-dropdown>
+            <small class="p-error" *ngIf="validar && !estudanteSelecionado">Campo Obrigatório.</small>
         </div>
         <div class="p-field p-col-12 p-md-12">
             <label>Tipo Encontro</label>
             <!-- appendTo="body" -->
             <p-dropdown optionLabel="name" optionValue="code" inputId="meioLocalEncontro" [options]="meiosLocal" 
             [(ngModel)]="meioLocalSelecionado" placeholder="-- Seleccionar --"></p-dropdown>
+            <small class="p-error" *ngIf="validar && !meioLocalSelecionado">Campo Obrigatório.</small>
         </div>
 
         <div *ngIf="(meioLocalSelecionado === 'Presencial' || meioLocalSelecionado === 'Ourtro')" class="p-field p-col-12">
             <label>Local</label>
             <input id="local" type="text" [(ngModel)]="encontro.local"  pInputText/>
+            <small class="p-error" *ngIf="validar && !encontro.local">Campo Obrigatório.</small>
         </div>
 
         <div class="p-field p-col-12">
             <label>Motivo</label>
             <!-- <input id="local" type="text" [(ngModel)]="encontro.motivo"  pInputText/> -->
             <textarea id="descricao" [rows]="4" pInputTextarea [(ngModel)]="encontro.motivo"></textarea>
+            <small class="p-error" *ngIf="validar && !encontro.motivo">Campo Obrigatório.</small>
         </div>
 
         <div class="p-field p-col-12 p-md-12">
             <label>Data do Encontro</label>
             <p-calendar id="calendar" inline="true" [(ngModel)]="encontro.data" dateFormat="dd/mm/yy"></p-calendar>
-            <small class="p-invalid" *ngIf="validar && !encontro.data">Campo Obrigatório.</small>
+            <small class="p-error" *ngIf="validar && !encontro.data">Campo Obrigatório.</small>
         </div>
         
     </div>

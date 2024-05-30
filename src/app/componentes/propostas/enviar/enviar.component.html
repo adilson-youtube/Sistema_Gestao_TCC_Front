@@ -4,27 +4,31 @@
 
 <p-card class="p-grid p-jc-center p-mt-6">
     <ng-template pTemplate="content">
-        <h3>Enviar Proposta</h3>
+        <h3>Enviar Proposta de TFC</h3>
         <!-- <div class="p-fluid p-formgrid p-grid p-jc-center p-col-12 p-md-12"> -->
         <div class="p-fluid p-formgrid p-grid">
             <div class="p-field p-col-12 p-md-12">
                 <label for="nome">Titulo</label>
                 <input id="nome" [(ngModel)]="tfc.titulo" type="text" pInputText>
+                <small class="p-error" *ngIf="validar && !tfc.titulo">Campo Obrigatório.</small>
             </div>
             <div *ngIf='isRole("Professor")' class="p-field p-col-12">
-                <label for="state">Areas de Conhecimento</label>
+                <label for="state">Areas de Investigação</label>
                 <p-dropdown inputId="state" [options]="areas" [(ngModel)]="areaSelecionado" placeholder="Seleccionar"
                     optionLabel="descricao" optionValue=""></p-dropdown>
+                    <small class="p-error" *ngIf="validar && !areaSelecionado">Campo Obrigatório.</small>
             </div>
             <div *ngIf='isRole("Estudante")' class="p-field p-col-12 p-md-6">
-                <label for="state">Areas de Conhecimento</label>
+                <label for="state">Areas de Investigação</label>
                 <p-dropdown inputId="state" [options]="areas" [(ngModel)]="areaSelecionado" placeholder="Seleccionar"
                     optionLabel="descricao" optionValue=""></p-dropdown>
+                    <small class="p-error" *ngIf="validar && !areaSelecionado">Campo Obrigatório.</small>
             </div>
             <div *ngIf='isRole("Estudante")' class="p-field p-col-12 p-md-6">
                 <label for="state">Orientador</label>
                 <p-dropdown inputId="state" [options]="professores" [(ngModel)]="professorSelecionado" placeholder="Seleccionar"
                     optionLabel="nome" optionValue=""></p-dropdown>
+                    <small class="p-error" *ngIf="validar && !professorSelecionado">Campo Obrigatório.</small>
             </div>
             <!-- <div class="p-field p-col-12 p-md-12">
                 <p-editor [(ngModel)]="text2" [style]="{'height':'320px'}">
@@ -44,7 +48,8 @@
             <div class="p-field p-col-12 p-md-12">
                 <label for="descricao">Descrição</label>
                 <!-- <textarea [rows]="5" [cols]="90" pInputTextarea autoResize="true"></textarea> -->
-                <textarea id="descricao" [rows]="9" pInputTextarea [(ngModel)]="tfc.Descricao"></textarea>
+                <textarea id="descricao" [rows]="9" pInputTextarea [(ngModel)]="tfc.descricao"></textarea>
+                <small class="p-error" *ngIf="validar && !tfc.descricao">Campo Obrigatório.</small>
             </div>
             <div class="p-field p-col-12 p-md-6">
             </div>
@@ -52,8 +57,10 @@
     </ng-template>
     <ng-template pTemplate="footer">
         <div class="p-grid p-nogutter p-jc-between">
-            <p-button label="Limpar" (onClick)="cancelar()" icon="pi pi-breash" class="p-button-danger"></p-button>
-            <p-button label="Salvar" (onClick)="salvar()" icon="pi pi-save" iconPos="right"></p-button>
+            <button type="button" pButton pRipple icon="pi pi-times" (click)="cancelar()" label="Limpar" class="p-button-danger"></button>
+            <button type="button" pButton pRipple icon="pi pi-save" iconPos="right" (click)="salvar()" label="Salvar"></button>
+            <!-- <p-button label="Limpar" (onClick)="cancelar()" icon="pi pi-trash" class="p-button-danger"></p-button> -->
+            <!-- <p-button label="Salvar" (onClick)="salvar()" icon="pi pi-save" iconPos="right"></p-button> -->
         </div>
     </ng-template>
 </p-card>

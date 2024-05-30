@@ -129,20 +129,20 @@
         <div class="p-field p-col-12 p-md-12">
             <label>Titulo *</label>
             <input id="titulo" type="text" [(ngModel)]="tarefa.titulo" pInputText> 
-            <small class="p-invalid" *ngIf="validar && !tarefa.titulo">Campo Obrigatório.</small>
+            <small class="p-error" *ngIf="validar && !tarefa.titulo">Campo Obrigatório.</small>
         </div>
 
         <div class="p-field p-col-12 p-md-12">
             <label>Descrição</label>
             <!-- <input id="descricao" type="text" [(ngModel)]="tarefa.descricao" pInputText>  -->
             <textarea id="descricao" [rows]="4" pInputTextarea [(ngModel)]="tarefa.descricao"></textarea>
-            <small class="p-invalid" *ngIf="validar && !tarefa.descricao">Campo Obrigatório.</small>
+            <small class="p-error" *ngIf="validar && !tarefa.descricao">Campo Obrigatório.</small>
         </div>
 
         <div class="p-field p-col-12 p-md-12">
             <label>Data de Entrega</label>
             <p-calendar id="calendar" inline="true" [(ngModel)]="dataEntrega" dateFormat="dd/mm/yy"></p-calendar>
-            <small class="p-invalid" *ngIf="validar && !tarefa.dataEntrega">Campo Obrigatório.</small>
+            <small class="p-error" *ngIf="validar && !tarefa.dataEntrega">Campo Obrigatório.</small>
         </div>
 
         <!-- <div class="p-field p-col-12 p-md-6">
@@ -170,7 +170,7 @@
         <div *ngIf="isRole('Professor')" class="p-field p-col-12 p-md-12">
             <label>Comentario</label>
             <textarea id="comentarioCorrecao" [rows]="5" type="text" [(ngModel)]="tarefa.comentarioCorrecao" pInputTextarea></textarea>
-            <small class="p-invalid" *ngIf="validar && !tarefa.comentarioCorrecao">Campo Obrigatório.</small>
+            <small class="p-error" *ngIf="validar && !tarefa.comentarioCorrecao">Campo Obrigatório.</small>
         </div>
 
         <div class="file-input-wrapper">

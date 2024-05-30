@@ -29,13 +29,13 @@ export class EnviarComponent implements OnInit {
   validar: boolean;
   parametro: string;
   exibirDetalhes = false;
-  tfc = new TFC();
+  tfc: TFC;
   tfcs: Array<TFC>;
   professores: Array<Professor>;
   professorSelecionado: Professor;
   areas: Array<Area>;
   areaSelecionado: Area;
-  estudante: Estudante;
+  estudante: Estudante = new Estudante();
   userInfo: any;
 
   @Input()
@@ -118,33 +118,52 @@ export class EnviarComponent implements OnInit {
   }
 
   salvar(): void {
+    this.tfc;
     this.validar = true;
-    if (this.isRole("Estudante")) {
-      this.tfc.idEstudante = Number(this.userInfo.id);
-      this.tfc.idProfessor = this.professorSelecionado.id;
-      this.tfc.professor = this.professorSelecionado;
-      this.tfc.respostaEstudante = true;
-      this.estudanteService.procurarEstudantePorId(Number(this.userInfo.id)).subscribe( resultado => {
-        this.tfc.estudante = resultado;
-      });
-    }
-    
-    if (this.isRole("Professor")) {
-      this.tfc.idProfessor = Number(this.userInfo.id);
-      this.tfc.respostaProfessor = true;
-      this.professorServico.procurarProfessorPorId(Number(this.userInfo.id)).subscribe( resultado => {
-        this.tfc.professor = resultado;
-      });
-    }
-    
-    this.tfc.idArea = this.areaSelecionado.id;
-    this.tfc.area = this.areaSelecionado;
+    var auxTfcs = new Array<TFC>();
 
-    if (this.tfc) {
-      this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
-        this.notificacaoMsg("success", "Proposta de TFC", "A Proposta foi enviada com sucesso!");
-        this.cancelar();
-      }); 
+    if (this?.tfc?.titulo && this?.tfc?.descricao && this?.areaSelecionado?.id && this?.professorSelecionado?.id) {
+      if (this.isRole("Estudante")) {
+        this.tfc.idEstudante = Number(this.userInfo.id);
+        this.tfc.idProfessor = this.professorSelecionado.id;
+        this.tfc.professor = this.professorSelecionado;
+        // this.tfc.respostaEstudante = true;
+        this.estudanteService.procurarEstudantePorId(Number(this.userInfo.id)).subscribe( resultado => {
+          this.tfc.estudante = resultado;
+        });
+      }
+      
+      if (this.isRole("Professor")) {
+        this.tfc.idProfessor = Number(this.userInfo.id);
+        // this.tfc.respostaProfessor = true;
+        this.professorServico.procurarProfessorPorId(Number(this.userInfo.id)).subscribe( resultado => {
+          this.tfc.professor = resultado;
+        });
+      }
+      
+      this.tfc.idArea = this.areaSelecionado.id;
+      this.tfc.area = this.areaSelecionado;
+      
+      this.tfcServico.TFCEstudante(this.userInfo.id).subscribe(tfcs => {
+        auxTfcs = tfcs;
+
+        if (auxTfcs.length>=1) {
+          this.notificacaoMsg("warn", "Proposta de TFC", "Não pode enviar mais de uma Proposta!");
+        } else {
+  
+          if (this.tfc) {
+            this.tfcServico.salvarTFC(this.tfc).subscribe(resultado => {
+              this.notificacaoMsg("success", "Proposta de TFC", "A Proposta foi enviada com sucesso!");
+              this.cancelar();
+            }); 
+          }
+          console.log("TFC pronto para defender!");
+        }
+      });
+      
+    } else {
+      console.log("Os dados devem ser preenchidos.");
+      
     }
 
   }

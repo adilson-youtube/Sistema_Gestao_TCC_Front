@@ -15,6 +15,11 @@ export class EstudanteService {
         return this.repositorio.listarEstudantes();
     }
 
+  //-- Estudante
+  ListarEstudantesTFCsFinalizados(): Observable<Array<Estudante>> {
+        return this.repositorio.ListarEstudantesTFCsFinalizados();
+    }
+
     procurarEstudantePorId(codigo: number): Observable<Estudante> {
         return this.repositorio.procurarEstudantePorId(codigo);
     }

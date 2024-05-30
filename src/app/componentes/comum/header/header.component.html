@@ -43,7 +43,7 @@
             <mat-menu class="custom-menu" #menuTCC="matMenu" xPosition="after">
                 <button class="texts-color" mat-menu-item routerLink="/listarTFCsDefendidos"><mat-icon
                         class="icons-color"> list </mat-icon>TRABALHOS DEFENDIDOS</button>
-                <button *ngIf='isRole("Estudante")' class="texts-color" mat-menu-item routerLink="/enviarTFC"><mat-icon
+                <button *ngIf='isRole("Estudante") && this?.tfcInfo?.estado==4' class="texts-color" mat-menu-item routerLink="/enviarTFC"><mat-icon
                         class="icons-color"> send </mat-icon>ENVIAR TFC</button>
                 <!-- <button class="texts-color" mat-menu-item routerLink="pesquisar"><mat-icon class="icons-color">
                         person_search </mat-icon>PESQUISAR SERVIÇOS</button> -->
@@ -73,19 +73,19 @@
 
 
             <button *ngIf='isRole("Estudante")' class="texts-color" mat-button routerLink="/PropostaReservada"><mat-icon class="icons-color"> list
-                </mat-icon>Meu Tema</button>
+                </mat-icon>VISUALIZAR TEMA</button>
 
 
             <button *ngIf='isRole("Professor")' class="texts-color" mat-button routerLink="/PropostaReservada"><mat-icon class="icons-color"> list
-                </mat-icon>Meus Orientandos</button>
+                </mat-icon>VISUALIZAR ORIENTANDOS</button>
 
 
             <button *ngIf='isRole("Estudante")' class="texts-color" mat-button routerLink="/encontros">
-                <mat-icon class="icons-color"> event</mat-icon>Encontros</button>
+                <mat-icon class="icons-color"> event</mat-icon>ENCONTROS</button>
 
 
             <button class="texts-color" mat-button routerLink="/listarBancas">
-                <mat-icon class="icons-color"> group</mat-icon>Bancas</button>
+                <mat-icon class="icons-color"> group</mat-icon>BANCAS</button>
 
 
             <!-- <button class="texts-color" mat-button routerLink="/dashboard"><mat-icon class="icons-color"> info

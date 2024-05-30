@@ -52,6 +52,11 @@
                         Estado <p-columnFilter type="text" field="tfc.estado" display="menu"></p-columnFilter>
                     </div>
                 </th>
+                <th>
+                    <div class="p-d-flex p-jc-between p-ai-center">
+                        Nota <p-columnFilter type="text" field="tfc.estado" display="menu"></p-columnFilter>
+                    </div>
+                </th>
                 
                 <th style="width:18%;text-align:center">Operação</th>
                 
@@ -60,10 +65,11 @@
         <ng-template pTemplate="body" let-tfc>
             <tr>
                 <td>{{tfc?.estudante?.nome}}</td>
-                <td>{{tfc.titulo}}</td>
+                <td>{{tfc?.titulo}}</td>
                 <td>{{tfc?.area?.descricao}}</td>
                 <td>{{tfc?.professor?.nome}}</td>
                 <td>{{findEstadoTFC(tfc?.estado)}}</td>
+                <td>{{tfc?.nota}}</td>
                 
                 <td style="text-align:center">
                     <!-- <button *ngIf='isRole("Admin")||isRole("Coordenador")' pButton pRipple icon="pi pi-pencil" 
@@ -76,18 +82,18 @@
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="6" style="text-align:center">LISTA DE PROPOSTAS DE TFC VAZIA.</td>
+                <td colspan="7" style="text-align:center">LISTA DE PROPOSTAS DE TFC VAZIA.</td>
             </tr>
         </ng-template>
     </p-table>
 
 
-    <ng-template pTemplate="footer">
+    <!-- <ng-template pTemplate="footer">
         <div class="p-grid p-nogutter p-jc-between">
             <p-button label="Retroceder" (onClick)="retroceder()" icon="pi pi-angle-left"></p-button>
             <p-button label="Seguinte" (onClick)="proximo()" icon="pi pi-angle-right" iconPos="right"></p-button>
         </div>
-    </ng-template>
+    </ng-template> -->
     <!-- <ng-template pTemplate="content">
     </ng-template> -->
 </p-card>

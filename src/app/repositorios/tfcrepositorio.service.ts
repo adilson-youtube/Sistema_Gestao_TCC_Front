@@ -28,7 +28,7 @@ export class TFCRepositorio {
 
   //--- TFC 
   ListarTFCsDefendidos(): Observable<Array<TFC>> {
-    const path = `TFCsDefendidos`;
+    const path = `TFC/TFCsDefendidos`;
     return this.http.get<Array<TFC>>(`${this.baseUrl}${path}`);
   }
 

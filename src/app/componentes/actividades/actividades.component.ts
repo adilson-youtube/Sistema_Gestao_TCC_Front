@@ -39,7 +39,7 @@ export class ActividadesComponent implements OnInit {
   parametro: string;
   //dadosDeUso: DadosDeUso;
   exibirDetalhes = false;
-  tarefa = new Tarefa();
+  tarefa: Tarefa = new Tarefa();
   tarefas: Array<Tarefa>;
   // tfc = new TFC();
   // tfcs: Array<TFC>;
@@ -358,12 +358,15 @@ export class ActividadesComponent implements OnInit {
       this.anexouFicheiro = false;
 
     } 
-    else {
+    else if (this?.tarefa?.titulo && this?.tarefa?.descricao && this?.dataEntrega){
       this.tarefaServico.salvarTarefa(this.tarefa).subscribe(resultado => {
         this.tarefas.unshift(this.tarefa);
         this.notificacaoMsg("success", "Tarefa", "A Tarefa foi Criada com Sucesso!");
         this.cancelar();
       }); 
+
+    } else {
+      console.log("Deve preencher os dados!");
 
     }
 
@@ -382,7 +385,7 @@ export class ActividadesComponent implements OnInit {
     this.tarefa = tarefa;
     console.log("Info da Tarefa: "+JSON.stringify(this.tarefa));
     // if (tarefa && tarefa?.idFicheiroResposta.length>=6) {
-    if (tarefa && this.anexouFicheiro) {
+    if (tarefa && this?.anexouFicheiro) {
       if (tarefa.dataEntrega) {
         this.dataEntrega = new Date(tarefa.dataEntrega);
       }

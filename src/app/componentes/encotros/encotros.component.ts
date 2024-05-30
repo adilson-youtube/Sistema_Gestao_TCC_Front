@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConfirmationService, PrimeIcons } from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeIcons } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { Encontro } from 'src/app/modelo/entidades/encontro';
@@ -25,11 +25,12 @@ export class EncotrosComponent implements OnInit, OnDestroy {
   validar: boolean;
   encontro = new Encontro();
   encontros: Array<Encontro>;
-  estudanteSelecionado: Estudante = new Estudante();
+  estudanteSelecionado: Estudante;
   estudantes: Array<Estudante>;
   tfc = new TFC();
   tfcs: Array<TFC>;
   idTFC: number;
+  dataEncontro: Date;
   
   userInfo: any;
 
@@ -68,7 +69,8 @@ export class EncotrosComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private tfcServico: TFCService,
     private estudanteService: EstudanteService,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService, 
+    private messageService: MessageService
   ) {
       
     
@@ -134,6 +136,7 @@ export class EncotrosComponent implements OnInit, OnDestroy {
   }
 
   modal(encontro: Encontro): void {
+    this.dataEncontro = new Date();
     this.encontro = encontro;
     this.exibir = true;
     this.validar = false;
@@ -153,6 +156,7 @@ export class EncotrosComponent implements OnInit, OnDestroy {
     this.exibirDetalhes = false;
     // this.exibirDetalhesEncontro = false;
     this.encontro = new Encontro();
+    window.location.reload();
   }
 
   salvar(): void {
@@ -163,10 +167,7 @@ export class EncotrosComponent implements OnInit, OnDestroy {
       this.encontroServico.actualizarEncontro(this.encontro.id, this.encontro).subscribe(resultado => {
         this.cancelar();
       }); 
-    } else {
-      // if (this.encontro.) {
-        
-      // }
+    } else if(this?.estudanteSelecionado && this?.meioLocalSelecionado && this?.encontro?.motivo && this?.encontro?.data) {
       this.tfcServico.TFCEstudante(this.estudanteSelecionado.id).subscribe( tfc => {
         // this.encontro.tfc = tfc.shift();
         // this.encontro.idTFC = this.encontro.tfc.id;
@@ -176,9 +177,13 @@ export class EncotrosComponent implements OnInit, OnDestroy {
         }
         this.encontroServico.salvarEncontro(this.encontro).subscribe(resultado => {
           this.encontros.unshift(resultado);
+          this.notificacaoMsg("success", "Encontro", "O Encontro foi Cadastrado com Sucesso!");
           this.cancelar();
         }); 
       });
+
+    } else {
+      console.log("Deve preencher os dados!");
 
     }
 
@@ -214,6 +219,10 @@ export class EncotrosComponent implements OnInit, OnDestroy {
 
   limpar(tabela: Table) {
     tabela.clear();
+  }
+
+  notificacaoMsg(tipoNotificacao?: string, cabecario?: string, msg?: string) {
+    this.messageService.add({severity: tipoNotificacao, summary:cabecario, detail: msg});
   }
 
 

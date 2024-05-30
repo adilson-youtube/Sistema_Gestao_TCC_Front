@@ -15,6 +15,14 @@ export class BancaService {
         return this.repositorio.listarBancas();
     }
 
+  listarBancasPorIdProfessor(id: number): Observable<Array<Banca>> {
+        return this.repositorio.listarBancasPorIdProfessor(id);
+    }
+
+  listarBancasPorIdEstudante(id: number): Observable<Array<Banca>> {
+        return this.repositorio.listarBancasPorIdEstudante(id);
+    }
+
     procurarBancaPorId(codigo: number): Observable<Banca> {
         return this.repositorio.procurarBancaPorId(codigo);
     }

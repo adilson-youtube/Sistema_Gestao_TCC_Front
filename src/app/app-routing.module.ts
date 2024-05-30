@@ -27,8 +27,8 @@ import { FileUploadComponent } from './componentes/file-upload/file-upload.compo
 import { TFCsComponent } from './componentes/propostas/tfcs.component';
 import { EncotrosComponent } from './componentes/encotros/encotros.component';
 import { TfcsDefendidosComponent } from './componentes/tfcs-defendidos/tfcs-defendidos.component';
-import { BancasComponent } from './componentes/bancas/bancas.component';
 import { EnviarTfcComponent } from './componentes/enviar-tfc/enviar-tfc.component';
+import { BancasComponent } from './componentes/bancas/bancas.component';
 
 
 const routes: Routes = [

@@ -189,7 +189,7 @@ export class TfcsDefendidosComponent implements OnInit {
         console.log("Os Dados da TFC: "+JSON.stringify(this.tfc));
         if (tfc) {
           if (this.isRole("Estudante")) {
-            this.tfc.respostaEstudante = true;
+            // this.tfc.respostaEstudante = true;
             this.tfc.idEstudante = Number(this.authenticationService.getDecodedToken().id);
             this.estudanteService.procurarEstudantePorId(this.tfc.idEstudante).subscribe((estudante)=> {
               this.tfc.estudante = estudante;

@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Banca } from 'src/app/modelo/entidades/banca';
 import { BancaProfessor } from 'src/app/modelo/entidades/bancaprofessor';
 import { Professor } from 'src/app/modelo/entidades/professor';
+import { PosicaoBanca } from 'src/app/modelo/enumerados/PosicaoBanca';
 import { ProfessorService } from 'src/app/servicos/professor.service';
 
 @Component({
@@ -49,7 +50,7 @@ export class DetalhesBancaComponent {
     var bancaProfessorAux: BancaProfessor = new BancaProfessor();
     if (bancasProfessores) {
       bancasProfessores.find((bp) => {
-        if (bp.categoria == "Presidente") {
+        if (bp.posicaoBanca == PosicaoBanca.Presidente) {
           bancaProfessorAux = bp;
         }
       });
@@ -66,7 +67,7 @@ export class DetalhesBancaComponent {
     var bancaProfessorAux: BancaProfessor = new BancaProfessor();
     if (bancasProfessores) {
       bancasProfessores.find((bp) => {
-        if (bp.categoria == "1º Vogal") {
+        if (bp.posicaoBanca == PosicaoBanca.PrimeiroVogal) {
           bancaProfessorAux = bp;
         }
       });
@@ -82,7 +83,7 @@ export class DetalhesBancaComponent {
     var bancaProfessorAux: BancaProfessor = new BancaProfessor();
     if (bancasProfessores) {
       bancasProfessores.find((bp) => {
-        if (bp.categoria == "2º Vogal") {
+        if (bp.posicaoBanca == PosicaoBanca.SegundoVogal) {
           bancaProfessorAux = bp;
         }
       });
