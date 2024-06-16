@@ -156,7 +156,14 @@ export class EncotrosComponent implements OnInit, OnDestroy {
     this.exibirDetalhes = false;
     // this.exibirDetalhesEncontro = false;
     this.encontro = new Encontro();
-    window.location.reload();
+    // window.location.reload();
+  }
+
+  listarEncontros() {
+    this.encontroServico.listarEncontrosTFC(this.idTFC).subscribe( resultados => { 
+      this.encontros = resultados;
+    });
+
   }
 
   salvar(): void {
@@ -165,6 +172,7 @@ export class EncotrosComponent implements OnInit, OnDestroy {
 
     if (this.encontro.id>=1) {
       this.encontroServico.actualizarEncontro(this.encontro.id, this.encontro).subscribe(resultado => {
+        this.listarEncontros();
         this.cancelar();
       }); 
     } else if(this?.estudanteSelecionado && this?.meioLocalSelecionado && this?.encontro?.motivo && this?.encontro?.data) {
@@ -176,7 +184,8 @@ export class EncotrosComponent implements OnInit, OnDestroy {
           this.encontro.local = this.meioLocalSelecionado;
         }
         this.encontroServico.salvarEncontro(this.encontro).subscribe(resultado => {
-          this.encontros.unshift(resultado);
+          // this.encontros.unshift(resultado);
+          this.listarEncontros();
           this.notificacaoMsg("success", "Encontro", "O Encontro foi Cadastrado com Sucesso!");
           this.cancelar();
         }); 
